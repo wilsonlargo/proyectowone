@@ -24,20 +24,23 @@ function make_lexicon() {
         const bt_del = newE("div", "bt_add", "btn btn-secondary org-btn-tool bi bi-trash3-fill")
         bts_adddel.appendChild(bt_del)
     }
-    //make_spliter_panel()
+    make_spliter_panel()
     function make_spliter_panel(){
-        const panel_splitter= newE("div", "panel_splitter", "h-100")
-        panel_splitter.setAttribute("data-role", "splitter")
-        panel_splitter.setAttribute("data-split-sizes", "30, 70")
+        const panel_splitter= newE("div", "panel_splitter", "splitter mt-2")
         panel_escritorio.appendChild(panel_splitter)
 
-        const panel_list= newE("div", "panel_list", "d-flex flex-justify-center flex-align-center")
-        panel_list.textContent="Hola"
+        const panel_list= newE("div", "panel_list", "")
+        panel_list.textContent="Panel listas"
         panel_splitter.appendChild(panel_list)
 
-        const panel_lexicon_edit= newE("div", "panel_lexicon_edit", "d-flex flex-justify-center flex-align-center")
+        const panel_separador= newE("div", "panel_separador", "bg-secondary")
+        panel_splitter.appendChild(panel_separador)
+
+        const panel_lexicon_edit= newE("div", "panel_lexicon_edit", "")
         panel_lexicon_edit.textContent="diccionario"
         panel_splitter.appendChild(panel_lexicon_edit)
+
+        dragElement(document.getElementById("panel_separador"), "H");
     }
 
 

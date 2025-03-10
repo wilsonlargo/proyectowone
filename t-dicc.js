@@ -1,0 +1,1 @@
+control.setAttribute("data-bs-toggle", "dropdown")

@@ -35,13 +35,13 @@ import {
 
 // Utiliza las claves y credenciales de mi base de datos de Tomakare
 const firebaseConfig = {
-    apiKey: "AIzaSyBD-VWbVbySQuKAzqe2M78njrGhEEW1K1c",
-    authDomain: "swanpatpo.firebaseapp.com",
-    projectId: "swanpatpo",
-    storageBucket: "swanpatpo.firebasestorage.app",
-    messagingSenderId: "517037223482",
-    appId: "1:517037223482:web:ddcf150ceae84aa5874f03"
-};
+    apiKey: "AIzaSyDVMKQ5tinwAdK4qzq98qQvELbZYUuaq5c",
+    authDomain: "woneprj.firebaseapp.com",
+    projectId: "woneprj",
+    storageBucket: "woneprj.firebasestorage.app",
+    messagingSenderId: "356688049122",
+    appId: "1:356688049122:web:077a9972fd3762ec57bfbb"
+  };
 
 // Inicializa Firebase
 const app = initializeApp(firebaseConfig);
@@ -50,7 +50,7 @@ const db = getFirestore(app);
 
 
 
-function _sele_escuela(proyecto) {
+function _sel_proyecto(proyecto) {
     //Sección para importar data del DRIVE
     // Cargar informacion de la base de datos de registros de tabla google
 
@@ -89,16 +89,16 @@ function _sele_escuela(proyecto) {
     }
 
     //4.
-    // Escuchar si hay en un cambio en la coleccion de vigencias y actualizar automaticamente la lista de proyectos
+    // Escuchar si hay en un cambio en la coleccion del proyecto actual y actualizar automaticamente la lista de proyectos
     onSnapshot(colectionproyectos, (querySnapshot) => {
-        const proyectos = [];
+        const data_tables = [];
         querySnapshot.forEach((doc) => {
-            proyectos.push({
+            data_tables.push({
                 ...doc.data(),
                 id: doc.id,
             });
         });
-        GLOBAL.state.proyectos = proyectos;
+        GLOBAL.state.data = data_tables;
     });
     GLOBAL.firestore = {
         getProyectos,
@@ -117,15 +117,11 @@ async function Verificar_Acceso(email, password) {
     try {
         const crearcredencial = await signInWithEmailAndPassword(auth, email, password)
         const proyecto = email.split("@")
-        _sele_escuela(proyecto[0])
+        _sel_proyecto(proyecto[0])
         mensajes("El acceso se ha completado con éxito","green")
-        openIni(email)
-       
-
-        
+        openIni(email)        
     } catch (error) {
         mensajes("Su usuario y contraseña no son correctos", "orange")
-        
     }
 
 }
@@ -135,7 +131,7 @@ async function CredentialOut() {
 }
 
 GLOBAL.admin = {
-    _sele_escuela,
+    _sel_proyecto,
     Verificar_Acceso,
     CredentialOut,
 }

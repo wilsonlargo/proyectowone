@@ -98,7 +98,7 @@ div.content {
   min-width: 200px;
   overflow: auto;
   white-space: nowrap;
-  border:#aaa solid 1px;
+  border: #aaa solid 1px;
   padding: 5px;
 }
 
@@ -108,7 +108,45 @@ div.content {
   min-width: 200px;
   overflow: auto;
   white-space: nowrap;
-  border:#aaa solid 1px;
+  border: #aaa solid 1px;
   padding: 5px;
+}
+
+.item-list-lx {
+  margin: 2px;
+  cursor: pointer;
+  padding-left: 10px;
+}
+
+.item-list-lx:hover {
+  background-color: #555;
+  color: white;
+}
+
+.input-flat-dicc {
+  border: none;
+  border-bottom:#555 1px solid;
+  outline: none;
+  width: 100%;
+}
+.label-wrap{
+  text-wrap: pretty
+}
+
+.div-categoria{
+  border: #aaa 1px solid;
+  border-radius: 5px;
+  padding: 10px;
+}
+.item-menu{
+  padding: 5px;
+  cursor: pointer;
+}
+.item-menu:hover{
+  background-color: #555;
+  color: white;
+}
+.text-justificado{
+  text-align: justify;
 }
 

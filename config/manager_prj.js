@@ -54,9 +54,6 @@ function Guardar_datos(INDICE, DATA) {
     GLOBAL.state.data[indx] = DATA
     const id = GLOBAL.firestore.updateProyecto(GLOBAL.state.data[indx])
 }
-function delete_item(DATA, CAMPO, ID) {
-    const filter = DATA.filter(ele => ele[CAMPO] !== ID)
-    return filter
-}
+
 
 

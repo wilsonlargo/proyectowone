@@ -4,9 +4,17 @@ const GLOBAL = {
     },
     firestore: {},
     admin: {},
-    from_drive:[]
+    from_drive: []
 };
 let activeEmail;
+function randomKey(len, arr) {
+    let ans = '';
+    for (let i = len; i > 0; i--) {
+        ans +=
+            arr[(Math.floor(Math.random() * arr.length))];
+    }
+    return(ans);
+}
 function IniCredential() {
     //Lee la información del form,ulario de ingreso en index.html
     const email = document.getElementById("inEmail").value
@@ -57,23 +65,22 @@ let newE = (elemento, id, clase, ancho) => {
 }
 
 ///////////////////////////////
-function dragElement(element, direction)
-{
-    var   md; // remember mouse down info
-    const first  = document.getElementById("panel_list");
+function dragElement(element, direction) {
+    var md; // remember mouse down info
+    const first = document.getElementById("panel_list");
     const second = document.getElementById("panel_lexicon_edit");
 
     element.onmousedown = onMouseDown;
 
-    function onMouseDown(e)
-    {
+    function onMouseDown(e) {
         //console.log("mouse down: " + e.clientX);
-        md = {e,
-              offsetLeft:  element.offsetLeft,
-              offsetTop:   element.offsetTop,
-              firstWidth:  first.offsetWidth,
-              secondWidth: second.offsetWidth
-             };
+        md = {
+            e,
+            offsetLeft: element.offsetLeft,
+            offsetTop: element.offsetTop,
+            firstWidth: first.offsetWidth,
+            secondWidth: second.offsetWidth
+        };
 
         document.onmousemove = onMouseMove;
         document.onmouseup = () => {
@@ -82,17 +89,18 @@ function dragElement(element, direction)
         }
     }
 
-    function onMouseMove(e)
-    {
+    function onMouseMove(e) {
         //console.log("mouse move: " + e.clientX);
-        var delta = {x: e.clientX - md.e.clientX,
-                     y: e.clientY - md.e.clientY};
+        var delta = {
+            x: e.clientX - md.e.clientX,
+            y: e.clientY - md.e.clientY
+        };
 
-        if (direction === "H" ) // Horizontal
+        if (direction === "H") // Horizontal
         {
             // Prevent negative-sized elements
             delta.x = Math.min(Math.max(delta.x, -md.firstWidth),
-                       md.secondWidth);
+                md.secondWidth);
 
             element.style.left = md.offsetLeft + delta.x + "px";
             first.style.width = (md.firstWidth + delta.x) + "px";

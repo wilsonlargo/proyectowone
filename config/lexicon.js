@@ -5,7 +5,7 @@ let active_lexicon_id = 0
 function make_lexicon() {
     active_lexicon = global_proyecto.LEXICON
 
-    byE("Nombre_proyecto").textContent = global_proyecto.INFO.nombre + "- Lexicón"
+    byE("Nombre_proyecto").textContent = global_proyecto.PROYECTO.nombre + "- Lexicón"
     const panel_escritorio = byE("panel_escritorio")
     panel_escritorio.innerHTML = ""
     _make_toolbar()
@@ -41,7 +41,7 @@ function make_lexicon() {
         bt_ini.onclick = () => {
             _move_to_entry("ini")
         }
-        
+
         const bt_prev = newE("div", "bt_prev", "btn btn-secondary org-btn-tool bi bi-skip-backward")
         bts_move.appendChild(bt_prev)
         bt_prev.onclick = () => {
@@ -65,22 +65,22 @@ function make_lexicon() {
 
         const btn_menu_config = newE("button", "btn_menu_config", "btn btn-secondary dropdown-toggle")
         btn_menu_config.setAttribute("data-bs-toggle", "dropdown")
-        btn_menu_config.type="button"
-        btn_menu_config.textContent="Configuración"
+        btn_menu_config.type = "button"
+        btn_menu_config.textContent = "Configuración"
         div_dropdown.appendChild(btn_menu_config)
 
         const ul_menu_config = newE("ul", "ul_menu_config", "dropdown-menu shadow")
         div_dropdown.appendChild(ul_menu_config)
 
         const item_variantes = newE("div", "item_variantes", "item-menu")
-        item_variantes.textContent="Variantes de idioma"
+        item_variantes.textContent = "Variantes de idioma"
         item_variantes.setAttribute("data-bs-toggle", "modal")
         item_variantes.setAttribute("data-bs-target", "#open_modal")
-        item_variantes.onclick=()=>{
+        item_variantes.onclick = () => {
             config_variantes()
         }
 
-        
+
         ul_menu_config.appendChild(item_variantes)
 
 
@@ -108,7 +108,7 @@ function make_lexicon() {
         dragElement(document.getElementById("panel_separador"), "H");
     }
     _make_list_lx()
-    
+
     function _make_list_lx() {
         const panel_list = byE("panel_list")
         panel_list.innerHTML = ""
@@ -196,39 +196,69 @@ function make_lexicon() {
             active_lexicon_id = 0
             _make_lexicon_edit(active_lexicon.entries[0])
 
-        } else if (option =="sig") {
+        } else if (option == "sig") {
             if (active_lexicon_id >= active_lexicon.entries.length - 1) {
                 alert("Último registro")
                 active_lexicon_id = active_lexicon.entries.length - 1
                 _make_lexicon_edit(active_lexicon.entries[active_lexicon_id])
-            }else{
+            } else {
                 active_lexicon_id = active_lexicon_id + 1
                 _make_lexicon_edit(active_lexicon.entries[active_lexicon_id])
             }
 
-        }else if (option =="prev"){
+        } else if (option == "prev") {
             if (active_lexicon_id == 0) {
                 alert("Primer registro")
                 active_lexicon_id = 0
                 _make_lexicon_edit(active_lexicon.entries[0])
-            }else{
+            } else {
                 active_lexicon_id = active_lexicon_id - 1
                 _make_lexicon_edit(active_lexicon.entries[active_lexicon_id])
             }
-        } else if(option =="fin"){
+        } else if (option == "fin") {
             active_lexicon_id = active_lexicon.entries.length - 1
             const entrada = _make_lexicon_edit(active_lexicon.entries[active_lexicon_id])
         }
     }
 }
-function config_variantes(){
-const modal_panel_gonfig= byE("modal_panel_gonfig")
-modal_panel_gonfig.innerHTML=""
-const div_detalle = newE("div", "div_detalle", "text-justificado")
-div_detalle.textContent=`En esta opción usted puede agregar variaciones dialectales del idioma principal, 
+function config_variantes() {
+    const modal_panel_gonfig = byE("modal_panel_gonfig")
+    modal_panel_gonfig.innerHTML = ""
+    const div_detalle = newE("div", "div_detalle", "text-justificado")
+    div_detalle.textContent = `En esta opción usted puede agregar variaciones dialectales del idioma principal, 
 tenga en cuenta que serán visibles en las diferentes categorías como una entrada secundaria.`
-modal_panel_gonfig.appendChild(div_detalle)
+    modal_panel_gonfig.appendChild(div_detalle)
 
+    const btn_agregar = newE("button", "btn_agregar", "btn btn-secondary btn-sm mt-2")
+    btn_agregar.textContent = "Agregar variante +"
+    modal_panel_gonfig.appendChild(btn_agregar)
+
+    btn_agregar.onclick=()=>{
+        const lx_variante={
+            "nombre":"Nueva variante",
+            "abreviacion"
+        }
+    }
+
+    const div_variantes = newE("div", "div_variantes", "")
+    modal_panel_gonfig.appendChild(div_variantes)
+
+
+    if (typeof global_proyecto["PROYECTO"].Variantes == "undefined") {
+        global_proyecto["PROYECTO"]["Variantes"] = []
+        Guardar_datos("PROYECTO", global_proyecto["PROYECTO"])
+        _make_variantes()
+    } else {
+        _make_variantes()
+    }
+
+    function _make_variantes() {
+        div_variantes.innerHTML=""
+        const lx_variantes=global_proyecto["PROYECTO"]["Variantes"]
+        for (i in lx_variantes){
+
+        }
+    }
 
 
 }

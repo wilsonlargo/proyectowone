@@ -18,7 +18,7 @@ function open_proyecto() {
     let textos = []
     for (id in data_project) {
         if (data_project[id].id == "PROYECTO") { //Si el la tabla es proyecto, guarda la información propoa del proyecto
-            global_proyecto["INFO"] = data_project[id]
+            global_proyecto["PROYECTO"] = data_project[id]
         } else if (data_project[id].id == "TABLAS") {//Guardar todas las tablas del proyecto
             global_proyecto["TABLAS"] = data_project[id]
         } else if (data_project[id].id == "LEXICON") {//Guarda y administra el lexicón

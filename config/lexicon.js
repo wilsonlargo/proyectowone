@@ -185,10 +185,7 @@ function make_lexicon() {
         _move_to_entry("fin")
     }
 
-    function _delete_registro(DATA, CAMPO, ID) {
-        const filter = DATA.filter(ele => ele[CAMPO] !== ID)
-        return filter
-    }
+
 
     function _move_to_entry(option) {
 
@@ -233,14 +230,26 @@ tenga en cuenta que serán visibles en las diferentes categorías como una entra
     btn_agregar.textContent = "Agregar variante +"
     modal_panel_gonfig.appendChild(btn_agregar)
 
-    btn_agregar.onclick=()=>{
-        const lx_variante={
-            "nombre":"Nueva variante",
-            "abreviacion"
+    btn_agregar.onclick = () => {
+        const lx_variante = {
+            "key": "var-" + randomKey(20, '12345abcde'),
+            "nombre": "Nueva variante",
+            "abreviacion": "abb",
+            "orden": "abcdefghijklmnopqrstuvwxyz",
+            "info": "información de la variante",
+            "style": {
+                "font-color":"green",
+                "font-size":"12pt",
+                "font-bold":false,
+                "font-italic":false,
+            },
         }
+        global_proyecto["PROYECTO"].Variantes.push(lx_variante)
+        Guardar_datos("PROYECTO", global_proyecto["PROYECTO"])
+        _make_variantes()
     }
 
-    const div_variantes = newE("div", "div_variantes", "")
+    const div_variantes = newE("div", "div_variantes", "m-2")
     modal_panel_gonfig.appendChild(div_variantes)
 
 
@@ -253,13 +262,117 @@ tenga en cuenta que serán visibles en las diferentes categorías como una entra
     }
 
     function _make_variantes() {
-        div_variantes.innerHTML=""
-        const lx_variantes=global_proyecto["PROYECTO"]["Variantes"]
-        for (i in lx_variantes){
+        div_variantes.innerHTML = ""
+        let lx_variantes = global_proyecto["PROYECTO"]["Variantes"]
+        let id_ref = 0
+        for (i in lx_variantes) {
+            const item_variante = newE("div", "item_variante" + id_ref, "item-collapse ps-2 text-white")
+            item_variante.textContent = lx_variantes[id_ref].nombre
+            item_variante.setAttribute("data-bs-toggle", "collapse")
+            item_variante.setAttribute("data-bs-target", "#collapse_variante" + id_ref)
+            div_variantes.appendChild(item_variante)
 
+            const collapse_variante = newE("div", "collapse_variante" + id_ref, "collapse p-2")
+            div_variantes.appendChild(collapse_variante)
+
+            //////////////////////////////////////
+
+            const row_nombre = newE("div", "row_nombre" + id_ref, "row")
+            collapse_variante.appendChild(row_nombre)
+
+            const col_nombre_label = newE("div", "col_nombre_label" + id_ref, "col-3")
+            col_nombre_label.textContent = "Nombre:"
+            row_nombre.appendChild(col_nombre_label)
+
+            const col_nombre_value = newE("div", "col_nombre_value" + id_ref, "col")
+            row_nombre.appendChild(col_nombre_value)
+
+            const int_nombre_value = newE("input", "int_nombre_value" + id_ref, "input-flat-dicc")
+            col_nombre_value.appendChild(int_nombre_value)
+
+            int_nombre_value.value = lx_variantes[id_ref].nombre
+
+            let n = id_ref
+            int_nombre_value.onchange = () => {
+                lx_variantes[n].nombre = int_nombre_value.value
+                item_variante.textContent = int_nombre_value.value
+                Guardar_datos("PROYECTO", global_proyecto["PROYECTO"])
+            }
+            //////////////////////////////////////
+
+            const row_abb = newE("div", "row_abb" + id_ref, "row")
+            collapse_variante.appendChild(row_abb)
+
+            const col_abb_label = newE("div", "col_abb_label" + id_ref, "col-3")
+            col_abb_label.textContent = "Abreviación:"
+            row_abb.appendChild(col_abb_label)
+
+            const col_abb_value = newE("div", "col_abb_value" + id_ref, "col")
+            row_abb.appendChild(col_abb_value)
+
+            const int_abb_value = newE("input", "int_abb_value" + id_ref, "input-flat-dicc")
+            col_abb_value.appendChild(int_abb_value)
+
+            int_abb_value.value = lx_variantes[id_ref].abreviacion
+            int_abb_value.onchange = () => {
+                lx_variantes[n].abreviacion = int_abb_value.value
+                Guardar_datos("PROYECTO", global_proyecto["PROYECTO"])
+            }
+            //////////////////////////////////////
+
+            const row_orden = newE("div", "row_orden" + id_ref, "row")
+            collapse_variante.appendChild(row_orden)
+
+            const col_orden_label = newE("div", "col_orden_label" + id_ref, "col-3")
+            col_orden_label.textContent = "Orden:"
+            row_orden.appendChild(col_orden_label)
+
+            const col_orden_value = newE("div", "col_orden_value" + id_ref, "col")
+            row_orden.appendChild(col_orden_value)
+
+            const int_orden_value = newE("textarea", "int_orden_value" + id_ref, "input-flat-dicc")
+            col_orden_value.appendChild(int_orden_value)
+
+            int_orden_value.value = lx_variantes[id_ref].orden
+            int_orden_value.onchange = () => {
+                lx_variantes[n].orden = int_orden_value.value
+                Guardar_datos("PROYECTO", global_proyecto["PROYECTO"])
+            }
+
+            const row_info = newE("div", "row_info" + id_ref, "row")
+            collapse_variante.appendChild(row_info)
+
+            const col_info_label = newE("div", "col_info_label" + id_ref, "col-3")
+            col_info_label.textContent = "Información:"
+            row_info.appendChild(col_info_label)
+
+            const col_info_value = newE("div", "col_info_value" + id_ref, "col")
+            row_info.appendChild(col_info_value)
+
+            const int_info_value = newE("textarea", "int_info_value" + id_ref, "input-flat-dicc")
+            col_info_value.appendChild(int_info_value)
+
+            int_info_value.value = lx_variantes[id_ref].info
+            int_info_value.onchange = () => {
+                lx_variantes[n].info = int_info_value.value
+                Guardar_datos("PROYECTO", global_proyecto["PROYECTO"])
+            }
+
+            const btn_eliminar = newE("button", "btn_eliminar" + id_ref, "btn btn-secondary btn-sm mt-2")
+            btn_eliminar.textContent="Eliminar variante"
+            collapse_variante.appendChild(btn_eliminar)
+
+            btn_eliminar.onclick=()=>{
+                global_proyecto["PROYECTO"]["Variantes"]= _delete_registro(lx_variantes, "key", lx_variantes[n].key)
+                Guardar_datos("PROYECTO", global_proyecto["PROYECTO"])
+                _make_variantes()
+            }
+            id_ref++
         }
     }
-
-
 }
 
+function _delete_registro(DATA, CAMPO, ID) {
+    const filter = DATA.filter(ele => ele[CAMPO] !== ID)
+    return filter
+}

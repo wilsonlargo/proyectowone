@@ -33,5 +33,17 @@ function loadDataBase(id, hoja, query = "Select *") {
 let DataPrincipal;
 loadDataBase("1dniplVXfiSFYUFfsT1Ij6cdEoAdtK7dqWf3x4s9eUSw", proyecto).then(objeto => {
     DataPrincipal = [...objeto].sort((a, b) => a[0] - b[0]);
-    GLOBAL.from_drive=DataPrincipal
+    GLOBAL.from_drive = DataPrincipal
 })
+
+let var_id = 0
+lx_variantes.forEach(var_lx => {
+    const row_lx_var = newE("div", "row_lx_var" + var_lx.abreviacion, "row row align-items-end")
+    div_lx.appendChild(row_lx_var)
+
+    const col_lx_var_label = newE("div", "col_lx_var_label" + var_lx.abreviacion, "col-3 label-wrap text-end")
+    col_lx_var_label.textContent = var_lx.abreviacion
+    row_lx_var.appendChild(col_lx_var_label)
+
+}
+)

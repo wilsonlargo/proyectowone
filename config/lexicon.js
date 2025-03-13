@@ -140,7 +140,7 @@ function make_lexicon() {
         const row_lx = newE("div", "row_lx", "row row align-items-end")
         div_lx.appendChild(row_lx)
 
-        const col_lx_label = newE("div", "col_lx_label", "col-3 label-wrap text-end")
+        const col_lx_label = newE("div", "col_lx_label", "col-3 label-wrap")
         col_lx_label.textContent = "Entrada principal"
         row_lx.appendChild(col_lx_label)
 
@@ -157,6 +157,59 @@ function make_lexicon() {
             byE("p-" + entrada.key).textContent = input_lx_value.value
         }
 
+        //Mostrar variantes del idioma principal
+        const lx_variantes = global_proyecto["PROYECTO"].Variantes
+        //Si en la configuración del proyecto existen variantes, verificar
+        if (typeof lx_variantes != "undefined") {
+            //Si existen estas variantes dentro del registro, verificar
+            if (entrada.lexeme.lx_lngs.length != 0) {
+                _put_variantes_lx()
+            } else {
+                lx_variantes.forEach(ele => {
+                    const variantes = {
+                        "variante": ele.nombre,
+                        "abreviacion": ele.abreviacion,
+                        "value": "",
+                    }
+                    entrada.lexeme.lx_lngs.push(variantes)
+
+                })
+                Guardar_datos("LEXICON", global_proyecto["LEXICON"])
+                _put_variantes_lx()
+            }
+        }
+
+        function _put_variantes_lx() {
+            entrada.lexeme.lx_lngs.forEach(var_lx => {
+                const global_variante = lx_variantes.filter(ele => ele.abreviacion == var_lx.abreviacion)
+                //Si la entrada dentro de
+                if (global_variante.length != 0) {
+                    const row_lx_var = newE("div", "row_lx_var" + var_lx.abreviacion, "row row align-items-end")
+                    div_lx.appendChild(row_lx_var)
+
+                    const col_lx_var_label = newE("div", "col_lx_var_label" + var_lx.abreviacion, "col-3 label-wrap text-end")
+                    col_lx_var_label.textContent = var_lx.abreviacion
+                    row_lx_var.appendChild(col_lx_var_label)
+
+                    const col_lx_var_value = newE("div", "col_lx_value" + var_lx.abreviacion, "col")
+                    row_lx_var.appendChild(col_lx_var_value)
+
+                    const input_lx_var_value = newE("input", "input_lx_var_value" + var_lx.abreviacion, "input-flat-dicc")
+                    input_lx_var_value.style.color = global_variante[0].style["font-color"]
+                    input_lx_var_value.style.fontSize = global_variante[0].style["font-size"]
+                    input_lx_var_value.type = "text"
+                    col_lx_var_value.appendChild(input_lx_var_value)
+
+                    input_lx_var_value.value = var_lx.value
+                    input_lx_var_value.onchange = () => {
+                        var_lx.value = input_lx_var_value.value
+                        Guardar_datos("LEXICON", global_proyecto["LEXICON"])
+                    }
+                }
+
+            }
+            )
+        }
 
         //
         const bt_del = byE("bt_del")
@@ -165,21 +218,14 @@ function make_lexicon() {
             Guardar_datos("LEXICON", global_proyecto["LEXICON"])
             _make_list_lx()
             panel_lexicon_edit.innerHTML = ""
+            _move_to_entry("ini")
         }
 
         //panel_lexicon_edit.textContent=id
     }
 
     function _add_registro() {
-        const template_entry = {
-            "id": active_lexicon.entries.length - 1,
-            "key": randomKey(20, '12345abcde'),
-            "lexeme": {
-                "lx": "Nueva entrada",
-                "lx_lngs": []
-            }
-        }
-        active_lexicon.entries.push(template_entry)
+        active_lexicon.entries.push(template_entry())
         Guardar_datos("LEXICON", global_proyecto["LEXICON"])
         _make_list_lx()
         _move_to_entry("fin")
@@ -192,7 +238,6 @@ function make_lexicon() {
         if (option == "ini") {
             active_lexicon_id = 0
             _make_lexicon_edit(active_lexicon.entries[0])
-
         } else if (option == "sig") {
             if (active_lexicon_id >= active_lexicon.entries.length - 1) {
                 alert("Último registro")
@@ -218,6 +263,7 @@ function make_lexicon() {
         }
     }
 }
+//Gestiona el cuadro de dialogo de las variantes dialectales de un idioma principal del proyecto
 function config_variantes() {
     const modal_panel_gonfig = byE("modal_panel_gonfig")
     modal_panel_gonfig.innerHTML = ""
@@ -238,15 +284,16 @@ tenga en cuenta que serán visibles en las diferentes categorías como una entra
             "orden": "abcdefghijklmnopqrstuvwxyz",
             "info": "información de la variante",
             "style": {
-                "font-color":"green",
-                "font-size":"12pt",
-                "font-bold":false,
-                "font-italic":false,
+                "font-color": "green",
+                "font-size": "12pt",
+                "font-bold": false,
+                "font-italic": false,
             },
         }
         global_proyecto["PROYECTO"].Variantes.push(lx_variante)
         Guardar_datos("PROYECTO", global_proyecto["PROYECTO"])
         _make_variantes()
+        make_lexicon()
     }
 
     const div_variantes = newE("div", "div_variantes", "m-2")
@@ -339,6 +386,7 @@ tenga en cuenta que serán visibles en las diferentes categorías como una entra
                 Guardar_datos("PROYECTO", global_proyecto["PROYECTO"])
             }
 
+            //////////////////////////////////////
             const row_info = newE("div", "row_info" + id_ref, "row")
             collapse_variante.appendChild(row_info)
 
@@ -358,15 +406,67 @@ tenga en cuenta que serán visibles en las diferentes categorías como una entra
                 Guardar_datos("PROYECTO", global_proyecto["PROYECTO"])
             }
 
-            const btn_eliminar = newE("button", "btn_eliminar" + id_ref, "btn btn-secondary btn-sm mt-2")
-            btn_eliminar.textContent="Eliminar variante"
+            //////////////////////////////////////
+            const row_style = newE("div", "row_style" + id_ref, "row")
+            collapse_variante.appendChild(row_style)
+
+            const col_style_label = newE("div", "col_style_label" + id_ref, "col-3")
+            col_style_label.textContent = "Estilos"
+            row_style.appendChild(col_style_label)
+
+            const col_style_value = newE("div", "col_style_value" + id_ref, "col")
+            row_style.appendChild(col_style_value)
+
+            const bts_styles = newE("div", "bts_styles" + id_ref, "btn-group")
+            bts_styles.role = "group"
+            col_style_value.appendChild(bts_styles)
+
+            const int_color = newE("input", "int_color" + id_ref, "form-control btn-secondary")
+            int_color.style.width = "50px"
+            int_color.style.height = "40px"
+            int_color.type = "color"
+            bts_styles.appendChild(int_color)
+
+            int_color.value = lx_variantes[n].style["font-color"]
+            int_color.onchange = () => {
+                lx_variantes[n].style["font-color"] = int_color.value
+                Guardar_datos("PROYECTO", global_proyecto["PROYECTO"])
+            }
+
+
+            const int_font_size = newE("select", "int_font_size" + id_ref, "btn btn-secondary text-white text-start")
+            int_font_size.style.width = "80px"
+            int_font_size.style.height = "40px"
+            bts_styles.appendChild(int_font_size)
+
+            const f_sizes = ["8pt", "9pt", "10pt", "11pt", "12pt", "13pt", "14pt", "16pt", "18pt", "20pt",]
+
+
+            f_sizes.forEach(item => {
+                const option = newE("option", "option" + item + id_ref, "")
+                option.value = item
+                option.textContent = item
+                int_font_size.appendChild(option)
+            })
+            int_font_size.value = lx_variantes[n].style["font-size"]
+            int_font_size.onchange = () => {
+                lx_variantes[n].style["font-size"] = int_font_size.value
+                Guardar_datos("PROYECTO", global_proyecto["PROYECTO"])
+            }
+
+            //////////////////////////////////////////////////// 
+
+            const btn_eliminar = newE("button", "btn_eliminar" + id_ref, "btn btn-secondary btn-sm mt-5")
+            btn_eliminar.textContent = "Eliminar variante"
             collapse_variante.appendChild(btn_eliminar)
 
-            btn_eliminar.onclick=()=>{
-                global_proyecto["PROYECTO"]["Variantes"]= _delete_registro(lx_variantes, "key", lx_variantes[n].key)
+            btn_eliminar.onclick = () => {
+                global_proyecto["PROYECTO"]["Variantes"] = _delete_registro(lx_variantes, "key", lx_variantes[n].key)
                 Guardar_datos("PROYECTO", global_proyecto["PROYECTO"])
                 _make_variantes()
+                make_lexicon()
             }
+
             id_ref++
         }
     }
@@ -375,4 +475,16 @@ tenga en cuenta que serán visibles en las diferentes categorías como una entra
 function _delete_registro(DATA, CAMPO, ID) {
     const filter = DATA.filter(ele => ele[CAMPO] !== ID)
     return filter
+}
+
+function template_entry() {
+    const template = {
+        "id": active_lexicon.entries.length - 1,
+        "key": randomKey(20, '12345abcde'),
+        "lexeme": {
+            "lx": "Nueva entrada",
+            "lx_lngs": []
+        }
+    }
+    return template
 }

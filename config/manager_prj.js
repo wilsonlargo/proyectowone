@@ -1,6 +1,3 @@
-function openweb() {
-    location.href = "./CONFIG/data-proyect.html"
-}
 function openIni(email) {
     byE("menu_general").hidden = false
     byE("btnRegistrarse").hidden = true

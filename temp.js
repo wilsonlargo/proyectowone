@@ -36,14 +36,32 @@ loadDataBase("1dniplVXfiSFYUFfsT1Ij6cdEoAdtK7dqWf3x4s9eUSw", proyecto).then(obje
     GLOBAL.from_drive = DataPrincipal
 })
 
-let var_id = 0
-lx_variantes.forEach(var_lx => {
-    const row_lx_var = newE("div", "row_lx_var" + var_lx.abreviacion, "row row align-items-end")
-    div_lx.appendChild(row_lx_var)
+entrada.lexeme.lx_lngs.forEach(var_lx => {
+    const global_variante = lx_variantes.filter(ele => ele.abreviacion == var_lx.abreviacion)
+    //Si la entrada dentro de
+    if (global_variante.length != 0) {
+        const row_lx_var = newE("div", "row_lx_var" + var_lx.abreviacion, "row row align-items-end tag-small")
+        div_lx.appendChild(row_lx_var)
 
-    const col_lx_var_label = newE("div", "col_lx_var_label" + var_lx.abreviacion, "col-3 label-wrap text-end")
-    col_lx_var_label.textContent = var_lx.abreviacion
-    row_lx_var.appendChild(col_lx_var_label)
+        const col_lx_var_label = newE("div", "col_lx_var_label" + var_lx.abreviacion, "col-3 label-wrap text-end")
+        col_lx_var_label.textContent = var_lx.abreviacion
+        row_lx_var.appendChild(col_lx_var_label)
+
+        const col_lx_var_value = newE("div", "col_lx_value" + var_lx.abreviacion, "col")
+        row_lx_var.appendChild(col_lx_var_value)
+
+        const input_lx_var_value = newE("input", "input_lx_var_value" + var_lx.abreviacion, "input-flat-dicc")
+        input_lx_var_value.style.color = global_variante[0].style["font-color"]
+        input_lx_var_value.style.fontSize = global_variante[0].style["font-size"]
+        input_lx_var_value.type = "text"
+        col_lx_var_value.appendChild(input_lx_var_value)
+
+        input_lx_var_value.value = var_lx.value
+        input_lx_var_value.onchange = () => {
+            var_lx.value = input_lx_var_value.value
+            Guardar_datos("LEXICON", global_proyecto["LEXICON"])
+        }
+    }
 
 }
 )

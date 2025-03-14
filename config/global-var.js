@@ -108,3 +108,11 @@ function dragElement(element, direction) {
         }
     }
 }
+
+function verificar_datos(DATA){
+    if (typeof DATA == "undefined") {
+        return false
+    } else {
+        return true
+    }
+}

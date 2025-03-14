@@ -60,17 +60,17 @@ function make_lexicon() {
             _move_to_entry("fin")
         }
 
-        const div_dropdown = newE("div", "div_dropdown", "dropdown mt-1")
-        bts_move.appendChild(div_dropdown)
+        const div_dropdown_config = newE("div", "div_dropdown", "dropdown mt-1")
+        bts_move.appendChild(div_dropdown_config)
 
         const btn_menu_config = newE("button", "btn_menu_config", "btn btn-secondary dropdown-toggle")
         btn_menu_config.setAttribute("data-bs-toggle", "dropdown")
         btn_menu_config.type = "button"
         btn_menu_config.textContent = "Configuración"
-        div_dropdown.appendChild(btn_menu_config)
+        div_dropdown_config.appendChild(btn_menu_config)
 
         const ul_menu_config = newE("ul", "ul_menu_config", "dropdown-menu shadow")
-        div_dropdown.appendChild(ul_menu_config)
+        div_dropdown_config.appendChild(ul_menu_config)
 
         const item_variantes = newE("div", "item_variantes", "item-menu")
         item_variantes.textContent = "Variantes de idioma"
@@ -80,13 +80,29 @@ function make_lexicon() {
             config_variantes()
         }
 
-
         ul_menu_config.appendChild(item_variantes)
 
+        /////////////////////////////////////////////
+        const div_dropdown_listas = newE("div", "div_dropdown_listas", "dropdown mt-1")
+        bts_move.appendChild(div_dropdown_listas)
 
+        const btn_menu_listas = newE("button", "btn_menu_config", "btn btn-secondary dropdown-toggle")
+        btn_menu_listas.setAttribute("data-bs-toggle", "dropdown")
+        btn_menu_listas.type = "button"
+        btn_menu_listas.textContent = "Listas"
+        div_dropdown_listas.appendChild(btn_menu_listas)
 
+        const ul_menu_listas = newE("ul", "ul_menu_listas", "dropdown-menu shadow")
+        div_dropdown_listas.appendChild(ul_menu_listas)
 
-
+        const item_morfema = newE("div", "item_morfema", "item-menu")
+        item_morfema.textContent = "Tipos de morfemas"
+        item_morfema.setAttribute("data-bs-toggle", "modal")
+        item_morfema.setAttribute("data-bs-target", "#open_modal")
+        ul_menu_listas.appendChild(item_morfema)
+        item_morfema.onclick = () => {
+            config_morfemas()
+        }
 
     }
     make_spliter_panel()
@@ -141,7 +157,7 @@ function make_lexicon() {
         div_lx.appendChild(row_lx)
 
         const col_lx_label = newE("div", "col_lx_label", "col-3 label-wrap")
-        col_lx_label.textContent = "Entrada principal"
+        col_lx_label.textContent = "Lexema base"
         row_lx.appendChild(col_lx_label)
 
         const col_lx_value = newE("div", "col_lx_value", "col")
@@ -157,6 +173,7 @@ function make_lexicon() {
             byE("p-" + entrada.key).textContent = input_lx_value.value
         }
 
+        /////////////////////////////////////////////////////////////////
         //Mostrar variantes del idioma principal
         const lx_variantes = global_proyecto["PROYECTO"].Variantes
         //Si en la configuración del proyecto existen variantes, verificar
@@ -179,12 +196,71 @@ function make_lexicon() {
             }
         }
 
+        //Gestiona las variantes del proyento dentro de la entrada LX,
         function _put_variantes_lx() {
-            entrada.lexeme.lx_lngs.forEach(var_lx => {
-                const global_variante = lx_variantes.filter(ele => ele.abreviacion == var_lx.abreviacion)
-                //Si la entrada dentro de
-                if (global_variante.length != 0) {
-                    const row_lx_var = newE("div", "row_lx_var" + var_lx.abreviacion, "row row align-items-end")
+            const contar_variantes_inlx = entrada.lexeme.lx_lngs.length
+            let contar_variantes_global;
+            let global_variante;
+            //Verifica si existe una tabla con variatnes globales
+            if (verificar_datos(global_proyecto["PROYECTO"].Variantes) == true) {
+                //Con la tabla de variantes globales hago una lista de variantes por nombre
+                global_variante = global_proyecto["PROYECTO"].Variantes
+                let item_global_var = []
+                global_variante.forEach(ele => {
+                    item_global_var.push(ele.nombre)
+                })
+                let item_inlx_var = []
+
+                for (i in entrada.lexeme.lx_lngs) {
+                    item_inlx_var.push(entrada.lexeme.lx_lngs[i].variante)
+                }
+
+                /////////////////////////////////////////////////////////////
+                //Cuento cuantas variantes hay en lo global y en la entrada
+                contar_variantes_global = global_variante.length
+                //Si hay menos variantes en lo global, debemos eliminar una variante de la entrada lx
+                if (contar_variantes_global < contar_variantes_inlx) {
+                    //Aquí verificamos si las que están en la entrada están también en la global
+                    //Si no está entonces vamso creando una lista alterna para actualizar los datos
+                    let includes_var = []
+                    entrada.lexeme.lx_lngs.forEach(var_lx => {
+                        if (item_global_var.includes(var_lx.variante) == true) {
+                            includes_var.push(var_lx)
+                        }
+                    })
+                    entrada.lexeme.lx_lngs = includes_var
+                    entrada.lexeme.lx_lngs.forEach(var_lx => {
+                        make_variante_inlx(var_lx)
+                    })
+                    Guardar_datos("LEXICON", global_proyecto["LEXICON"])
+                } else if (contar_variantes_global > contar_variantes_inlx) {
+                    global_variante.forEach(ele => {
+
+                        if (item_inlx_var.includes(ele.nombre) == false) {
+                            const variantes = {
+                                "variante": ele.nombre,
+                                "abreviacion": ele.abreviacion,
+                                "value": "",
+                            }
+                            entrada.lexeme.lx_lngs.push(variantes)
+
+                            Guardar_datos("LEXICON", global_proyecto["LEXICON"])
+                        }
+                    })
+                    entrada.lexeme.lx_lngs.forEach(var_lx => {
+                        make_variante_inlx(var_lx)
+                    })
+                } else if (contar_variantes_global == contar_variantes_inlx) {
+                    entrada.lexeme.lx_lngs.forEach(var_lx => {
+                        make_variante_inlx(var_lx)
+                    })
+                }
+            }
+            function make_variante_inlx(var_lx) {
+                //Identifica los datos desde el global
+                const style_filter = global_variante.filter(ele => ele["nombre"] == var_lx.variante)
+                if (style_filter[0].visible == true) {
+                    const row_lx_var = newE("div", "row_lx_var" + var_lx.abreviacion, "row row align-items-end tag-small")
                     div_lx.appendChild(row_lx_var)
 
                     const col_lx_var_label = newE("div", "col_lx_var_label" + var_lx.abreviacion, "col-3 label-wrap text-end")
@@ -195,8 +271,8 @@ function make_lexicon() {
                     row_lx_var.appendChild(col_lx_var_value)
 
                     const input_lx_var_value = newE("input", "input_lx_var_value" + var_lx.abreviacion, "input-flat-dicc")
-                    input_lx_var_value.style.color = global_variante[0].style["font-color"]
-                    input_lx_var_value.style.fontSize = global_variante[0].style["font-size"]
+                    input_lx_var_value.style.color = style_filter[0].style["font-color"]
+                    input_lx_var_value.style.fontSize = style_filter[0].style["font-size"]
                     input_lx_var_value.type = "text"
                     col_lx_var_value.appendChild(input_lx_var_value)
 
@@ -206,22 +282,36 @@ function make_lexicon() {
                         Guardar_datos("LEXICON", global_proyecto["LEXICON"])
                     }
                 }
-
             }
-            )
-        }
 
-        //
-        const bt_del = byE("bt_del")
-        bt_del.onclick = () => {
+
+
+
+        }
+        /////////////////////////////////////////////////////////////////
+        const row_morfema = newE("div", "row_morfema", "row row align-items-end")
+        div_lx.appendChild(row_morfema)
+
+        const col_morfema_label = newE("div", "col_lx_label", "col-3 label-wrap")
+        col_morfema_label.textContent = "Tipo de morfema"
+        row_morfema.appendChild(col_morfema_label)
+
+        const col_morfema_value = newE("div", "col_morfema_value", "col")
+        row_morfema.appendChild(col_morfema_value)
+
+        const input_morfema_value = newE("select", "input_morfema_value", "input-flat-dicc")
+        col_morfema_value.appendChild(input_morfema_value)
+
+
+
+        //////////////////////////////////77
+        byE("bt_del").onclick = () => {
             active_lexicon.entries = _delete_registro(active_lexicon.entries, "key", entrada.key)
             Guardar_datos("LEXICON", global_proyecto["LEXICON"])
             _make_list_lx()
             panel_lexicon_edit.innerHTML = ""
             _move_to_entry("ini")
         }
-
-        //panel_lexicon_edit.textContent=id
     }
 
     function _add_registro() {
@@ -289,11 +379,12 @@ tenga en cuenta que serán visibles en las diferentes categorías como una entra
                 "font-bold": false,
                 "font-italic": false,
             },
+            "visible": true,
         }
         global_proyecto["PROYECTO"].Variantes.push(lx_variante)
         Guardar_datos("PROYECTO", global_proyecto["PROYECTO"])
         _make_variantes()
-        make_lexicon()
+
     }
 
     const div_variantes = newE("div", "div_variantes", "m-2")
@@ -454,6 +545,28 @@ tenga en cuenta que serán visibles en las diferentes categorías como una entra
                 Guardar_datos("PROYECTO", global_proyecto["PROYECTO"])
             }
 
+            //////////////////////////////////////
+            const row_visible = newE("div", "row_style" + id_ref, "row mt-2")
+            collapse_variante.appendChild(row_visible)
+
+            const col_visible_label = newE("div", "col_visible_label" + id_ref, "col-3")
+            col_visible_label.textContent = "Visible"
+            row_visible.appendChild(col_visible_label)
+
+            const col_visible_value = newE("div", "col_visible_value" + id_ref, "col-3")
+            row_visible.appendChild(col_visible_value)
+
+            const int_visible_value = newE("input", "int_visible_value" + id_ref, "form-check-input")
+            int_visible_value.type = "checkbox"
+
+            col_visible_value.appendChild(int_visible_value)
+
+            int_visible_value.checked = lx_variantes[n].visible
+            int_visible_value.onchange = () => {
+                lx_variantes[n].visible = int_visible_value.checked
+                Guardar_datos("PROYECTO", global_proyecto["PROYECTO"])
+            }
+
             //////////////////////////////////////////////////// 
 
             const btn_eliminar = newE("button", "btn_eliminar" + id_ref, "btn btn-secondary btn-sm mt-5")
@@ -464,12 +577,26 @@ tenga en cuenta que serán visibles en las diferentes categorías como una entra
                 global_proyecto["PROYECTO"]["Variantes"] = _delete_registro(lx_variantes, "key", lx_variantes[n].key)
                 Guardar_datos("PROYECTO", global_proyecto["PROYECTO"])
                 _make_variantes()
+            }
+
+            byE("btnAceptar_open").onclick = () => {
                 make_lexicon()
             }
 
             id_ref++
         }
     }
+    function _make_tipo_morfemas() {
+
+    }
+}
+
+function config_morfemas() {
+    const modal_panel_gonfig = byE("modal_panel_gonfig")
+    modal_panel_gonfig.innerHTML = ""
+    const div_detalle = newE("div", "div_detalle", "text-justificado")
+    div_detalle.textContent = `En esta opción usted puede agregar diferentes tipos de clasificación de morfemas.`
+    modal_panel_gonfig.appendChild(div_detalle)
 }
 
 function _delete_registro(DATA, CAMPO, ID) {
@@ -483,7 +610,14 @@ function template_entry() {
         "key": randomKey(20, '12345abcde'),
         "lexeme": {
             "lx": "Nueva entrada",
-            "lx_lngs": []
+            "lx_lngs": [],
+            "visible": true
+        },
+        "clase-morfema": {
+            "tipo": "",
+            "abreviacion": "",
+            "lx_lngs": [],
+            "visible": true
         }
     }
     return template

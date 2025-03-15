@@ -302,6 +302,30 @@ function make_lexicon() {
         const input_morfema_value = newE("select", "input_morfema_value", "input-flat-dicc")
         col_morfema_value.appendChild(input_morfema_value)
 
+        if (verificar_datos(global_proyecto["TABLAS"].MORFEMAS) == true) {
+
+            global_proyecto["TABLAS"].MORFEMAS.forEach(ele => {
+                const option = newE("option", "option" + ele.nombre, "")
+                option.value = ele.nombre
+                option.textContent = ele.nombre
+                input_morfema_value.appendChild(option)
+            })
+
+            const option = newE("option", "optionIndefinido", "")
+            option.value = "Indefinido"
+            option.textContent = "Indefinido"
+            input_morfema_value.appendChild(option)
+        }
+        input_morfema_value.value = entrada["clase-morfema"].tipo
+        input_morfema_value.onchange = () => {
+            
+            const filter_morfema= global_proyecto["TABLAS"].MORFEMAS.filter(ele=>ele.nombre==input_morfema_value.value)
+            entrada["clase-morfema"].tipo = input_morfema_value.value
+            entrada["clase-morfema"].abreviacion=filter_morfema[0].abreviacion          
+            Guardar_datos("LEXICON", global_proyecto["LEXICON"])
+        }
+
+
 
 
         //////////////////////////////////77
@@ -614,11 +638,11 @@ function config_morfemas() {
     }
     const div_clase = newE("div", "div_clase", "m-2")
     modal_panel_gonfig.appendChild(div_clase)
-    if(verificar_datos(global_proyecto["TABLAS"].MORFEMAS)==false){
+    if (verificar_datos(global_proyecto["TABLAS"].MORFEMAS) == false) {
         global_proyecto["TABLAS"]["MORFEMAS"] = template_mofemas()
         Guardar_datos("TABLAS", global_proyecto["TABLAS"])
-        _make_morfemas()      
-    }else{
+        _make_morfemas()
+    } else {
         _make_morfemas()
 
     }
@@ -679,7 +703,7 @@ function config_morfemas() {
                 lx_morfemas[n].abreviacion = int_abb_value.value
                 Guardar_datos("TABLAS", global_proyecto["TABLAS"])
             }
-            
+
             //////////////////////////////////////
             const row_info = newE("div", "row_info" + id_ref, "row")
             collapse_clase.appendChild(row_info)
@@ -711,7 +735,7 @@ function config_morfemas() {
             const col_estruturaIni_value = newE("div", "col_estruturaIni_value" + id_ref, "col")
             row_estrutura.appendChild(col_estruturaIni_value)
 
-           
+
             const int_estruturaIni_value = newE("input", "int_estruturaIni_value" + id_ref, "input-flat-dicc")
             col_estruturaIni_value.appendChild(int_estruturaIni_value)
 
@@ -732,7 +756,7 @@ function config_morfemas() {
             const col_estruturaFin_value = newE("div", "col_estruturaFin_value" + id_ref, "col")
             row_estrutura_fin.appendChild(col_estruturaFin_value)
 
-           
+
             const int_estruturaFin_value = newE("input", "int_estruturaFin_value" + id_ref, "input-flat-dicc")
             col_estruturaFin_value.appendChild(int_estruturaFin_value)
 
@@ -780,8 +804,8 @@ function template_entry() {
             "visible": true
         },
         "clase-morfema": {
-            "tipo": "",
-            "abreviacion": "",
+            "tipo": "Indefinido",
+            "abreviacion": "ind",
             "lx_lngs": [],
             "visible": true
         }
@@ -836,8 +860,8 @@ function template_mofemas() {
         }
     ]
 
-    template.forEach(ele=>{
-        ele.key="morf-" + randomKey(10, '12345abcde')
+    template.forEach(ele => {
+        ele.key = "morf-" + randomKey(10, '12345abcde')
     })
     return template
 }

@@ -157,8 +157,35 @@ function make_lexicon() {
         div_lx.appendChild(row_lx)
 
         const col_lx_label = newE("div", "col_lx_label", "col-3 label-wrap")
-        col_lx_label.textContent = "Lexema base"
         row_lx.appendChild(col_lx_label)
+
+        const row_lx_label = newE("div", "row_lx_label", "row align-items-center")
+        col_lx_label.appendChild(row_lx_label)
+
+        const col_menu_lx = newE("div", "col_menu_lx", "col-auto")
+        row_lx_label.appendChild(col_menu_lx)
+
+        const btn_menu_lx = newE("div", "btn_menu_lx", "bi bi-arrow-down-circle-fill btn-context-lx")
+        btn_menu_lx.setAttribute("data-bs-toggle", "dropdown")
+        col_menu_lx.appendChild(btn_menu_lx)
+
+        const ul_menu_lx = newE("ul", "ul_menu_lx", "dropdown-menu shadow")
+        col_menu_lx.appendChild(ul_menu_lx)
+
+        const item_lx_vertodo_campos = newE("ul", "item_lx_vertodo_campos", "item-menu")
+        item_lx_vertodo_campos.textContent="Ver campos ocultos"
+        ul_menu_lx.appendChild(item_lx_vertodo_campos)
+        item_lx_vertodo_campos.onclick=()=>{
+            entrada["clase-contexto"].visible=true
+            _make_lexicon_edit(entrada)
+        }
+
+
+
+        const col_menu_lx_label = newE("div", "col_menu_lx_label", "col-auto")
+        col_menu_lx_label.textContent = "Lexema base"
+        row_lx_label.appendChild(col_menu_lx_label)
+
 
         const col_lx_value = newE("div", "col_lx_value", "col")
         row_lx.appendChild(col_lx_value)
@@ -303,7 +330,6 @@ function make_lexicon() {
         col_morfema_value.appendChild(input_morfema_value)
 
         if (verificar_datos(global_proyecto["TABLAS"].MORFEMAS) == true) {
-
             global_proyecto["TABLAS"].MORFEMAS.forEach(ele => {
                 const option = newE("option", "option" + ele.nombre, "")
                 option.value = ele.nombre
@@ -318,12 +344,81 @@ function make_lexicon() {
         }
         input_morfema_value.value = entrada["clase-morfema"].tipo
         input_morfema_value.onchange = () => {
-            
-            const filter_morfema= global_proyecto["TABLAS"].MORFEMAS.filter(ele=>ele.nombre==input_morfema_value.value)
+            const filter_morfema = global_proyecto["TABLAS"].MORFEMAS.filter(ele => ele.nombre == input_morfema_value.value)
             entrada["clase-morfema"].tipo = input_morfema_value.value
-            entrada["clase-morfema"].abreviacion=filter_morfema[0].abreviacion          
+            entrada["clase-morfema"].abreviacion = filter_morfema[0].abreviacion
             Guardar_datos("LEXICON", global_proyecto["LEXICON"])
         }
+
+        /////////////////////////////////////////////////////////////////
+        ///Configuración contexto
+        if (entrada["clase-contexto"].visible == true) {
+            const row_contexto = newE("div", "row_contexto", "row row align-items-end mt-2")
+            div_lx.appendChild(row_contexto)
+
+            const col_contexto_label = newE("div", "col_contexto_label", "col-3 label-wrap")
+            row_contexto.appendChild(col_contexto_label)
+
+            const row_contexto_label = newE("div", "row_contexto_label", "row align-items-center")
+            col_contexto_label.appendChild(row_contexto_label)
+
+            const col_menu_contexto = newE("div", "col_menu_contexto", "col-auto")
+            row_contexto_label.appendChild(col_menu_contexto)
+
+            const btn_menu_contexto = newE("div", "btn_menu_contexto", "bi bi-arrow-down-circle-fill btn-context-lx")
+            btn_menu_contexto.setAttribute("data-bs-toggle", "dropdown")
+            col_menu_contexto.appendChild(btn_menu_contexto)
+
+            const ul_menu_contexto = newE("ul", "ul_menu_contexto", "dropdown-menu shadow")
+            col_menu_contexto.appendChild(ul_menu_contexto)
+
+            const div_visible_contexto = newE("div", "div_visible_contexto", "form-check")
+            ul_menu_contexto.appendChild(div_visible_contexto)
+
+            const int_visible_contexto = newE("input", "int_visible_contexto", "form-check-input-check")
+            int_visible_contexto.type = "checkbox"
+            div_visible_contexto.appendChild(int_visible_contexto)
+
+
+            const int_visibleContexto_label = newE("label", "int_visibleContexto_label", "form-check-label ms-2")
+            int_visibleContexto_label.for = "int_visible_contexto"
+            int_visibleContexto_label.textContent = "Visible"
+            div_visible_contexto.appendChild(int_visibleContexto_label)
+
+
+            int_visible_contexto.checked = entrada["clase-contexto"].visible
+            int_visible_contexto.onchange = () => {
+                entrada["clase-contexto"].visible = int_visible_contexto.checked
+                Guardar_datos("LEXICON", global_proyecto["LEXICON"])
+                _make_lexicon_edit(entrada)
+            }
+
+
+            const col_menu_contexto_label = newE("div", "col_menu_contexto_label", "col-auto")
+            col_menu_contexto_label.textContent = "Contexto"
+            row_contexto_label.appendChild(col_menu_contexto_label)
+
+            const col_contexto_value = newE("div", "col_contexto_value", "col")
+            row_contexto.appendChild(col_contexto_value)
+
+            const input_contexto_value = newE("input", "input_contexto_value", "input-flat-dicc fw-bold")
+            col_contexto_value.appendChild(input_contexto_value)
+
+            nput_contexto_value.value = entrada[clase - conttexto].contexto
+            input_contexto_value.onchange = () => {
+                entrada[clase - conttexto].contexto = nput_contexto_value.value
+                Guardar_datos("LEXICON", global_proyecto["LEXICON"])
+            }
+
+        }
+
+
+
+
+
+
+
+
 
 
 
@@ -808,6 +903,20 @@ function template_entry() {
             "abreviacion": "ind",
             "lx_lngs": [],
             "visible": true
+        },
+        "clase-contexto": {
+            "contexto": "",
+            "detalle": "",
+            "visible": true
+        },
+        "clase-varianteOf": {
+            "variantes": []
+        }
+        ,
+        "clase-etimologia": {
+            "forma": "",
+            "visible": true,
+            "estructura": []
         }
     }
     return template

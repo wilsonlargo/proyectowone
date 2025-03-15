@@ -173,3 +173,13 @@ div.content {
 color: #aaa;
 font-size: ppt;
 }
+.btn-context-lx{
+  font-size: 10pt;
+  cursor: pointer;
+  color: #aaa;
+  width: 1px;
+}
+.btn-context-lx:hover{
+  color:#4a235a;
+  font-weight: bold;
+}

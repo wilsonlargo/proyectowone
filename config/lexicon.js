@@ -177,6 +177,8 @@ function make_lexicon() {
         ul_menu_lx.appendChild(item_lx_vertodo_campos)
         item_lx_vertodo_campos.onclick=()=>{
             entrada["clase-contexto"].visible=true
+
+            Guardar_datos("LEXICON", global_proyecto["LEXICON"])
             _make_lexicon_edit(entrada)
         }
 
@@ -404,9 +406,9 @@ function make_lexicon() {
             const input_contexto_value = newE("input", "input_contexto_value", "input-flat-dicc fw-bold")
             col_contexto_value.appendChild(input_contexto_value)
 
-            nput_contexto_value.value = entrada[clase - conttexto].contexto
+            input_contexto_value.value = entrada["clase-contexto"].contexto
             input_contexto_value.onchange = () => {
-                entrada[clase - conttexto].contexto = nput_contexto_value.value
+                entrada["clase-contexto"].contexto = input_contexto_value.value
                 Guardar_datos("LEXICON", global_proyecto["LEXICON"])
             }
 

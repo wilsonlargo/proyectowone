@@ -586,9 +586,6 @@ tenga en cuenta que serán visibles en las diferentes categorías como una entra
             id_ref++
         }
     }
-    function _make_tipo_morfemas() {
-
-    }
 }
 
 function config_morfemas() {
@@ -597,6 +594,175 @@ function config_morfemas() {
     const div_detalle = newE("div", "div_detalle", "text-justificado")
     div_detalle.textContent = `En esta opción usted puede agregar diferentes tipos de clasificación de morfemas.`
     modal_panel_gonfig.appendChild(div_detalle)
+
+    const btn_agregar = newE("button", "btn_agregar", "btn btn-secondary btn-sm mt-2")
+    btn_agregar.textContent = "Agregar tipo de morfema +"
+    modal_panel_gonfig.appendChild(btn_agregar)
+
+    btn_agregar.onclick = () => {
+        const lx_morfema = {
+            "key": "morf-" + randomKey(20, '12345abcde'),
+            "nombre": "Nueva tipo",
+            "abreviacion": "abb",
+            "info": "información de la variante",
+            "estructura": {
+                "ini": "",
+                "fin": "",
+            },
+            "visible": true,
+        }
+    }
+    const div_clase = newE("div", "div_clase", "m-2")
+    modal_panel_gonfig.appendChild(div_clase)
+    if(verificar_datos(global_proyecto["TABLAS"].MORFEMAS)==false){
+        global_proyecto["TABLAS"]["MORFEMAS"] = template_mofemas()
+        Guardar_datos("TABLAS", global_proyecto["TABLAS"])
+        _make_morfemas()      
+    }else{
+        _make_morfemas()
+
+    }
+    function _make_morfemas() {
+        div_clase.innerHTML = ""
+        let lx_morfemas = global_proyecto["TABLAS"]["MORFEMAS"]
+        let id_ref = 0
+        for (i in lx_morfemas) {
+            const item_clase = newE("div", "item_clase" + id_ref, "item-collapse ps-2 text-white")
+            item_clase.textContent = lx_morfemas[id_ref].nombre
+            item_clase.setAttribute("data-bs-toggle", "collapse")
+            item_clase.setAttribute("data-bs-target", "#collapse_clase" + id_ref)
+            div_clase.appendChild(item_clase)
+
+            const collapse_clase = newE("div", "collapse_clase" + id_ref, "collapse p-2")
+            div_clase.appendChild(collapse_clase)
+
+            //////////////////////////////////////
+
+            const row_nombre = newE("div", "row_nombre" + id_ref, "row")
+            collapse_clase.appendChild(row_nombre)
+
+            const col_nombre_label = newE("div", "col_nombre_label" + id_ref, "col-3")
+            col_nombre_label.textContent = "Nombre:"
+            row_nombre.appendChild(col_nombre_label)
+
+            const col_nombre_value = newE("div", "col_nombre_value" + id_ref, "col")
+            row_nombre.appendChild(col_nombre_value)
+
+            const int_nombre_value = newE("input", "int_nombre_value" + id_ref, "input-flat-dicc")
+            col_nombre_value.appendChild(int_nombre_value)
+
+            int_nombre_value.value = lx_morfemas[id_ref].nombre
+
+            let n = id_ref
+            int_nombre_value.onchange = () => {
+                lx_morfemas[n].nombre = int_nombre_value.value
+                item_clase.textContent = int_nombre_value.value
+                Guardar_datos("TABLAS", global_proyecto["TABLAS"])
+            }
+            //////////////////////////////////////
+
+            const row_abb = newE("div", "row_abb" + id_ref, "row")
+            collapse_clase.appendChild(row_abb)
+
+            const col_abb_label = newE("div", "col_abb_label" + id_ref, "col-3")
+            col_abb_label.textContent = "Abreviación:"
+            row_abb.appendChild(col_abb_label)
+
+            const col_abb_value = newE("div", "col_abb_value" + id_ref, "col")
+            row_abb.appendChild(col_abb_value)
+
+            const int_abb_value = newE("input", "int_abb_value" + id_ref, "input-flat-dicc")
+            col_abb_value.appendChild(int_abb_value)
+
+            int_abb_value.value = lx_morfemas[id_ref].abreviacion
+            int_abb_value.onchange = () => {
+                lx_morfemas[n].abreviacion = int_abb_value.value
+                Guardar_datos("TABLAS", global_proyecto["TABLAS"])
+            }
+            
+            //////////////////////////////////////
+            const row_info = newE("div", "row_info" + id_ref, "row")
+            collapse_clase.appendChild(row_info)
+
+            const col_info_label = newE("div", "col_info_label" + id_ref, "col-3")
+            col_info_label.textContent = "Detalle:"
+            row_info.appendChild(col_info_label)
+
+            const col_info_value = newE("div", "col_info_value" + id_ref, "col")
+            row_info.appendChild(col_info_value)
+
+            const int_info_value = newE("textarea", "int_info_value" + id_ref, "input-flat-dicc")
+            col_info_value.appendChild(int_info_value)
+
+            int_info_value.value = lx_morfemas[id_ref].info
+            int_info_value.onchange = () => {
+                lx_morfemas[n].info = int_info_value.value
+                Guardar_datos("TABLAS", global_proyecto["TABLAS"])
+            }
+
+            //////////////////////////////////////
+            const row_estrutura = newE("div", "row_strutura" + id_ref, "row")
+            collapse_clase.appendChild(row_estrutura)
+
+            const col_estruturaIni_label = newE("div", "col_estruturaIni_label" + id_ref, "col-3")
+            col_estruturaIni_label.textContent = "Inicio"
+            row_estrutura.appendChild(col_estruturaIni_label)
+
+            const col_estruturaIni_value = newE("div", "col_estruturaIni_value" + id_ref, "col")
+            row_estrutura.appendChild(col_estruturaIni_value)
+
+           
+            const int_estruturaIni_value = newE("input", "int_estruturaIni_value" + id_ref, "input-flat-dicc")
+            col_estruturaIni_value.appendChild(int_estruturaIni_value)
+
+            int_estruturaIni_value.value = lx_morfemas[n].estructura["ini"]
+            int_estruturaIni_value.onchange = () => {
+                lx_morfemas[n].estructura["ini"] = int_estruturaIni_value.value
+                Guardar_datos("TABLAS", global_proyecto["TABLAS"])
+            }
+
+            //////////////////////////////////////
+            const row_estrutura_fin = newE("div", "row_estrutura_fin" + id_ref, "row")
+            collapse_clase.appendChild(row_estrutura_fin)
+
+            const col_estruturaFin_label = newE("div", "col_estruturaFin_label" + id_ref, "col-3")
+            col_estruturaFin_label.textContent = "Fin"
+            row_estrutura_fin.appendChild(col_estruturaFin_label)
+
+            const col_estruturaFin_value = newE("div", "col_estruturaFin_value" + id_ref, "col")
+            row_estrutura_fin.appendChild(col_estruturaFin_value)
+
+           
+            const int_estruturaFin_value = newE("input", "int_estruturaFin_value" + id_ref, "input-flat-dicc")
+            col_estruturaFin_value.appendChild(int_estruturaFin_value)
+
+            int_estruturaFin_value.value = lx_morfemas[n].estructura["fin"]
+            int_estruturaFin_value.onchange = () => {
+                lx_morfemas[n].estructura["fin"] = int_estruturaFin_value.value
+                Guardar_datos("TABLAS", global_proyecto["TABLAS"])
+            }
+            ///////////////////////////////////////////////////////7
+
+            const btn_eliminar = newE("button", "btn_eliminar" + id_ref, "btn btn-secondary btn-sm mt-5")
+            btn_eliminar.textContent = "Eliminar tipo"
+            collapse_clase.appendChild(btn_eliminar)
+
+            btn_eliminar.onclick = () => {
+                global_proyecto["TABLAS"]["MORFEMAS"] = _delete_registro(lx_morfemas, "key", lx_morfemas[n].key)
+                Guardar_datos("TABLAS", global_proyecto["TABLAS"])
+                _make_morfemas
+            }
+
+            byE("btnAceptar_open").onclick = () => {
+                make_lexicon()
+            }
+
+            id_ref++
+        }
+    }
+
+
+
 }
 
 function _delete_registro(DATA, CAMPO, ID) {
@@ -620,5 +786,58 @@ function template_entry() {
             "visible": true
         }
     }
+    return template
+}
+function template_mofemas() {
+    const template = [
+        {
+            "key": "morf",
+            "nombre": "Tema",
+            "abreviacion": "tem",
+            "info": "Lexema base que contiene la referencia base de significado",
+            "estructura": {
+                "ini": "",
+                "fin": "",
+            },
+            "visible": true,
+        },
+        {
+            "key": "morf",
+            "nombre": "Raíz",
+            "abreviacion": "rad",
+            "info": "Lexema central sin ningún tipo de afijos",
+            "estructura": {
+                "ini": "-",
+                "fin": "-",
+            },
+            "visible": true,
+        },
+        {
+            "key": "morf",
+            "nombre": "Prefíjo",
+            "abreviacion": "pre",
+            "info": "Lexema que se ubíca al inicio de un radical",
+            "estructura": {
+                "ini": "-",
+                "fin": "",
+            },
+            "visible": true,
+        },
+        {
+            "key": "morf",
+            "nombre": "Sufíjo",
+            "abreviacion": "pre",
+            "info": "Lexema que se ubíca al final de un radical",
+            "estructura": {
+                "ini": "",
+                "fin": "-",
+            },
+            "visible": true,
+        }
+    ]
+
+    template.forEach(ele=>{
+        ele.key="morf-" + randomKey(10, '12345abcde')
+    })
     return template
 }

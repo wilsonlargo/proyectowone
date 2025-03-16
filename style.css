@@ -183,3 +183,8 @@ font-size: ppt;
   color:#4a235a;
   font-weight: bold;
 }
+
+.div-fluid {
+  display: flex;
+  justify-content:left;
+}

@@ -104,6 +104,15 @@ function make_lexicon() {
             config_morfemas()
         }
 
+        const item_contexto = newE("div", "item_contexto", "item-menu")
+        item_contexto.textContent = "Tipos de contexto"
+        item_contexto.setAttribute("data-bs-toggle", "modal")
+        item_contexto.setAttribute("data-bs-target", "#open_modal")
+        ul_menu_listas.appendChild(item_contexto)
+        item_contexto.onclick = () => {
+            config_contexto()
+        }
+
     }
     make_spliter_panel()
     function make_spliter_panel() {
@@ -173,10 +182,10 @@ function make_lexicon() {
         col_menu_lx.appendChild(ul_menu_lx)
 
         const item_lx_vertodo_campos = newE("ul", "item_lx_vertodo_campos", "item-menu")
-        item_lx_vertodo_campos.textContent="Ver campos ocultos"
+        item_lx_vertodo_campos.textContent = "Ver campos ocultos"
         ul_menu_lx.appendChild(item_lx_vertodo_campos)
-        item_lx_vertodo_campos.onclick=()=>{
-            entrada["clase-contexto"].visible=true
+        item_lx_vertodo_campos.onclick = () => {
+            entrada["clase-contexto"].visible = true
 
             Guardar_datos("LEXICON", global_proyecto["LEXICON"])
             _make_lexicon_edit(entrada)
@@ -403,13 +412,58 @@ function make_lexicon() {
             const col_contexto_value = newE("div", "col_contexto_value", "col")
             row_contexto.appendChild(col_contexto_value)
 
-            const input_contexto_value = newE("input", "input_contexto_value", "input-flat-dicc fw-bold")
-            col_contexto_value.appendChild(input_contexto_value)
+            const row_contexto_value = newE("div", "row_contexto_value", "row align-items-center")
+            col_contexto_value.appendChild(row_contexto_value)
 
-            input_contexto_value.value = entrada["clase-contexto"].contexto
-            input_contexto_value.onchange = () => {
-                entrada["clase-contexto"].contexto = input_contexto_value.value
-                Guardar_datos("LEXICON", global_proyecto["LEXICON"])
+            const col_contexto_values = newE("div", "div_contexto_values", "col div-fluid")
+
+            row_contexto_value.appendChild(col_contexto_values)
+
+            const col_contexto_items = newE("div", "col_contexto_items", "col-auto")
+            row_contexto_value.appendChild(col_contexto_items)
+
+            const btn_menu_contexto_items = newE("button", "btn_menu_contexto_items", "btn btn-light btn-sm fw-bold")
+            btn_menu_contexto_items.type = "button"
+            btn_menu_contexto_items.textContent = "..."
+            btn_menu_contexto_items.setAttribute("data-bs-toggle", "dropdown")
+            col_contexto_items.appendChild(btn_menu_contexto_items)
+
+            const ul_menu_contexto_items = newE("ul", "ul_menu_contexto_items", "dropdown-menu shadow")
+            col_contexto_items.appendChild(ul_menu_contexto_items)
+
+            //Verifico si hay una tabla con esa información
+            if (verificar_datos(global_proyecto["TABLAS"].CONTEXTOS) == true) {
+                global_proyecto["TABLAS"].CONTEXTOS.forEach(ele => {
+                    const item_contexto = newE("div", "item_contexto" + ele.nombre, "item-menu m-1")
+                    item_contexto.textContent = ele.nombre + " " + ele.contexto
+                    ul_menu_contexto_items.appendChild(item_contexto)
+                    item_contexto.onclick = () => {
+                        entrada["clase-contexto"].contextos.push(ele)
+                        Guardar_datos("LEXICON", global_proyecto["LEXICON"])
+                        _make_contextos_items()
+                    }
+                })
+                _make_contextos_items()
+                function _make_contextos_items(){
+                    col_contexto_values.innerHTML=""
+                    entrada["clase-contexto"].contextos.forEach(contexto=>{
+                        const div_contexto = newE("div", "div_contexto" + contexto.nombre, "div-fluid me-4")
+                        div_contexto.style.width = "50px"
+                        div_contexto.textContent = contexto.contexto
+
+                        const div_borrar = newE("div", "div_borrar" + contexto.nombre, "ms-2 bi bi-x-circle-fill btn-context-lx")
+                        div_contexto.appendChild(div_borrar)
+                        col_contexto_values.appendChild(div_contexto)
+
+                        div_borrar.onclick=()=>{
+                            const filter_borrar=entrada["clase-contexto"].contextos.filter(e=>e.key!=contexto.key)
+                            entrada["clase-contexto"].contextos=filter_borrar
+                            Guardar_datos("LEXICON", global_proyecto["LEXICON"])
+                            _make_contextos_items()
+                        }
+
+                    })
+                }
             }
 
         }
@@ -732,6 +786,9 @@ function config_morfemas() {
             },
             "visible": true,
         }
+        global_proyecto["TABLAS"].MORFEMAS.push(lx_morfema)
+        Guardar_datos("TABLAS", global_proyecto["TABLAS"])
+        _make_morfemas()
     }
     const div_clase = newE("div", "div_clase", "m-2")
     modal_panel_gonfig.appendChild(div_clase)
@@ -871,7 +928,140 @@ function config_morfemas() {
             btn_eliminar.onclick = () => {
                 global_proyecto["TABLAS"]["MORFEMAS"] = _delete_registro(lx_morfemas, "key", lx_morfemas[n].key)
                 Guardar_datos("TABLAS", global_proyecto["TABLAS"])
-                _make_morfemas
+                _make_morfemas()
+            }
+
+            byE("btnAceptar_open").onclick = () => {
+                make_lexicon()
+            }
+
+            id_ref++
+        }
+    }
+
+}
+
+function config_contexto() {
+    const modal_panel_gonfig = byE("modal_panel_gonfig")
+    modal_panel_gonfig.innerHTML = ""
+    const div_detalle = newE("div", "div_detalle", "text-justificado")
+    div_detalle.textContent = `En esta sección puede agregar contextos o condiciones de aparición de morfemas. 
+    Debe estructurar el entorno según la regla que usted indíque`
+    modal_panel_gonfig.appendChild(div_detalle)
+
+    const btn_agregar = newE("button", "btn_agregar", "btn btn-secondary btn-sm mt-2")
+    btn_agregar.textContent = "Agregar contexto +"
+    modal_panel_gonfig.appendChild(btn_agregar)
+
+    btn_agregar.onclick = () => {
+        const lx_contexto = {
+            "key": "cont-" + randomKey(10, '12345abcde'),
+            "nombre": "Nuevo contexto",
+            "contexto": "/",
+            "info": "Describir contexto",
+        }
+        global_proyecto["TABLAS"].CONTEXTOS.push(lx_contexto)
+        Guardar_datos("TABLAS", global_proyecto["TABLAS"])
+        _make_contexto()
+    }
+    const div_clase = newE("div", "div_clase", "m-2")
+    modal_panel_gonfig.appendChild(div_clase)
+    if (verificar_datos(global_proyecto["TABLAS"].CONTEXTOS) == false) {
+        global_proyecto["TABLAS"]["CONTEXTOS"] = []
+        global_proyecto["TABLAS"]["CONTEXTOS"] = template_contexto()
+        Guardar_datos("TABLAS", global_proyecto["TABLAS"])
+        _make_contexto()
+    } else {
+
+        _make_contexto()
+
+    }
+    function _make_contexto() {
+        div_clase.innerHTML = ""
+        let lx_contextos = global_proyecto["TABLAS"]["CONTEXTOS"]
+        let id_ref = 0
+        for (i in lx_contextos) {
+            const item_clase = newE("div", "item_clase" + id_ref, "item-collapse ps-2 text-white")
+            item_clase.textContent = lx_contextos[id_ref].nombre
+            item_clase.setAttribute("data-bs-toggle", "collapse")
+            item_clase.setAttribute("data-bs-target", "#collapse_clase" + id_ref)
+            div_clase.appendChild(item_clase)
+
+            const collapse_clase = newE("div", "collapse_clase" + id_ref, "collapse p-2")
+            div_clase.appendChild(collapse_clase)
+
+            //////////////////////////////////////
+
+            const row_nombre = newE("div", "row_nombre" + id_ref, "row")
+            collapse_clase.appendChild(row_nombre)
+
+            const col_nombre_label = newE("div", "col_nombre_label" + id_ref, "col-3")
+            col_nombre_label.textContent = "Nombre:"
+            row_nombre.appendChild(col_nombre_label)
+
+            const col_nombre_value = newE("div", "col_nombre_value" + id_ref, "col")
+            row_nombre.appendChild(col_nombre_value)
+
+            const int_nombre_value = newE("input", "int_nombre_value" + id_ref, "input-flat-dicc")
+            col_nombre_value.appendChild(int_nombre_value)
+
+            int_nombre_value.value = lx_contextos[id_ref].nombre
+
+            let n = id_ref
+            int_nombre_value.onchange = () => {
+                lx_contextos[n].nombre = int_nombre_value.value
+                item_clase.textContent = int_nombre_value.value
+                Guardar_datos("TABLAS", global_proyecto["TABLAS"])
+            }
+            //////////////////////////////////////
+
+            const row_abb = newE("div", "row_abb" + id_ref, "row")
+            collapse_clase.appendChild(row_abb)
+
+            const col_abb_label = newE("div", "col_abb_label" + id_ref, "col-3")
+            col_abb_label.textContent = "Contexto:"
+            row_abb.appendChild(col_abb_label)
+
+            const col_abb_value = newE("div", "col_abb_value" + id_ref, "col")
+            row_abb.appendChild(col_abb_value)
+
+            const int_abb_value = newE("input", "int_abb_value" + id_ref, "input-flat-dicc")
+            col_abb_value.appendChild(int_abb_value)
+
+            int_abb_value.value = lx_contextos[id_ref].contexto
+            int_abb_value.onchange = () => {
+                lx_contextos[n].contexto = int_abb_value.value
+                Guardar_datos("TABLAS", global_proyecto["TABLAS"])
+            }
+
+            //////////////////////////////////////
+            const row_info = newE("div", "row_info" + id_ref, "row")
+            collapse_clase.appendChild(row_info)
+
+            const col_info_label = newE("div", "col_info_label" + id_ref, "col-3")
+            col_info_label.textContent = "Detalle:"
+            row_info.appendChild(col_info_label)
+
+            const col_info_value = newE("div", "col_info_value" + id_ref, "col")
+            row_info.appendChild(col_info_value)
+
+            const int_info_value = newE("textarea", "int_info_value" + id_ref, "input-flat-dicc")
+            col_info_value.appendChild(int_info_value)
+
+            int_info_value.value = lx_contextos[id_ref].info
+            int_info_value.onchange = () => {
+                lx_contextos[n].info = int_info_value.value
+                Guardar_datos("TABLAS", global_proyecto["TABLAS"])
+            }
+
+            const btn_eliminar = newE("button", "btn_eliminar" + id_ref, "btn btn-secondary btn-sm mt-5")
+            btn_eliminar.textContent = "Eliminar contexto"
+            collapse_clase.appendChild(btn_eliminar)
+
+            btn_eliminar.onclick = () => {
+                global_proyecto["TABLAS"]["CONTEXTOS"] = _delete_registro(lx_contextos, "key", lx_contextos[n].key)
+                Guardar_datos("TABLAS", global_proyecto["TABLAS"])
+                _make_contexto()
             }
 
             byE("btnAceptar_open").onclick = () => {
@@ -907,8 +1097,7 @@ function template_entry() {
             "visible": true
         },
         "clase-contexto": {
-            "contexto": "",
-            "detalle": "",
+            "contextos": [],
             "visible": true
         },
         "clase-varianteOf": {
@@ -973,6 +1162,39 @@ function template_mofemas() {
 
     template.forEach(ele => {
         ele.key = "morf-" + randomKey(10, '12345abcde')
+    })
+    return template
+}
+function template_contexto() {
+    const template = [
+        {
+            "key": "cont",
+            "nombre": "Después de vocal",
+            "contexto": "/[V]_",
+            "info": "En posterior adyacencia de una vocal",
+        },
+        {
+            "key": "cont",
+            "nombre": "Después de consonante",
+            "contexto": "/[C]_",
+            "info": "En posterior adyacencia de una consonante",
+        },
+        {
+            "key": "cont",
+            "nombre": "Antes de vocal",
+            "contexto": "/_[V]",
+            "info": "En anterior adyacencia de una vocal",
+        },
+        {
+            "key": "cont",
+            "nombre": "Antes de consonante",
+            "contexto": "/_[C]",
+            "info": "En anterior adyacencia de una consonante",
+        },
+    ]
+
+    template.forEach(ele => {
+        ele.key = "cont-" + randomKey(10, '12345abcde')
     })
     return template
 }

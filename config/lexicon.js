@@ -82,6 +82,16 @@ function make_lexicon() {
 
         ul_menu_config.appendChild(item_variantes)
 
+        const item_idioma_analisis = newE("div", "item_idioma_analisis", "item-menu")
+        item_idioma_analisis.textContent = "Idiomas de análisis"
+        item_idioma_analisis.setAttribute("data-bs-toggle", "modal")
+        item_idioma_analisis.setAttribute("data-bs-target", "#open_modal")
+        item_idioma_analisis.onclick = () => {
+            config_idioma_analisis()
+        }
+        ul_menu_config.appendChild(item_idioma_analisis)
+
+
         /////////////////////////////////////////////
         const div_dropdown_listas = newE("div", "div_dropdown_listas", "dropdown mt-1")
         bts_move.appendChild(div_dropdown_listas)
@@ -186,12 +196,12 @@ function make_lexicon() {
         ul_menu_lx.appendChild(item_lx_vertodo_campos)
         item_lx_vertodo_campos.onclick = () => {
             entrada["clase-contexto"].visible = true
+            entrada["clase-varianteOf"].visible = true
+
 
             Guardar_datos("LEXICON", global_proyecto["LEXICON"])
             _make_lexicon_edit(entrada)
         }
-
-
 
         const col_menu_lx_label = newE("div", "col_menu_lx_label", "col-auto")
         col_menu_lx_label.textContent = "Lexema base"
@@ -321,10 +331,6 @@ function make_lexicon() {
                     }
                 }
             }
-
-
-
-
         }
         /////////////////////////////////////////////////////////////////
         const row_morfema = newE("div", "row_morfema", "row row align-items-end")
@@ -362,36 +368,36 @@ function make_lexicon() {
         }
 
         /////////////////////////////////////////////////////////////////
-        ///Configuración contexto
+        ///Configuración contextos de aparición
         if (entrada["clase-contexto"].visible == true) {
-            const row_contexto = newE("div", "row_contexto", "row row align-items-end mt-2")
+            const row_contexto = newE("div", randomKey(10, '12345abcde'), "row row align-items-end mt-2")
             div_lx.appendChild(row_contexto)
 
-            const col_contexto_label = newE("div", "col_contexto_label", "col-3 label-wrap")
+            const col_contexto_label = newE("div", randomKey(10, '12345abcde'), "col-3 label-wrap")
             row_contexto.appendChild(col_contexto_label)
 
-            const row_contexto_label = newE("div", "row_contexto_label", "row align-items-center")
+            const row_contexto_label = newE("div", randomKey(10, '12345abcde'), "row align-items-center")
             col_contexto_label.appendChild(row_contexto_label)
 
-            const col_menu_contexto = newE("div", "col_menu_contexto", "col-auto")
+            const col_menu_contexto = newE("div", randomKey(10, '12345abcde'), "col-auto")
             row_contexto_label.appendChild(col_menu_contexto)
 
-            const btn_menu_contexto = newE("div", "btn_menu_contexto", "bi bi-arrow-down-circle-fill btn-context-lx")
+            const btn_menu_contexto = newE("div", randomKey(10, '12345abcde'), "bi bi-arrow-down-circle-fill btn-context-lx")
             btn_menu_contexto.setAttribute("data-bs-toggle", "dropdown")
             col_menu_contexto.appendChild(btn_menu_contexto)
 
-            const ul_menu_contexto = newE("ul", "ul_menu_contexto", "dropdown-menu shadow")
+            const ul_menu_contexto = newE("ul", randomKey(10, '12345abcde'), "dropdown-menu shadow")
             col_menu_contexto.appendChild(ul_menu_contexto)
 
-            const div_visible_contexto = newE("div", "div_visible_contexto", "form-check")
+            const div_visible_contexto = newE("div", randomKey(10, '12345abcde'), "form-check")
             ul_menu_contexto.appendChild(div_visible_contexto)
 
-            const int_visible_contexto = newE("input", "int_visible_contexto", "form-check-input-check")
+            const int_visible_contexto = newE("input", randomKey(10, '12345abcde'), "form-check-input-check")
             int_visible_contexto.type = "checkbox"
             div_visible_contexto.appendChild(int_visible_contexto)
 
 
-            const int_visibleContexto_label = newE("label", "int_visibleContexto_label", "form-check-label ms-2")
+            const int_visibleContexto_label = newE("label", randomKey(10, '12345abcde'), "form-check-label ms-2")
             int_visibleContexto_label.for = "int_visible_contexto"
             int_visibleContexto_label.textContent = "Visible"
             div_visible_contexto.appendChild(int_visibleContexto_label)
@@ -405,36 +411,36 @@ function make_lexicon() {
             }
 
 
-            const col_menu_contexto_label = newE("div", "col_menu_contexto_label", "col-auto")
+            const col_menu_contexto_label = newE("div", randomKey(10, '12345abcde'), "col-auto")
             col_menu_contexto_label.textContent = "Contexto"
             row_contexto_label.appendChild(col_menu_contexto_label)
 
-            const col_contexto_value = newE("div", "col_contexto_value", "col")
+            const col_contexto_value = newE("div", randomKey(10, '12345abcde'), "col")
             row_contexto.appendChild(col_contexto_value)
 
-            const row_contexto_value = newE("div", "row_contexto_value", "row align-items-center")
+            const row_contexto_value = newE("div", randomKey(10, '12345abcde'), "row align-items-center")
             col_contexto_value.appendChild(row_contexto_value)
 
-            const col_contexto_values = newE("div", "div_contexto_values", "col div-fluid")
+            const col_contexto_values = newE("div", randomKey(10, '12345abcde'), "col div-fluid")
 
             row_contexto_value.appendChild(col_contexto_values)
 
-            const col_contexto_items = newE("div", "col_contexto_items", "col-auto")
+            const col_contexto_items = newE("div", randomKey(10, '12345abcde'), "col-auto")
             row_contexto_value.appendChild(col_contexto_items)
 
-            const btn_menu_contexto_items = newE("button", "btn_menu_contexto_items", "btn btn-light btn-sm fw-bold")
+            const btn_menu_contexto_items = newE("button", randomKey(10, '12345abcde'), "btn btn-light btn-sm fw-bold")
             btn_menu_contexto_items.type = "button"
             btn_menu_contexto_items.textContent = "..."
             btn_menu_contexto_items.setAttribute("data-bs-toggle", "dropdown")
             col_contexto_items.appendChild(btn_menu_contexto_items)
 
-            const ul_menu_contexto_items = newE("ul", "ul_menu_contexto_items", "dropdown-menu shadow")
+            const ul_menu_contexto_items = newE("ul", randomKey(10, '12345abcde'), "dropdown-menu shadow")
             col_contexto_items.appendChild(ul_menu_contexto_items)
 
             //Verifico si hay una tabla con esa información
             if (verificar_datos(global_proyecto["TABLAS"].CONTEXTOS) == true) {
                 global_proyecto["TABLAS"].CONTEXTOS.forEach(ele => {
-                    const item_contexto = newE("div", "item_contexto" + ele.nombre, "item-menu m-1")
+                    const item_contexto = newE("div", randomKey(10, '12345abcde'), "item-menu m-1")
                     item_contexto.textContent = ele.nombre + " " + ele.contexto
                     ul_menu_contexto_items.appendChild(item_contexto)
                     item_contexto.onclick = () => {
@@ -444,9 +450,9 @@ function make_lexicon() {
                     }
                 })
                 _make_contextos_items()
-                function _make_contextos_items(){
-                    col_contexto_values.innerHTML=""
-                    entrada["clase-contexto"].contextos.forEach(contexto=>{
+                function _make_contextos_items() {
+                    col_contexto_values.innerHTML = ""
+                    entrada["clase-contexto"].contextos.forEach(contexto => {
                         const div_contexto = newE("div", "div_contexto" + contexto.nombre, "div-fluid me-4")
                         div_contexto.style.width = "50px"
                         div_contexto.textContent = contexto.contexto
@@ -455,9 +461,9 @@ function make_lexicon() {
                         div_contexto.appendChild(div_borrar)
                         col_contexto_values.appendChild(div_contexto)
 
-                        div_borrar.onclick=()=>{
-                            const filter_borrar=entrada["clase-contexto"].contextos.filter(e=>e.key!=contexto.key)
-                            entrada["clase-contexto"].contextos=filter_borrar
+                        div_borrar.onclick = () => {
+                            const filter_borrar = entrada["clase-contexto"].contextos.filter(e => e.key != contexto.key)
+                            entrada["clase-contexto"].contextos = filter_borrar
                             Guardar_datos("LEXICON", global_proyecto["LEXICON"])
                             _make_contextos_items()
                         }
@@ -468,7 +474,451 @@ function make_lexicon() {
 
         }
 
+        if (entrada["clase-varianteOf"].visible == true) {
+            const row_varianteOf = newE("div", randomKey(10, '12345abcde'), "row row align-items-end mt-2")
+            div_lx.appendChild(row_varianteOf)
 
+            const col_row_varianteOf_label = newE("div", randomKey(10, '12345abcde'), "col-3 label-wrap")
+            row_varianteOf.appendChild(col_row_varianteOf_label)
+
+            const row_varianteOf_label = newE("div", randomKey(10, '12345abcde'), "row align-items-center")
+            col_row_varianteOf_label.appendChild(row_varianteOf_label)
+
+            const col_menu_varianteOf = newE("div", randomKey(10, '12345abcde'), "col-auto")
+            row_varianteOf_label.appendChild(col_menu_varianteOf)
+
+            const btn_menu_varianteOf = newE("div", randomKey(10, '12345abcde'), "bi bi-arrow-down-circle-fill btn-context-lx")
+            btn_menu_varianteOf.setAttribute("data-bs-toggle", "dropdown")
+            col_menu_varianteOf.appendChild(btn_menu_varianteOf)
+
+            const ul_menu_varianteOf = newE("ul", randomKey(10, '12345abcde'), "dropdown-menu shadow")
+            col_menu_varianteOf.appendChild(ul_menu_varianteOf)
+
+            const div_visible_varianteOf = newE("div", randomKey(10, '12345abcde'), "form-check")
+            ul_menu_varianteOf.appendChild(div_visible_varianteOf)
+
+            const int_visible_varianteOf = newE("input", randomKey(10, '12345abcde'), "form-check-input-check")
+            int_visible_varianteOf.type = "checkbox"
+            div_visible_varianteOf.appendChild(int_visible_varianteOf)
+
+
+            const int_visibleVarianteOf_label = newE("label", randomKey(10, '12345abcde'), "form-check-label ms-2")
+            int_visibleVarianteOf_label.for = "int_visible_varianteOf"
+            int_visibleVarianteOf_label.textContent = "Visible"
+            div_visible_varianteOf.appendChild(int_visibleVarianteOf_label)
+
+
+            int_visible_varianteOf.checked = entrada["clase-varianteOf"].visible
+            int_visible_varianteOf.onchange = () => {
+                entrada["clase-varianteOf"].visible = int_visible_varianteOf.checked
+                Guardar_datos("LEXICON", global_proyecto["LEXICON"])
+                _make_lexicon_edit(entrada)
+            }
+
+            const col_menu_varianteOf_label = newE("div", randomKey(10, '12345abcde'), "col-auto")
+            col_menu_varianteOf_label.textContent = "Variante de"
+            row_varianteOf_label.appendChild(col_menu_varianteOf_label)
+
+            const col_variateOf_value = newE("div", randomKey(10, '12345abcde'), "col")
+            row_varianteOf.appendChild(col_variateOf_value)
+
+            const row_varianteOf_value = newE("div", randomKey(10, '12345abcde'), "row align-items-center")
+            col_variateOf_value.appendChild(row_varianteOf_value)
+
+            const col_variateOf_values = newE("div", randomKey(10, '12345abcde'), "col div-fluid")
+            row_varianteOf_value.appendChild(col_variateOf_values)
+
+            const col_variateOf_items = newE("div", randomKey(10, '12345abcde'), "col-auto")
+            row_varianteOf_value.appendChild(col_variateOf_items)
+
+            const btn_menu_variateOf_items = newE("button", randomKey(10, '12345abcde'), "btn btn-light btn-sm fw-bold")
+            btn_menu_variateOf_items.type = "button"
+            btn_menu_variateOf_items.textContent = "..."
+            btn_menu_variateOf_items.setAttribute("data-bs-toggle", "modal")
+            btn_menu_variateOf_items.setAttribute("data-bs-target", "#open_modal")
+            col_variateOf_items.appendChild(btn_menu_variateOf_items)
+
+            byE("config_titulo").textContent = "Buscar relación"
+            const modal_panel_gonfig = byE("modal_panel_gonfig")
+            modal_panel_gonfig.innerHTML = ""
+            const sm_buscar = newE("small", randomKey(10, '12345abcde'), "")
+            sm_buscar.textContent = "Buscar palabra"
+            modal_panel_gonfig.appendChild(sm_buscar)
+
+            //Creamos una casilla de búsqueda
+            const int_buscar = newE("input", randomKey(10, '12345abcde'), "form-control")
+            modal_panel_gonfig.appendChild(int_buscar)
+
+            //Creamos una lista de idiomas
+            const sm_idiomas = newE("small", randomKey(10, '12345abcde'), "")
+            sm_idiomas.textContent = "Idioma de búsqueda"
+            modal_panel_gonfig.appendChild(sm_idiomas)
+
+            const sel_buscar = newE("select", randomKey(10, '12345abcde'), "form-control")
+            modal_panel_gonfig.appendChild(sel_buscar)
+
+            //Primero creo el idioma principal
+            const Op_principal = newE("option", randomKey(10, '12345abcde'), "")
+            Op_principal.value = "lexeme_lx"
+
+            const lngP = global_proyecto["PROYECTO"]
+            Op_principal.textContent = lngP.idioma + " (" + lngP.cod_idioma + ")"
+            sel_buscar.appendChild(Op_principal)
+
+            //Segundo busco idiomas de análisis
+            const lngS = global_proyecto["PROYECTO"].Lngtraducion
+            lngS.forEach(l => {
+                const Op_secundaria = newE("option", randomKey(10, '12345abcde'), "")
+                Op_secundaria.value = "sentidos_" + l.abreviacion
+                Op_secundaria.textContent = l.nombre + " (" + l.abreviacion + ")"
+                sel_buscar.appendChild(Op_secundaria)
+            })
+
+            //Creamos un contenedor de listas
+            const div_resultados = newE("div", randomKey(10, '12345abcde'), "menu-group-scroll")
+            modal_panel_gonfig.appendChild(div_resultados)
+
+            //Creamos una lista de idiomas
+            const sm_resultado = newE("small", randomKey(10, '12345abcde'), "")
+            sm_resultado.textContent = "Selección"
+            modal_panel_gonfig.appendChild(sm_resultado)
+
+            //Creamos un contenedor de listas
+            const sel_resultados = newE("select", randomKey(10, '12345abcde'), "form-coltrol")
+            sel_resultados.style.width = "100%"
+            modal_panel_gonfig.appendChild(sel_resultados)
+
+            //Creamos una lista de idiomas
+            const sm_tipo = newE("small", randomKey(10, '12345abcde'), "")
+            sm_tipo.textContent = "Tipo de variación"
+            modal_panel_gonfig.appendChild(sm_tipo)
+
+            //Creamos un contenedor de listas
+            const sel_tipos = newE("select", randomKey(10, '12345abcde'), "form-coltrol")
+            sel_tipos.style.width = "100%"
+            modal_panel_gonfig.appendChild(sel_tipos)
+
+            const tipos = ["Dialectal", "Ortográfica", "Morfológica"]
+            tipos.forEach(t => {
+                const option = newE("option", randomKey(10, '12345abcde'), "")
+                option.value = t
+                option.textContent = t
+                sel_tipos.appendChild(option)
+            })
+
+
+            int_buscar.oninput = () => {
+                div_resultados.innerHTML = ""
+                const fuente = sel_buscar.value.split("_")
+                if (fuente[0] == "lexeme") {
+                    //Leo todas las entradas y su lexema
+                    global_proyecto["LEXICON"].entries.forEach(lx => {
+                        let cadena_ini = lx.lexeme.lx.toLowerCase()
+                        if (cadena_ini.startsWith(int_buscar.value.toLowerCase()) == true
+                            && int_buscar.value != "") {
+                            const item = newE("div", randomKey(10, '12345abcde'), "item-menu")
+                            //Contrar traducciones para colocar en la lista
+                            let glosas = ""
+                            lx["clase-sn"].sentidos.forEach(sn => {
+                                glosas = glosas + ", " + sn.gn[0].texto
+
+                            })
+                            item.innerHTML = `<b>${lx.lexeme.lx}</b> ${glosas}`
+                            div_resultados.appendChild(item)
+                            item.onclick = () => {
+                                sel_resultados.innerHTML = ""
+                                const res = newE("option", randomKey(10, '12345abcde'), "")
+                                res.value = lx.lexeme.lx + "_" + lx.key
+                                res.textContent = lx.lexeme.lx
+                                sel_resultados.appendChild(res)
+                                sel_resultados.value = lx.lexeme.lx + "_" + lx.key
+                            }
+                        }
+                    })
+                } else if (fuente[0] == "sentidos") {
+                    //Leo todas las entradas y su sentido
+                    global_proyecto["LEXICON"].entries.forEach(lx => {
+                        lx["clase-sn"].sentidos.forEach(sn => {
+                            sn.gn.forEach(l => {
+                                if (l.abreviacion == fuente[1]) {
+                                    let cadena_ini = l.texto.toLowerCase()
+                                    if (cadena_ini.startsWith(int_buscar.value.toLowerCase()) == true
+                                        && int_buscar.value != "") {
+                                        const item = newE("div", randomKey(10, '12345abcde'), "item-menu")
+                                        item.textContent = l.texto
+                                        item.innerHTML = `<b>${l.texto}</b> ${lx.lexeme.lx}`
+                                        div_resultados.appendChild(item)
+                                        item.onclick = () => {
+                                            sel_resultados.innerHTML = ""
+                                            const res = newE("option", randomKey(10, '12345abcde'), "")
+                                            res.value = lx.lexeme.lx + "_" + lx.key
+                                            res.textContent = lx.lexeme.lx
+                                            sel_resultados.appendChild(res)
+                                            sel_resultados.value = lx.lexeme.lx + "_" + lx.key
+                                        }
+                                    }
+                                }
+                            })
+
+                        })
+
+                    })
+                }
+
+            }
+
+            byE("btnAceptar_open").onclick = () => {
+                const resultado = sel_resultados.value.split("_")
+                const variacion = {
+                    "key": randomKey(10, '12345abcde'),
+                    "ref": resultado[1],
+                    "texto": resultado[0],
+                    "tipo": sel_tipos.value,
+                }
+                entrada["clase-varianteOf"].variantes.push(variacion)
+                Guardar_datos("LEXICON", global_proyecto["LEXICON"])
+
+                _make_variantes_items()
+            }
+
+            _make_variantes_items()
+            function _make_variantes_items() {
+                col_variateOf_values.innerHTML = ""
+                entrada["clase-varianteOf"].variantes.forEach(cat => {
+                    const div_cat = newE("div", randomKey(10, '12345abcde'), "div-fluid")
+                    div_cat.style.cursor="pointer"
+                    
+                    div_cat.innerHTML=`[<b class="me-2">${cat.texto}</b>  Var.  <i class="ms-2">${cat.tipo}</i>]`
+                    div_cat.onclick=()=>{
+                        const find_entrada=global_proyecto["LEXICON"].entries.filter(lx=>lx.key==cat.ref)
+                        _make_lexicon_edit(find_entrada[0])
+                        active_lexicon_id=find_entrada[0].id
+                    }
+
+
+                    const div_borrar = newE("div", randomKey(10, '12345abcde'), "ms-2 bi bi-x-circle-fill btn-context-lx me-4")
+                    //div_cat.appendChild(div_borrar)
+                    col_variateOf_values.appendChild(div_cat)
+                    col_variateOf_values.appendChild(div_borrar)
+
+                    div_borrar.onclick = () => {
+                        const filter_borrar = entrada["clase-varianteOf"].variantes.filter(e => e.key != cat.key)
+                        entrada["clase-varianteOf"].variantes = filter_borrar
+                        Guardar_datos("LEXICON", global_proyecto["LEXICON"])
+                        _make_variantes_items()
+                    }
+
+                })
+            }
+        }
+
+        ///SECCIÓN DE INGRESO SENTIDOS
+        _make_sentidos_panel()
+        function _make_sentidos_panel() {
+            const lb_clase = "sns"
+            //Contenedor de categoria lx y sus variantes
+            const div_sn = newE("div", randomKey(10, '12345abcde'), "div-categoria mt-2")
+            panel_lexicon_edit.appendChild(div_sn)
+
+            const div_acciones_sntool = newE("div", randomKey(10, '12345abcde'), "")
+            div_sn.appendChild(div_acciones_sntool)
+
+            const div_sentidos_list = newE("div", randomKey(10, '12345abcde'), "ms-3")
+            div_sn.appendChild(div_sentidos_list)
+
+            const row_titulo_sentidos = newE("div", randomKey(10, '12345abcde'), "row row align-items-end")
+            div_acciones_sntool.appendChild(row_titulo_sentidos)
+
+            const col_titulo_sentidos = newE("div", randomKey(10, '12345abcde'), "col-3 label-wrap")
+            row_titulo_sentidos.appendChild(col_titulo_sentidos)
+
+            const row_A_label = newE("div", randomKey(10, '12345abcde'), "row align-items-center")
+            col_titulo_sentidos.appendChild(row_A_label)
+
+            const col_menu_AA = newE("div", randomKey(10, '12345abcde'), "col-auto")
+            row_A_label.appendChild(col_menu_AA)
+
+            const btn_menu_AA = newE("div", randomKey(10, '12345abcde'), "bi bi-arrow-down-circle-fill btn-context-lx")
+            btn_menu_AA.setAttribute("data-bs-toggle", "dropdown")
+            col_menu_AA.appendChild(btn_menu_AA)
+
+            const ul_menu_AA = newE("ul", randomKey(10, '12345abcde'), "dropdown-menu shadow")
+            col_menu_AA.appendChild(ul_menu_AA)
+
+            const col_menu_AB = newE("div", randomKey(10, '12345abcde'), "col-auto fw-bold")
+            col_menu_AB.textContent = "Sentidos"
+            row_A_label.appendChild(col_menu_AB)
+
+
+            const col_acciones_sentidos = newE("div", randomKey(10, '12345abcde'), "col div-fluid-rg")
+            row_titulo_sentidos.appendChild(col_acciones_sentidos)
+
+            const btn_agregar_sentidos = newE("div", randomKey(10, '12345abcde'), "item-texto-small me-2")
+            btn_agregar_sentidos.textContent = "Agregar sentido +"
+            col_acciones_sentidos.appendChild(btn_agregar_sentidos)
+
+            btn_agregar_sentidos.onclick = () => {
+                entrada["clase-sn"].sentidos.push(template_sn())
+                Guardar_datos("LEXICON", global_proyecto["LEXICON"])
+                _make_sentido()
+            }
+
+            const btn_agregar_ejemplo = newE("div", randomKey(10, '12345abcde'), "item-texto-small me-2")
+            btn_agregar_ejemplo.textContent = "Agregar ejemplo +"
+            col_acciones_sentidos.appendChild(btn_agregar_ejemplo)
+
+            _make_sentido()
+            function _make_sentido() {
+                div_sentidos_list.innerHTML = ""
+                //Miramos los sentidos que están en esta entra
+                const tabla_sentidos = entrada["clase-sn"].sentidos
+                //Creamos una línea de sentido tipo collapse
+
+                let s = 0
+                tabla_sentidos.forEach(sn => {
+                    const btn_sn_collapse = newE("div", randomKey(10, '12345abcde'), "btn-collapse-sn")
+                    btn_sn_collapse.setAttribute("data-bs-toggle", "collapse")
+                    btn_sn_collapse.setAttribute("data-bs-target", "#collapse_sn" + s)
+                    btn_sn_collapse.textContent = "Sentido " + (s + 1)
+                    div_sentidos_list.appendChild(btn_sn_collapse)
+
+                    const div_sn_collapse = newE("div", "collapse_sn" + s, "collapse show ms-4")
+                    div_sentidos_list.appendChild(div_sn_collapse)
+
+                    crear_gns()
+                    function crear_gns() {
+                        const row_cat = newE("div", randomKey(10, '12345abcde'), "row")
+                        div_sn_collapse.appendChild(row_cat)
+
+                        const col_cat_menu = newE("div", randomKey(10, '12345abcde'), "col-auto")
+                        row_cat.appendChild(col_cat_menu)
+
+                        const row_cat_menu = newE("div", randomKey(10, '12345abcde'), "row align-items-center")
+                        col_cat_menu.appendChild(row_cat_menu)
+
+                        const col_row_catMenu = newE("div", randomKey(10, '12345abcde'), "col-auto")
+                        row_cat_menu.appendChild(col_row_catMenu)
+
+                        const btn_menu_cat = newE("div", randomKey(10, '12345abcde'), "bi bi-arrow-down-circle-fill btn-context-lx")
+                        btn_menu_cat.setAttribute("data-bs-toggle", "dropdown")
+                        col_row_catMenu.appendChild(btn_menu_cat)
+
+                        const ul_menu_cat = newE("ul", randomKey(10, '12345abcde'), "dropdown-menu shadow")
+                        col_row_catMenu.appendChild(ul_menu_cat)
+
+                        const col_row_catLabel = newE("div", randomKey(10, '12345abcde'), "col-auto")
+                        row_cat_menu.appendChild(col_row_catLabel)
+
+                        const div_col_catLabel = newE("div", randomKey(10, '12345abcde'), "sub-labels")
+                        div_col_catLabel.textContent = "Glosa"
+                        col_row_catLabel.appendChild(div_col_catLabel)
+
+
+                        const col_cat_value = newE("div", randomKey(10, '12345abcde'), "col")
+                        row_cat.appendChild(col_cat_value)
+
+                        //Aquí las filas dentro del valor de glosa, muestra por idima de análisis
+
+                        sn.gn.forEach(_lng => {
+                            //Verifica que el idioma existe y si es visible
+                            const filter_trad = global_proyecto["PROYECTO"].Lngtraducion.filter(l => l.abreviacion == _lng.abreviacion)
+                            if (filter_trad[0].visible == true) {
+                                const row_cat_values_lng = newE("div", randomKey(10, '12345abcde'), "row")
+                                col_cat_value.appendChild(row_cat_values_lng)
+                                const col_cat_label_lng = newE("div", randomKey(10, '12345abcde'), "col-auto tag-small")
+                                col_cat_label_lng.textContent = _lng.abreviacion
+                                row_cat_values_lng.appendChild(col_cat_label_lng)
+
+                                const col_cat_value_lng = newE("div", randomKey(10, '12345abcde'), "col")
+                                row_cat_values_lng.appendChild(col_cat_value_lng)
+
+                                const int_cat_value_lng = newE("input", randomKey(10, '12345abcde'), "input-flat-dicc fw-bold")
+                                int_cat_value_lng.style.color = filter_trad[0].style["font-color"]
+                                int_cat_value_lng.style.fontSize = filter_trad[0].style["font-size"]
+                                col_cat_value_lng.appendChild(int_cat_value_lng)
+
+                                int_cat_value_lng.value = _lng.texto
+                                int_cat_value_lng.onchange = () => {
+                                    _lng.texto = int_cat_value_lng.value
+                                    Guardar_datos("LEXICON", global_proyecto["LEXICON"])
+                                }
+
+
+                            }
+                        })
+                    }
+
+                    _crear_dns()
+                    function _crear_dns() {
+                        const row_cat = newE("div", randomKey(10, '12345abcde'), "row")
+                        div_sn_collapse.appendChild(row_cat)
+
+                        const col_cat_menu = newE("div", randomKey(10, '12345abcde'), "col-auto")
+                        row_cat.appendChild(col_cat_menu)
+
+                        const row_cat_menu = newE("div", randomKey(10, '12345abcde'), "row align-items-center")
+                        col_cat_menu.appendChild(row_cat_menu)
+
+                        const col_row_catMenu = newE("div", randomKey(10, '12345abcde'), "col-auto")
+                        row_cat_menu.appendChild(col_row_catMenu)
+
+                        const btn_menu_cat = newE("div", randomKey(10, '12345abcde'), "bi bi-arrow-down-circle-fill btn-context-lx")
+                        btn_menu_cat.setAttribute("data-bs-toggle", "dropdown")
+                        col_row_catMenu.appendChild(btn_menu_cat)
+
+                        const ul_menu_cat = newE("ul", randomKey(10, '12345abcde'), "dropdown-menu shadow")
+                        col_row_catMenu.appendChild(ul_menu_cat)
+
+                        const col_row_catLabel = newE("div", randomKey(10, '12345abcde'), "col-auto")
+                        row_cat_menu.appendChild(col_row_catLabel)
+
+                        const div_col_catLabel = newE("div", randomKey(10, '12345abcde'), "sub-labels")
+                        div_col_catLabel.textContent = "Definición"
+                        col_row_catLabel.appendChild(div_col_catLabel)
+
+                        const col_cat_value = newE("div", randomKey(10, '12345abcde'), "col")
+                        row_cat.appendChild(col_cat_value)
+                        sn.dn.forEach(_lng => {
+                            //Verifica que el idioma existe y si es visible
+                            const filter_trad = global_proyecto["PROYECTO"].Lngtraducion.filter(l => l.abreviacion == _lng.abreviacion)
+                            if (filter_trad[0].visible == true) {
+                                const row_cat_values_lng = newE("div", randomKey(10, '12345abcde'), "row")
+                                col_cat_value.appendChild(row_cat_values_lng)
+
+                                const col_cat_label_lng = newE("div", randomKey(10, '12345abcde'), "col-auto tag-small")
+                                col_cat_label_lng.textContent = _lng.abreviacion
+                                row_cat_values_lng.appendChild(col_cat_label_lng)
+
+                                const col_cat_value_lng = newE("div", randomKey(10, '12345abcde'), "col")
+                                row_cat_values_lng.appendChild(col_cat_value_lng)
+
+                                const int_cat_value_lng = newE("input", randomKey(10, '12345abcde'), "input-flat-dicc")
+                                int_cat_value_lng.style.color = filter_trad[0].style["font-color"]
+                                int_cat_value_lng.style.fontSize = filter_trad[0].style["font-size"]
+                                col_cat_value_lng.appendChild(int_cat_value_lng)
+
+                                int_cat_value_lng.value = _lng.texto
+                                int_cat_value_lng.onchange = () => {
+                                    _lng.texto = int_cat_value_lng.value
+                                    Guardar_datos("LEXICON", global_proyecto["LEXICON"])
+                                }
+
+
+                            }
+                        })
+                    }
+
+
+                    s++
+                })
+
+
+
+
+            }
+
+
+        }
 
 
 
@@ -530,6 +980,7 @@ function make_lexicon() {
 }
 //Gestiona el cuadro de dialogo de las variantes dialectales de un idioma principal del proyecto
 function config_variantes() {
+    byE("config_titulo").textContent = "Configurar idioma de variantes"
     const modal_panel_gonfig = byE("modal_panel_gonfig")
     modal_panel_gonfig.innerHTML = ""
     const div_detalle = newE("div", "div_detalle", "text-justificado")
@@ -764,6 +1215,7 @@ tenga en cuenta que serán visibles en las diferentes categorías como una entra
 }
 
 function config_morfemas() {
+    byE("config_titulo").textContent = "Configurar lista de morfemas"
     const modal_panel_gonfig = byE("modal_panel_gonfig")
     modal_panel_gonfig.innerHTML = ""
     const div_detalle = newE("div", "div_detalle", "text-justificado")
@@ -942,6 +1394,7 @@ function config_morfemas() {
 }
 
 function config_contexto() {
+    byE("config_titulo").textContent = "Configurar contexto"
     const modal_panel_gonfig = byE("modal_panel_gonfig")
     modal_panel_gonfig.innerHTML = ""
     const div_detalle = newE("div", "div_detalle", "text-justificado")
@@ -1076,6 +1529,237 @@ function config_contexto() {
 
 }
 
+function config_idioma_analisis() {
+    byE("config_titulo").textContent = "Configurar idioma de análisis"
+    const modal_panel_gonfig = byE("modal_panel_gonfig")
+    modal_panel_gonfig.innerHTML = ""
+    const div_detalle = newE("div", "div_detalle", "text-justificado")
+    div_detalle.textContent = `En esta opción se configurán los idiomas de análisis para traducción de la información.`
+    modal_panel_gonfig.appendChild(div_detalle)
+
+    const btn_agregar = newE("button", "btn_agregar", "btn btn-secondary btn-sm mt-2")
+    btn_agregar.textContent = "Agregar  +"
+    modal_panel_gonfig.appendChild(btn_agregar)
+
+    btn_agregar.onclick = () => {
+        const lx_traduccion = {
+            "key": "var-" + randomKey(20, '12345abcde'),
+            "nombre": "Idioma",
+            "abreviacion": "aa",
+            "orden": "abcdefghijklmnopqrstuvwxyz",
+            "info": "información del idioma de análisis",
+            "style": {
+                "font-color": "green",
+                "font-size": "12pt",
+                "font-bold": false,
+                "font-italic": false,
+            },
+            "visible": true,
+        }
+        global_proyecto["PROYECTO"].Lngtraducion.push(lx_traduccion)
+        Guardar_datos("PROYECTO", global_proyecto["PROYECTO"])
+        _make_idiomas()
+
+    }
+
+    const div_clase = newE("div", "div_variantes", "m-2")
+    modal_panel_gonfig.appendChild(div_clase)
+
+    if (verificar_datos(global_proyecto["PROYECTO"].Lngtraducion) == false) {
+        global_proyecto["PROYECTO"]["Lngtraducion"] = []
+        Guardar_datos("PROYECTO", global_proyecto["PROYECTO"])
+        _make_idiomas()
+    } else {
+        _make_idiomas()
+    }
+    function _make_idiomas() {
+        div_clase.innerHTML = ""
+        let lx_clases = global_proyecto["PROYECTO"]["Lngtraducion"]
+        let id_ref = 0
+        for (i in lx_clases) {
+            const item_clase = newE("div", "item_variante" + id_ref, "item-collapse ps-2 text-white")
+            item_clase.textContent = lx_clases[id_ref].nombre
+            item_clase.setAttribute("data-bs-toggle", "collapse")
+            item_clase.setAttribute("data-bs-target", "#collapse_clase" + id_ref)
+            div_clase.appendChild(item_clase)
+
+            const collapse_clase = newE("div", "collapse_clase" + id_ref, "collapse p-2")
+            div_clase.appendChild(collapse_clase)
+
+            //////////////////////////////////////
+
+            const row_nombre = newE("div", "row_nombre" + id_ref, "row")
+            collapse_clase.appendChild(row_nombre)
+
+            const col_nombre_label = newE("div", "col_nombre_label" + id_ref, "col-3")
+            col_nombre_label.textContent = "Nombre:"
+            row_nombre.appendChild(col_nombre_label)
+
+            const col_nombre_value = newE("div", "col_nombre_value" + id_ref, "col")
+            row_nombre.appendChild(col_nombre_value)
+
+            const int_nombre_value = newE("input", "int_nombre_value" + id_ref, "input-flat-dicc")
+            col_nombre_value.appendChild(int_nombre_value)
+
+            int_nombre_value.value = lx_clases[id_ref].nombre
+
+            let n = id_ref
+            int_nombre_value.onchange = () => {
+                lx_clases[n].nombre = int_nombre_value.value
+                item_clase.textContent = int_nombre_value.value
+                Guardar_datos("PROYECTO", global_proyecto["PROYECTO"])
+            }
+            //////////////////////////////////////
+
+            const row_abb = newE("div", "row_abb" + id_ref, "row")
+            collapse_clase.appendChild(row_abb)
+
+            const col_abb_label = newE("div", "col_abb_label" + id_ref, "col-3")
+            col_abb_label.textContent = "Abreviación:"
+            row_abb.appendChild(col_abb_label)
+
+            const col_abb_value = newE("div", "col_abb_value" + id_ref, "col")
+            row_abb.appendChild(col_abb_value)
+
+            const int_abb_value = newE("input", "int_abb_value" + id_ref, "input-flat-dicc")
+            col_abb_value.appendChild(int_abb_value)
+
+            int_abb_value.value = lx_clases[id_ref].abreviacion
+            int_abb_value.onchange = () => {
+                lx_clases[n].abreviacion = int_abb_value.value
+                Guardar_datos("PROYECTO", global_proyecto["PROYECTO"])
+            }
+            //////////////////////////////////////
+
+            const row_orden = newE("div", "row_orden" + id_ref, "row")
+            collapse_clase.appendChild(row_orden)
+
+            const col_orden_label = newE("div", "col_orden_label" + id_ref, "col-3")
+            col_orden_label.textContent = "Orden:"
+            row_orden.appendChild(col_orden_label)
+
+            const col_orden_value = newE("div", "col_orden_value" + id_ref, "col")
+            row_orden.appendChild(col_orden_value)
+
+            const int_orden_value = newE("textarea", "int_orden_value" + id_ref, "input-flat-dicc")
+            col_orden_value.appendChild(int_orden_value)
+
+            int_orden_value.value = lx_clases[id_ref].orden
+            int_orden_value.onchange = () => {
+                lx_clases[n].orden = int_orden_value.value
+                Guardar_datos("PROYECTO", global_proyecto["PROYECTO"])
+            }
+
+            //////////////////////////////////////
+            const row_info = newE("div", "row_info" + id_ref, "row")
+            collapse_clase.appendChild(row_info)
+
+            const col_info_label = newE("div", "col_info_label" + id_ref, "col-3")
+            col_info_label.textContent = "Información:"
+            row_info.appendChild(col_info_label)
+
+            const col_info_value = newE("div", "col_info_value" + id_ref, "col")
+            row_info.appendChild(col_info_value)
+
+            const int_info_value = newE("textarea", "int_info_value" + id_ref, "input-flat-dicc")
+            col_info_value.appendChild(int_info_value)
+
+            int_info_value.value = lx_clases[id_ref].info
+            int_info_value.onchange = () => {
+                lx_clases[n].info = int_info_value.value
+                Guardar_datos("PROYECTO", global_proyecto["PROYECTO"])
+            }
+
+            //////////////////////////////////////
+            const row_style = newE("div", "row_style" + id_ref, "row")
+            collapse_clase.appendChild(row_style)
+
+            const col_style_label = newE("div", "col_style_label" + id_ref, "col-3")
+            col_style_label.textContent = "Estilos"
+            row_style.appendChild(col_style_label)
+
+            const col_style_value = newE("div", "col_style_value" + id_ref, "col")
+            row_style.appendChild(col_style_value)
+
+            const bts_styles = newE("div", "bts_styles" + id_ref, "btn-group")
+            bts_styles.role = "group"
+            col_style_value.appendChild(bts_styles)
+
+            const int_color = newE("input", "int_color" + id_ref, "form-control btn-secondary")
+            int_color.style.width = "50px"
+            int_color.style.height = "40px"
+            int_color.type = "color"
+            bts_styles.appendChild(int_color)
+
+            int_color.value = lx_clases[n].style["font-color"]
+            int_color.onchange = () => {
+                lx_clases[n].style["font-color"] = int_color.value
+                Guardar_datos("PROYECTO", global_proyecto["PROYECTO"])
+            }
+
+
+            const int_font_size = newE("select", "int_font_size" + id_ref, "btn btn-secondary text-white text-start")
+            int_font_size.style.width = "80px"
+            int_font_size.style.height = "40px"
+            bts_styles.appendChild(int_font_size)
+
+            const f_sizes = ["8pt", "9pt", "10pt", "11pt", "12pt", "13pt", "14pt", "16pt", "18pt", "20pt",]
+
+            f_sizes.forEach(item => {
+                const option = newE("option", "option" + item + id_ref, "")
+                option.value = item
+                option.textContent = item
+                int_font_size.appendChild(option)
+            })
+            int_font_size.value = lx_clases[n].style["font-size"]
+            int_font_size.onchange = () => {
+                lx_clases[n].style["font-size"] = int_font_size.value
+                Guardar_datos("PROYECTO", global_proyecto["PROYECTO"])
+            }
+
+            //////////////////////////////////////
+            const row_visible = newE("div", "row_style" + id_ref, "row mt-2")
+            collapse_clase.appendChild(row_visible)
+
+            const col_visible_label = newE("div", "col_visible_label" + id_ref, "col-3")
+            col_visible_label.textContent = "Visible"
+            row_visible.appendChild(col_visible_label)
+
+            const col_visible_value = newE("div", "col_visible_value" + id_ref, "col-3")
+            row_visible.appendChild(col_visible_value)
+
+            const int_visible_value = newE("input", "int_visible_value" + id_ref, "form-check-input")
+            int_visible_value.type = "checkbox"
+
+            col_visible_value.appendChild(int_visible_value)
+
+            int_visible_value.checked = lx_clases[n].visible
+            int_visible_value.onchange = () => {
+                lx_clases[n].visible = int_visible_value.checked
+                Guardar_datos("PROYECTO", global_proyecto["PROYECTO"])
+            }
+
+            //////////////////////////////////////////////////// 
+
+            const btn_eliminar = newE("button", "btn_eliminar" + id_ref, "btn btn-secondary btn-sm mt-5")
+            btn_eliminar.textContent = "Eliminar variante"
+            collapse_clase.appendChild(btn_eliminar)
+
+            btn_eliminar.onclick = () => {
+                global_proyecto["PROYECTO"]["Variantes"] = _delete_registro(lx_clases, "key", lx_clases[n].key)
+                Guardar_datos("PROYECTO", global_proyecto["PROYECTO"])
+                _make_variantes()
+            }
+
+            byE("btnAceptar_open").onclick = () => {
+                make_lexicon()
+            }
+
+            id_ref++
+        }
+    }
+}
+
 function _delete_registro(DATA, CAMPO, ID) {
     const filter = DATA.filter(ele => ele[CAMPO] !== ID)
     return filter
@@ -1101,13 +1785,19 @@ function template_entry() {
             "visible": true
         },
         "clase-varianteOf": {
-            "variantes": []
+            "variantes": [],
+            "visible": true
         }
         ,
         "clase-etimologia": {
             "forma": "",
             "visible": true,
             "estructura": []
+        }
+        ,
+        "clase-sn": {
+            "visible": true,
+            "sentidos": []
         }
     }
     return template
@@ -1196,5 +1886,33 @@ function template_contexto() {
     template.forEach(ele => {
         ele.key = "cont-" + randomKey(10, '12345abcde')
     })
+    return template
+}
+
+function template_sn() {
+    //Debo procesar antes los idiomas incluidos para análisis
+    let gns = []
+    let dns = []
+    if (verificar_datos(global_proyecto["PROYECTO"].Lngtraducion) == true) {
+        const lngs = global_proyecto["PROYECTO"].Lngtraducion
+        lngs.forEach(l => {
+            const item_gn = {
+                "texto": "Palabra en " + l.nombre,
+                "idioma": l.nombre,
+                "abreviacion": l.abreviacion,
+                "visible": l.visible
+            }
+            gns.push(item_gn)
+            dns.push(item_gn)
+        })
+        //
+    }
+    const template = {
+        "key": "sn-" + randomKey(10, '12345abcde'),
+        "gn": gns,
+        "dn": dns,
+        "ps": "Indefinido",
+        "ex": [],
+    }
     return template
 }

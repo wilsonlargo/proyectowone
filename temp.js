@@ -36,11 +36,23 @@ loadDataBase("1dniplVXfiSFYUFfsT1Ij6cdEoAdtK7dqWf3x4s9eUSw", proyecto).then(obje
     GLOBAL.from_drive = DataPrincipal
 })
 
-const input_contexto_value = newE("input", "input_contexto_value", "input-flat-dicc fw-bold")
-col_contexto_value.appendChild(input_contexto_value)
+function _make_contextos_items(){
+    col_contexto_values.innerHTML=""
+    entrada["clase-contexto"].contextos.forEach(contexto=>{
+        const div_contexto = newE("div", "div_contexto" + contexto.nombre, "div-fluid me-4")
+        div_contexto.style.width = "50px"
+        div_contexto.textContent = contexto.contexto
 
-input_contexto_value.value = entrada["clase-contexto"].contexto
-input_contexto_value.onchange = () => {
-    entrada["clase-contexto"].contexto = input_contexto_value.value
-    Guardar_datos("LEXICON", global_proyecto["LEXICON"])
+        const div_borrar = newE("div", "div_borrar" + contexto.nombre, "ms-2 bi bi-x-circle-fill btn-context-lx")
+        div_contexto.appendChild(div_borrar)
+        col_contexto_values.appendChild(div_contexto)
+
+        div_borrar.onclick=()=>{
+            const filter_borrar=entrada["clase-contexto"].contextos.filter(e=>e.key!=contexto.key)
+            entrada["clase-contexto"].contextos=filter_borrar
+            Guardar_datos("LEXICON", global_proyecto["LEXICON"])
+            _make_contextos_items()
+        }
+
+    })
 }

@@ -151,6 +151,8 @@ div.content {
   background-color: #555;
   color: white;
 }
+
+
 .text-justificado{
   text-align: justify;
 }
@@ -171,10 +173,10 @@ div.content {
 
 .tag-small{
 color: #aaa;
-font-size: ppt;
+font-size: 9pt;
 }
 .btn-context-lx{
-  font-size: 10pt;
+  font-size: 8pt;
   cursor: pointer;
   color: #aaa;
   width: 1px;
@@ -187,4 +189,50 @@ font-size: ppt;
 .div-fluid {
   display: flex;
   justify-content:left;
+}
+
+.div-fluid-rg {
+  display: flex;
+  justify-content:right;
+
+}
+.div-fluid-rg-2 {
+  display: flex;
+  justify-content:right;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+
+.item-texto-small{
+  color: #aaa;
+  cursor: pointer;
+  font-size: 10pt;
+}
+.item-texto-small:hover{
+  color:#4a235a;
+  font-weight:bolder;
+}
+
+.btn-collapse-sn{
+  font-size: 11pt;
+  margin-top: 5px;
+  margin-left: 10px;
+  border: none;
+  border-bottom:#f1f1f1 solid 5px;
+  cursor: pointer;
+}
+.sub-labels{
+  font-size: 11pt;
+  width: 100px;
+  color: #aaa;
+}
+
+.menu-group-scroll{
+  margin-top: 5px;
+  max-height: 100px;
+  height: 200px;
+  border: #aaa solid 1px;
+  overflow-y: auto; /* Show vertical scrollbar */ 
+  overflow-x:hidden
 }

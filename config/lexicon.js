@@ -1836,7 +1836,6 @@ function config_gramatical_list() {
                 }
             }
 
-
             const col_collapse_name = newE("div", randomKey(10, '12345abcde'), "col")
             col_collapse_name.textContent = cat.nombre[0].texto
             item_collapse_categoria.appendChild(col_collapse_name)

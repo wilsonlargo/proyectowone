@@ -78,7 +78,7 @@ div.content {
   display: flex;
 }
 
-#panel_separador {
+#panel_separador_lx {
   cursor: col-resize;
   background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='30'><path d='M2 0 v30 M5 0 v30 M8 0 v30' fill='none' stroke='black'/></svg>");
   background-repeat: no-repeat;
@@ -92,7 +92,7 @@ div.content {
   user-select: none;
 }
 
-#panel_list {
+#panel_list_lx {
   width: 30%;
   height: 500%;
   min-width: 200px;
@@ -102,9 +102,43 @@ div.content {
   padding: 5px;
 }
 
-#panel_lexicon_edit {
+#panel_lexicon_edit_lx {
   width: 70%;
   height: 500%;
+  min-width: 200px;
+  overflow: auto;
+  white-space: nowrap;
+  border: #aaa solid 1px;
+  padding: 5px;
+}
+
+#panel_separador_ps {
+  cursor: col-resize;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='30'><path d='M2 0 v30 M5 0 v30 M8 0 v30' fill='none' stroke='black'/></svg>");
+  background-repeat: no-repeat;
+  background-position: center;
+  width: 10px;
+  height: 250%;
+
+  /* Prevent the browser's built-in drag from interfering */
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+#panel_list_ps {
+  width: 30%;
+  height: 250%;
+  min-width: 200px;
+  overflow: auto;
+  white-space: nowrap;
+  border: #aaa solid 1px;
+  padding: 5px;
+}
+
+#panel_lexicon_edit_ps {
+  width: 70%;
+  height: 250%;
   min-width: 200px;
   overflow: auto;
   white-space: nowrap;
@@ -152,7 +186,6 @@ div.content {
   color: white;
 }
 
-
 .text-justificado{
   text-align: justify;
 }
@@ -196,6 +229,8 @@ font-size: 9pt;
   justify-content:right;
 
 }
+
+
 .div-fluid-rg-2 {
   display: flex;
   justify-content:right;
@@ -235,4 +270,24 @@ font-size: 9pt;
   border: #aaa solid 1px;
   overflow-y: auto; /* Show vertical scrollbar */ 
   overflow-x:hidden
+}
+
+.plus-tree{
+  font-size: 18pt;
+  cursor: pointer;
+  width: 8px;
+}
+.plus-tree:hover{
+  font-weight: bold;
+}
+
+.item-tree{
+  cursor: pointer;
+  margin: 2px;
+}
+.item-tree:hover{
+  background-color: #555;
+  color: white;
+  border-radius: 7px;
+
 }

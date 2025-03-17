@@ -65,10 +65,10 @@ let newE = (elemento, id, clase, ancho) => {
 }
 
 ///////////////////////////////
-function dragElement(element, direction) {
+function dragElement(element, direction,panel_list_lx,panel_lexicon_edit_lx) {
     var md; // remember mouse down info
-    const first = document.getElementById("panel_list");
-    const second = document.getElementById("panel_lexicon_edit");
+    const first = document.getElementById(panel_list_lx);
+    const second = document.getElementById(panel_lexicon_edit_lx);
 
     element.onmousedown = onMouseDown;
 

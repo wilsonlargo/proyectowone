@@ -70,6 +70,7 @@ function make_lexicon() {
         div_dropdown_config.appendChild(btn_menu_config)
 
         const ul_menu_config = newE("ul", "ul_menu_config", "dropdown-menu shadow")
+        ul_menu_config.style.width = "200px"
         div_dropdown_config.appendChild(ul_menu_config)
 
         const item_variantes = newE("div", "item_variantes", "item-menu")
@@ -77,6 +78,7 @@ function make_lexicon() {
         item_variantes.setAttribute("data-bs-toggle", "modal")
         item_variantes.setAttribute("data-bs-target", "#open_modal")
         item_variantes.onclick = () => {
+            byE("class_modal_open").className = "modal-dialog"
             config_variantes()
         }
 
@@ -87,6 +89,7 @@ function make_lexicon() {
         item_idioma_analisis.setAttribute("data-bs-toggle", "modal")
         item_idioma_analisis.setAttribute("data-bs-target", "#open_modal")
         item_idioma_analisis.onclick = () => {
+            byE("class_modal_open").className = "modal-dialog"
             config_idioma_analisis()
         }
         ul_menu_config.appendChild(item_idioma_analisis)
@@ -103,6 +106,7 @@ function make_lexicon() {
         div_dropdown_listas.appendChild(btn_menu_listas)
 
         const ul_menu_listas = newE("ul", "ul_menu_listas", "dropdown-menu shadow")
+        ul_menu_listas.style.width = "200px"
         div_dropdown_listas.appendChild(ul_menu_listas)
 
         const item_morfema = newE("div", "item_morfema", "item-menu")
@@ -111,6 +115,7 @@ function make_lexicon() {
         item_morfema.setAttribute("data-bs-target", "#open_modal")
         ul_menu_listas.appendChild(item_morfema)
         item_morfema.onclick = () => {
+            byE("class_modal_open").className = "modal-dialog"
             config_morfemas()
         }
 
@@ -120,7 +125,18 @@ function make_lexicon() {
         item_contexto.setAttribute("data-bs-target", "#open_modal")
         ul_menu_listas.appendChild(item_contexto)
         item_contexto.onclick = () => {
+            byE("class_modal_open").className = "modal-dialog"
             config_contexto()
+        }
+
+        const item_ps = newE("div", "item_ps", "item-menu")
+        item_ps.textContent = "Categorías gramaticales"
+        item_ps.setAttribute("data-bs-toggle", "modal")
+        item_ps.setAttribute("data-bs-target", "#open_modal")
+        ul_menu_listas.appendChild(item_ps)
+        item_ps.onclick = () => {
+            byE("class_modal_open").className = "modal-dialog modal-fullscreen"
+            config_gramatical_list()
         }
 
     }
@@ -129,23 +145,22 @@ function make_lexicon() {
         const panel_splitter = newE("div", "panel_splitter", "splitter mt-2")
         panel_escritorio.appendChild(panel_splitter)
 
-        const panel_list = newE("div", "panel_list", "")
-        panel_list.textContent = "Panel listas"
+        const panel_list = newE("div", "panel_list_lx", "")
         panel_splitter.appendChild(panel_list)
 
-        const panel_separador = newE("div", "panel_separador", "bg-secondary")
+        const panel_separador = newE("div", "panel_separador_lx", "bg-secondary")
         panel_splitter.appendChild(panel_separador)
 
-        const panel_lexicon_edit = newE("div", "panel_lexicon_edit", "p-2")
+        const panel_lexicon_edit = newE("div", "panel_lexicon_edit_lx", "p-2")
         panel_lexicon_edit.textContent = "diccionario"
         panel_splitter.appendChild(panel_lexicon_edit)
 
-        dragElement(document.getElementById("panel_separador"), "H");
+        dragElement(document.getElementById("panel_separador_lx"), "H", "panel_list_lx", "panel_lexicon_edit_lx");
     }
     _make_list_lx()
 
     function _make_list_lx() {
-        const panel_list = byE("panel_list")
+        const panel_list = byE("panel_list_lx")
         panel_list.innerHTML = ""
 
         let i = 0
@@ -165,7 +180,7 @@ function make_lexicon() {
     }
     _move_to_entry("ini")
     function _make_lexicon_edit(entrada) {
-        const panel_lexicon_edit = byE("panel_lexicon_edit")
+        const panel_lexicon_edit = byE("panel_lexicon_edit_lx")
         panel_lexicon_edit.innerHTML = ""
 
         //Contenedor de categoria lx y sus variantes
@@ -686,16 +701,14 @@ function make_lexicon() {
                 col_variateOf_values.innerHTML = ""
                 entrada["clase-varianteOf"].variantes.forEach(cat => {
                     const div_cat = newE("div", randomKey(10, '12345abcde'), "div-fluid")
-                    div_cat.style.cursor="pointer"
-                    
-                    div_cat.innerHTML=`[<b class="me-2">${cat.texto}</b>  Var.  <i class="ms-2">${cat.tipo}</i>]`
-                    div_cat.onclick=()=>{
-                        const find_entrada=global_proyecto["LEXICON"].entries.filter(lx=>lx.key==cat.ref)
+                    div_cat.style.cursor = "pointer"
+
+                    div_cat.innerHTML = `[<b class="me-2">${cat.texto}</b>  Var.  <i class="ms-2">${cat.tipo}</i>]`
+                    div_cat.onclick = () => {
+                        const find_entrada = global_proyecto["LEXICON"].entries.filter(lx => lx.key == cat.ref)
                         _make_lexicon_edit(find_entrada[0])
-                        active_lexicon_id=find_entrada[0].id
+                        active_lexicon_id = find_entrada[0].id
                     }
-
-
                     const div_borrar = newE("div", randomKey(10, '12345abcde'), "ms-2 bi bi-x-circle-fill btn-context-lx me-4")
                     //div_cat.appendChild(div_borrar)
                     col_variateOf_values.appendChild(div_cat)
@@ -919,15 +932,6 @@ function make_lexicon() {
 
 
         }
-
-
-
-
-
-
-
-
-
 
         //////////////////////////////////77
         byE("bt_del").onclick = () => {
@@ -1760,6 +1764,93 @@ function config_idioma_analisis() {
     }
 }
 
+function config_gramatical_list() {
+    byE("config_titulo").textContent = "Categorías gramaticales"
+    const modal_panel_gonfig = byE("modal_panel_gonfig")
+    modal_panel_gonfig.innerHTML = ""
+
+    const div_actions = newE("div", randomKey(20, '12345abcde'), "div-fluid")
+    modal_panel_gonfig.appendChild(div_actions)
+
+    const div_add_categoria = newE("div", randomKey(20, '12345abcde'), "item-texto-small")
+    div_add_categoria.textContent = "Agregar categoria +"
+    div_actions.appendChild(div_add_categoria)
+
+
+    make_spliter_panel()
+    function make_spliter_panel() {
+        const panel_splitter = newE("div", randomKey(20, '12345abcde'), "splitter mt-2")
+        modal_panel_gonfig.appendChild(panel_splitter)
+
+        const panel_list = newE("div", "panel_list_ps", "")
+        panel_list.style.height = modal_panel_gonfig.style.height
+        panel_splitter.appendChild(panel_list)
+
+        const panel_separador = newE("div", "panel_separador_ps", "bg-secondary")
+        panel_splitter.appendChild(panel_separador)
+
+        const panel_lexicon_edit = newE("div", "panel_lexicon_edit_ps", "p-2")
+        panel_lexicon_edit.style.height = modal_panel_gonfig.style.height
+        panel_splitter.appendChild(panel_lexicon_edit)
+
+        dragElement(document.getElementById("panel_separador_ps"), "H", "panel_list_ps", "panel_lexicon_edit_ps");
+
+        if (verificar_datos(global_proyecto["TABLAS"].CATGRAMATICAL) == false) {
+            global_proyecto["TABLAS"]["CATGRAMATICAL"] = []
+            Guardar_datos("TABLAS", global_proyecto["TABLAS"])
+            //_make_idiomas()
+        } else {
+            //_make_idiomas()
+        }
+    }
+
+    div_add_categoria.onclick = () => {
+        global_proyecto["TABLAS"]["CATGRAMATICAL"].push(template_ps())
+
+        Guardar_datos("TABLAS", global_proyecto["TABLAS"])
+
+        _make_categoria()
+
+    }
+    _make_categoria()
+    function _make_categoria() {
+        const tabla_categorias = global_proyecto["TABLAS"]["CATGRAMATICAL"]
+        const panel_list = byE("panel_list_ps")
+        panel_list.innerHTML = ""
+
+        let cat_A = 0
+        tabla_categorias.forEach(cat => {
+            const item_collapse_categoria = newE("div", randomKey(10, '12345abcde'), "row align-items-center item-tree")
+            panel_list.appendChild(item_collapse_categoria)
+
+            const col_collapse_plus = newE("div", randomKey(10, '12345abcde'), "col-auto plus-tree")
+            col_collapse_plus.textContent = "-"
+            col_collapse_plus.setAttribute("data-bs-toggle", "collapse")
+            col_collapse_plus.setAttribute("data-bs-target", "#collapse_ps" + cat_A)
+            item_collapse_categoria.appendChild(col_collapse_plus)
+            col_collapse_plus.onclick = () => {
+                if (col_collapse_plus.textContent == "+") {
+                    col_collapse_plus.textContent = "-"
+                } else if (col_collapse_plus.textContent == "-") {
+                    col_collapse_plus.textContent = "+"
+                }
+            }
+
+
+            const col_collapse_name = newE("div", randomKey(10, '12345abcde'), "col")
+            col_collapse_name.textContent = cat.nombre[0].texto
+            item_collapse_categoria.appendChild(col_collapse_name)
+
+            const div_collapse = newE("div", "collapse_ps" + cat_A, "collapse show ms-5 item-tree ps-2")
+            div_collapse.textContent = "Sub categoria"
+            panel_list.appendChild(div_collapse)
+            cat_A++
+        })
+
+    }
+}
+
+
 function _delete_registro(DATA, CAMPO, ID) {
     const filter = DATA.filter(ele => ele[CAMPO] !== ID)
     return filter
@@ -1913,6 +2004,35 @@ function template_sn() {
         "dn": dns,
         "ps": "Indefinido",
         "ex": [],
+    }
+    return template
+}
+function template_ps() {
+    //Debo procesar antes los idiomas incluidos para análisis
+    let ns = []
+    let abbs = []
+    let dess = []
+    if (verificar_datos(global_proyecto["PROYECTO"].Lngtraducion) == true) {
+        const lngs = global_proyecto["PROYECTO"].Lngtraducion
+        lngs.forEach(l => {
+            const item = {
+                "texto": "Categoria en " + l.nombre,
+                "idioma": l.nombre,
+                "abreviacion": l.abreviacion,
+                "visible": l.visible
+            }
+            ns.push(item)
+            abbs.push(item)
+            dess.push(item)
+        })
+        //
+    }
+    const template = {
+        "key": "ps-" + randomKey(10, '12345abcde'),
+        "nombre": ns,
+        "abreviaciones": abbs,
+        "definiciones": dess,
+        "subcategorias":[]
     }
     return template
 }

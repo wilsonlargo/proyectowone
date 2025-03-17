@@ -555,7 +555,7 @@ function make_lexicon() {
                 byE("class_modal_open").className = "modal-dialog"
                 _open_variaciones()
             }
-
+            _open_variaciones()
             function _open_variaciones(){
                 byE("config_titulo").textContent = "Buscar relación"
                 const modal_panel_gonfig = byE("modal_panel_gonfig")

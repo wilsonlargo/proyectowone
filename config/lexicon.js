@@ -212,8 +212,6 @@ function make_lexicon() {
         item_lx_vertodo_campos.onclick = () => {
             entrada["clase-contexto"].visible = true
             entrada["clase-varianteOf"].visible = true
-
-
             Guardar_datos("LEXICON", global_proyecto["LEXICON"])
             _make_lexicon_edit(entrada)
         }
@@ -553,176 +551,187 @@ function make_lexicon() {
             btn_menu_variateOf_items.setAttribute("data-bs-target", "#open_modal")
             col_variateOf_items.appendChild(btn_menu_variateOf_items)
 
-            byE("config_titulo").textContent = "Buscar relación"
-            const modal_panel_gonfig = byE("modal_panel_gonfig")
-            modal_panel_gonfig.innerHTML = ""
-            const sm_buscar = newE("small", randomKey(10, '12345abcde'), "")
-            sm_buscar.textContent = "Buscar palabra"
-            modal_panel_gonfig.appendChild(sm_buscar)
+            btn_menu_variateOf_items.onclick=()=>{
+                byE("class_modal_open").className = "modal-dialog"
+                _open_variaciones()
+            }
 
-            //Creamos una casilla de búsqueda
-            const int_buscar = newE("input", randomKey(10, '12345abcde'), "form-control")
-            modal_panel_gonfig.appendChild(int_buscar)
-
-            //Creamos una lista de idiomas
-            const sm_idiomas = newE("small", randomKey(10, '12345abcde'), "")
-            sm_idiomas.textContent = "Idioma de búsqueda"
-            modal_panel_gonfig.appendChild(sm_idiomas)
-
-            const sel_buscar = newE("select", randomKey(10, '12345abcde'), "form-control")
-            modal_panel_gonfig.appendChild(sel_buscar)
-
-            //Primero creo el idioma principal
-            const Op_principal = newE("option", randomKey(10, '12345abcde'), "")
-            Op_principal.value = "lexeme_lx"
-
-            const lngP = global_proyecto["PROYECTO"]
-            Op_principal.textContent = lngP.idioma + " (" + lngP.cod_idioma + ")"
-            sel_buscar.appendChild(Op_principal)
-
-            //Segundo busco idiomas de análisis
-            const lngS = global_proyecto["PROYECTO"].Lngtraducion
-            lngS.forEach(l => {
-                const Op_secundaria = newE("option", randomKey(10, '12345abcde'), "")
-                Op_secundaria.value = "sentidos_" + l.abreviacion
-                Op_secundaria.textContent = l.nombre + " (" + l.abreviacion + ")"
-                sel_buscar.appendChild(Op_secundaria)
-            })
-
-            //Creamos un contenedor de listas
-            const div_resultados = newE("div", randomKey(10, '12345abcde'), "menu-group-scroll")
-            modal_panel_gonfig.appendChild(div_resultados)
-
-            //Creamos una lista de idiomas
-            const sm_resultado = newE("small", randomKey(10, '12345abcde'), "")
-            sm_resultado.textContent = "Selección"
-            modal_panel_gonfig.appendChild(sm_resultado)
-
-            //Creamos un contenedor de listas
-            const sel_resultados = newE("select", randomKey(10, '12345abcde'), "form-coltrol")
-            sel_resultados.style.width = "100%"
-            modal_panel_gonfig.appendChild(sel_resultados)
-
-            //Creamos una lista de idiomas
-            const sm_tipo = newE("small", randomKey(10, '12345abcde'), "")
-            sm_tipo.textContent = "Tipo de variación"
-            modal_panel_gonfig.appendChild(sm_tipo)
-
-            //Creamos un contenedor de listas
-            const sel_tipos = newE("select", randomKey(10, '12345abcde'), "form-coltrol")
-            sel_tipos.style.width = "100%"
-            modal_panel_gonfig.appendChild(sel_tipos)
-
-            const tipos = ["Dialectal", "Ortográfica", "Morfológica"]
-            tipos.forEach(t => {
-                const option = newE("option", randomKey(10, '12345abcde'), "")
-                option.value = t
-                option.textContent = t
-                sel_tipos.appendChild(option)
-            })
-
-
-            int_buscar.oninput = () => {
-                div_resultados.innerHTML = ""
-                const fuente = sel_buscar.value.split("_")
-                if (fuente[0] == "lexeme") {
-                    //Leo todas las entradas y su lexema
-                    global_proyecto["LEXICON"].entries.forEach(lx => {
-                        let cadena_ini = lx.lexeme.lx.toLowerCase()
-                        if (cadena_ini.startsWith(int_buscar.value.toLowerCase()) == true
-                            && int_buscar.value != "") {
-                            const item = newE("div", randomKey(10, '12345abcde'), "item-menu")
-                            //Contrar traducciones para colocar en la lista
-                            let glosas = ""
-                            lx["clase-sn"].sentidos.forEach(sn => {
-                                glosas = glosas + ", " + sn.gn[0].texto
-
-                            })
-                            item.innerHTML = `<b>${lx.lexeme.lx}</b> ${glosas}`
-                            div_resultados.appendChild(item)
-                            item.onclick = () => {
-                                sel_resultados.innerHTML = ""
-                                const res = newE("option", randomKey(10, '12345abcde'), "")
-                                res.value = lx.lexeme.lx + "_" + lx.key
-                                res.textContent = lx.lexeme.lx
-                                sel_resultados.appendChild(res)
-                                sel_resultados.value = lx.lexeme.lx + "_" + lx.key
+            function _open_variaciones(){
+                byE("config_titulo").textContent = "Buscar relación"
+                const modal_panel_gonfig = byE("modal_panel_gonfig")
+                modal_panel_gonfig.innerHTML = ""
+                const sm_buscar = newE("small", randomKey(10, '12345abcde'), "")
+                sm_buscar.textContent = "Buscar palabra"
+                modal_panel_gonfig.appendChild(sm_buscar)
+    
+                //Creamos una casilla de búsqueda
+                const int_buscar = newE("input", randomKey(10, '12345abcde'), "form-control")
+                modal_panel_gonfig.appendChild(int_buscar)
+    
+                //Creamos una lista de idiomas
+                const sm_idiomas = newE("small", randomKey(10, '12345abcde'), "")
+                sm_idiomas.textContent = "Idioma de búsqueda"
+                modal_panel_gonfig.appendChild(sm_idiomas)
+    
+                const sel_buscar = newE("select", randomKey(10, '12345abcde'), "form-control")
+                modal_panel_gonfig.appendChild(sel_buscar)
+    
+                //Primero creo el idioma principal
+                const Op_principal = newE("option", randomKey(10, '12345abcde'), "")
+                Op_principal.value = "lexeme_lx"
+    
+                const lngP = global_proyecto["PROYECTO"]
+                Op_principal.textContent = lngP.idioma + " (" + lngP.cod_idioma + ")"
+                sel_buscar.appendChild(Op_principal)
+    
+                //Segundo busco idiomas de análisis
+                const lngS = global_proyecto["PROYECTO"].Lngtraducion
+                lngS.forEach(l => {
+                    const Op_secundaria = newE("option", randomKey(10, '12345abcde'), "")
+                    Op_secundaria.value = "sentidos_" + l.abreviacion
+                    Op_secundaria.textContent = l.nombre + " (" + l.abreviacion + ")"
+                    sel_buscar.appendChild(Op_secundaria)
+                })
+    
+                //Creamos un contenedor de listas
+                const div_resultados = newE("div", randomKey(10, '12345abcde'), "menu-group-scroll")
+                modal_panel_gonfig.appendChild(div_resultados)
+    
+                //Creamos una lista de idiomas
+                const sm_resultado = newE("small", randomKey(10, '12345abcde'), "")
+                sm_resultado.textContent = "Selección"
+                modal_panel_gonfig.appendChild(sm_resultado)
+    
+                //Creamos un contenedor de listas
+                const sel_resultados = newE("select", randomKey(10, '12345abcde'), "form-coltrol")
+                sel_resultados.style.width = "100%"
+                modal_panel_gonfig.appendChild(sel_resultados)
+    
+                //Creamos una lista de idiomas
+                const sm_tipo = newE("small", randomKey(10, '12345abcde'), "")
+                sm_tipo.textContent = "Tipo de variación"
+                modal_panel_gonfig.appendChild(sm_tipo)
+    
+                //Creamos un contenedor de listas
+                const sel_tipos = newE("select", randomKey(10, '12345abcde'), "form-coltrol")
+                sel_tipos.style.width = "100%"
+                modal_panel_gonfig.appendChild(sel_tipos)
+    
+                const tipos = ["Dialectal", "Ortográfica", "Morfológica"]
+                tipos.forEach(t => {
+                    const option = newE("option", randomKey(10, '12345abcde'), "")
+                    option.value = t
+                    option.textContent = t
+                    sel_tipos.appendChild(option)
+                })
+    
+    
+                int_buscar.oninput = () => {
+                    div_resultados.innerHTML = ""
+                    const fuente = sel_buscar.value.split("_")
+                    if (fuente[0] == "lexeme") {
+                        //Leo todas las entradas y su lexema
+                        global_proyecto["LEXICON"].entries.forEach(lx => {
+                            let cadena_ini = lx.lexeme.lx.toLowerCase()
+                            if (cadena_ini.startsWith(int_buscar.value.toLowerCase()) == true
+                                && int_buscar.value != "") {
+                                const item = newE("div", randomKey(10, '12345abcde'), "item-menu")
+                                //Contrar traducciones para colocar en la lista
+                                let glosas = ""
+                                lx["clase-sn"].sentidos.forEach(sn => {
+                                    glosas = glosas + ", " + sn.gn[0].texto
+    
+                                })
+                                item.innerHTML = `<b>${lx.lexeme.lx}</b> ${glosas}`
+                                div_resultados.appendChild(item)
+                                item.onclick = () => {
+                                    sel_resultados.innerHTML = ""
+                                    const res = newE("option", randomKey(10, '12345abcde'), "")
+                                    res.value = lx.lexeme.lx + "_" + lx.key
+                                    res.textContent = lx.lexeme.lx
+                                    sel_resultados.appendChild(res)
+                                    sel_resultados.value = lx.lexeme.lx + "_" + lx.key
+                                }
                             }
-                        }
-                    })
-                } else if (fuente[0] == "sentidos") {
-                    //Leo todas las entradas y su sentido
-                    global_proyecto["LEXICON"].entries.forEach(lx => {
-                        lx["clase-sn"].sentidos.forEach(sn => {
-                            sn.gn.forEach(l => {
-                                if (l.abreviacion == fuente[1]) {
-                                    let cadena_ini = l.texto.toLowerCase()
-                                    if (cadena_ini.startsWith(int_buscar.value.toLowerCase()) == true
-                                        && int_buscar.value != "") {
-                                        const item = newE("div", randomKey(10, '12345abcde'), "item-menu")
-                                        item.textContent = l.texto
-                                        item.innerHTML = `<b>${l.texto}</b> ${lx.lexeme.lx}`
-                                        div_resultados.appendChild(item)
-                                        item.onclick = () => {
-                                            sel_resultados.innerHTML = ""
-                                            const res = newE("option", randomKey(10, '12345abcde'), "")
-                                            res.value = lx.lexeme.lx + "_" + lx.key
-                                            res.textContent = lx.lexeme.lx
-                                            sel_resultados.appendChild(res)
-                                            sel_resultados.value = lx.lexeme.lx + "_" + lx.key
+                        })
+                    } else if (fuente[0] == "sentidos") {
+                        //Leo todas las entradas y su sentido
+                        global_proyecto["LEXICON"].entries.forEach(lx => {
+                            lx["clase-sn"].sentidos.forEach(sn => {
+                                sn.gn.forEach(l => {
+                                    if (l.abreviacion == fuente[1]) {
+                                        let cadena_ini = l.texto.toLowerCase()
+                                        if (cadena_ini.startsWith(int_buscar.value.toLowerCase()) == true
+                                            && int_buscar.value != "") {
+                                            const item = newE("div", randomKey(10, '12345abcde'), "item-menu")
+                                            item.textContent = l.texto
+                                            item.innerHTML = `<b>${l.texto}</b> ${lx.lexeme.lx}`
+                                            div_resultados.appendChild(item)
+                                            item.onclick = () => {
+                                                sel_resultados.innerHTML = ""
+                                                const res = newE("option", randomKey(10, '12345abcde'), "")
+                                                res.value = lx.lexeme.lx + "_" + lx.key
+                                                res.textContent = lx.lexeme.lx
+                                                sel_resultados.appendChild(res)
+                                                sel_resultados.value = lx.lexeme.lx + "_" + lx.key
+                                            }
                                         }
                                     }
-                                }
+                                })
+    
                             })
-
+    
                         })
-
+                    }
+    
+                }
+    
+                byE("btnAceptar_open").onclick = () => {
+                    const resultado = sel_resultados.value.split("_")
+                    const variacion = {
+                        "key": randomKey(10, '12345abcde'),
+                        "ref": resultado[1],
+                        "texto": resultado[0],
+                        "tipo": sel_tipos.value,
+                    }
+                    entrada["clase-varianteOf"].variantes.push(variacion)
+                    Guardar_datos("LEXICON", global_proyecto["LEXICON"])
+    
+                    _make_variantes_items()
+                }
+    
+                _make_variantes_items()
+                function _make_variantes_items() {
+                    col_variateOf_values.innerHTML = ""
+                    entrada["clase-varianteOf"].variantes.forEach(cat => {
+                        const div_cat = newE("div", randomKey(10, '12345abcde'), "div-fluid")
+                        div_cat.style.cursor = "pointer"
+    
+                        div_cat.innerHTML = `[<b class="me-2">${cat.texto}</b>  Var.  <i class="ms-2">${cat.tipo}</i>]`
+                        div_cat.onclick = () => {
+                            const find_entrada = global_proyecto["LEXICON"].entries.filter(lx => lx.key == cat.ref)
+                            _make_lexicon_edit(find_entrada[0])
+                            active_lexicon_id = find_entrada[0].id
+                        }
+                        const div_borrar = newE("div", randomKey(10, '12345abcde'), "ms-2 bi bi-x-circle-fill btn-context-lx me-4")
+                        //div_cat.appendChild(div_borrar)
+                        col_variateOf_values.appendChild(div_cat)
+                        col_variateOf_values.appendChild(div_borrar)
+    
+                        div_borrar.onclick = () => {
+                            const filter_borrar = entrada["clase-varianteOf"].variantes.filter(e => e.key != cat.key)
+                            entrada["clase-varianteOf"].variantes = filter_borrar
+                            Guardar_datos("LEXICON", global_proyecto["LEXICON"])
+                            _make_variantes_items()
+                        }
+    
                     })
                 }
-
             }
 
-            byE("btnAceptar_open").onclick = () => {
-                const resultado = sel_resultados.value.split("_")
-                const variacion = {
-                    "key": randomKey(10, '12345abcde'),
-                    "ref": resultado[1],
-                    "texto": resultado[0],
-                    "tipo": sel_tipos.value,
-                }
-                entrada["clase-varianteOf"].variantes.push(variacion)
-                Guardar_datos("LEXICON", global_proyecto["LEXICON"])
 
-                _make_variantes_items()
-            }
 
-            _make_variantes_items()
-            function _make_variantes_items() {
-                col_variateOf_values.innerHTML = ""
-                entrada["clase-varianteOf"].variantes.forEach(cat => {
-                    const div_cat = newE("div", randomKey(10, '12345abcde'), "div-fluid")
-                    div_cat.style.cursor = "pointer"
-
-                    div_cat.innerHTML = `[<b class="me-2">${cat.texto}</b>  Var.  <i class="ms-2">${cat.tipo}</i>]`
-                    div_cat.onclick = () => {
-                        const find_entrada = global_proyecto["LEXICON"].entries.filter(lx => lx.key == cat.ref)
-                        _make_lexicon_edit(find_entrada[0])
-                        active_lexicon_id = find_entrada[0].id
-                    }
-                    const div_borrar = newE("div", randomKey(10, '12345abcde'), "ms-2 bi bi-x-circle-fill btn-context-lx me-4")
-                    //div_cat.appendChild(div_borrar)
-                    col_variateOf_values.appendChild(div_cat)
-                    col_variateOf_values.appendChild(div_borrar)
-
-                    div_borrar.onclick = () => {
-                        const filter_borrar = entrada["clase-varianteOf"].variantes.filter(e => e.key != cat.key)
-                        entrada["clase-varianteOf"].variantes = filter_borrar
-                        Guardar_datos("LEXICON", global_proyecto["LEXICON"])
-                        _make_variantes_items()
-                    }
-
-                })
-            }
+            
         }
 
         ///SECCIÓN DE INGRESO SENTIDOS

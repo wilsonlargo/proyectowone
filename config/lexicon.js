@@ -551,39 +551,39 @@ function make_lexicon() {
             btn_menu_variateOf_items.setAttribute("data-bs-target", "#open_modal")
             col_variateOf_items.appendChild(btn_menu_variateOf_items)
 
-            btn_menu_variateOf_items.onclick=()=>{
+            btn_menu_variateOf_items.onclick = () => {
                 byE("class_modal_open").className = "modal-dialog"
                 _open_variaciones()
             }
             _open_variaciones()
-            function _open_variaciones(){
+            function _open_variaciones() {
                 byE("config_titulo").textContent = "Buscar relación"
                 const modal_panel_gonfig = byE("modal_panel_gonfig")
                 modal_panel_gonfig.innerHTML = ""
                 const sm_buscar = newE("small", randomKey(10, '12345abcde'), "")
                 sm_buscar.textContent = "Buscar palabra"
                 modal_panel_gonfig.appendChild(sm_buscar)
-    
+
                 //Creamos una casilla de búsqueda
                 const int_buscar = newE("input", randomKey(10, '12345abcde'), "form-control")
                 modal_panel_gonfig.appendChild(int_buscar)
-    
+
                 //Creamos una lista de idiomas
                 const sm_idiomas = newE("small", randomKey(10, '12345abcde'), "")
                 sm_idiomas.textContent = "Idioma de búsqueda"
                 modal_panel_gonfig.appendChild(sm_idiomas)
-    
+
                 const sel_buscar = newE("select", randomKey(10, '12345abcde'), "form-control")
                 modal_panel_gonfig.appendChild(sel_buscar)
-    
+
                 //Primero creo el idioma principal
                 const Op_principal = newE("option", randomKey(10, '12345abcde'), "")
                 Op_principal.value = "lexeme_lx"
-    
+
                 const lngP = global_proyecto["PROYECTO"]
                 Op_principal.textContent = lngP.idioma + " (" + lngP.cod_idioma + ")"
                 sel_buscar.appendChild(Op_principal)
-    
+
                 //Segundo busco idiomas de análisis
                 const lngS = global_proyecto["PROYECTO"].Lngtraducion
                 lngS.forEach(l => {
@@ -592,31 +592,31 @@ function make_lexicon() {
                     Op_secundaria.textContent = l.nombre + " (" + l.abreviacion + ")"
                     sel_buscar.appendChild(Op_secundaria)
                 })
-    
+
                 //Creamos un contenedor de listas
                 const div_resultados = newE("div", randomKey(10, '12345abcde'), "menu-group-scroll")
                 modal_panel_gonfig.appendChild(div_resultados)
-    
+
                 //Creamos una lista de idiomas
                 const sm_resultado = newE("small", randomKey(10, '12345abcde'), "")
                 sm_resultado.textContent = "Selección"
                 modal_panel_gonfig.appendChild(sm_resultado)
-    
+
                 //Creamos un contenedor de listas
                 const sel_resultados = newE("select", randomKey(10, '12345abcde'), "form-coltrol")
                 sel_resultados.style.width = "100%"
                 modal_panel_gonfig.appendChild(sel_resultados)
-    
+
                 //Creamos una lista de idiomas
                 const sm_tipo = newE("small", randomKey(10, '12345abcde'), "")
                 sm_tipo.textContent = "Tipo de variación"
                 modal_panel_gonfig.appendChild(sm_tipo)
-    
+
                 //Creamos un contenedor de listas
                 const sel_tipos = newE("select", randomKey(10, '12345abcde'), "form-coltrol")
                 sel_tipos.style.width = "100%"
                 modal_panel_gonfig.appendChild(sel_tipos)
-    
+
                 const tipos = ["Dialectal", "Ortográfica", "Morfológica"]
                 tipos.forEach(t => {
                     const option = newE("option", randomKey(10, '12345abcde'), "")
@@ -624,8 +624,8 @@ function make_lexicon() {
                     option.textContent = t
                     sel_tipos.appendChild(option)
                 })
-    
-    
+
+
                 int_buscar.oninput = () => {
                     div_resultados.innerHTML = ""
                     const fuente = sel_buscar.value.split("_")
@@ -640,7 +640,7 @@ function make_lexicon() {
                                 let glosas = ""
                                 lx["clase-sn"].sentidos.forEach(sn => {
                                     glosas = glosas + ", " + sn.gn[0].texto
-    
+
                                 })
                                 item.innerHTML = `<b>${lx.lexeme.lx}</b> ${glosas}`
                                 div_resultados.appendChild(item)
@@ -678,14 +678,14 @@ function make_lexicon() {
                                         }
                                     }
                                 })
-    
+
                             })
-    
+
                         })
                     }
-    
+
                 }
-    
+
                 byE("btnAceptar_open").onclick = () => {
                     const resultado = sel_resultados.value.split("_")
                     const variacion = {
@@ -696,17 +696,17 @@ function make_lexicon() {
                     }
                     entrada["clase-varianteOf"].variantes.push(variacion)
                     Guardar_datos("LEXICON", global_proyecto["LEXICON"])
-    
+
                     _make_variantes_items()
                 }
-    
+
                 _make_variantes_items()
                 function _make_variantes_items() {
                     col_variateOf_values.innerHTML = ""
                     entrada["clase-varianteOf"].variantes.forEach(cat => {
                         const div_cat = newE("div", randomKey(10, '12345abcde'), "div-fluid")
                         div_cat.style.cursor = "pointer"
-    
+
                         div_cat.innerHTML = `[<b class="me-2">${cat.texto}</b>  Var.  <i class="ms-2">${cat.tipo}</i>]`
                         div_cat.onclick = () => {
                             const find_entrada = global_proyecto["LEXICON"].entries.filter(lx => lx.key == cat.ref)
@@ -717,21 +717,21 @@ function make_lexicon() {
                         //div_cat.appendChild(div_borrar)
                         col_variateOf_values.appendChild(div_cat)
                         col_variateOf_values.appendChild(div_borrar)
-    
+
                         div_borrar.onclick = () => {
                             const filter_borrar = entrada["clase-varianteOf"].variantes.filter(e => e.key != cat.key)
                             entrada["clase-varianteOf"].variantes = filter_borrar
                             Guardar_datos("LEXICON", global_proyecto["LEXICON"])
                             _make_variantes_items()
                         }
-    
+
                     })
                 }
             }
 
 
 
-            
+
         }
 
         ///SECCIÓN DE INGRESO SENTIDOS
@@ -914,7 +914,7 @@ function make_lexicon() {
                                 const col_cat_value_lng = newE("div", randomKey(10, '12345abcde'), "col")
                                 row_cat_values_lng.appendChild(col_cat_value_lng)
 
-                                const int_cat_value_lng = newE("input", randomKey(10, '12345abcde'), "input-flat-dicc")
+                                const int_cat_value_lng = newE("textarea", randomKey(10, '12345abcde'), "input-flat-dicc")
                                 int_cat_value_lng.style.color = filter_trad[0].style["font-color"]
                                 int_cat_value_lng.style.fontSize = filter_trad[0].style["font-size"]
                                 col_cat_value_lng.appendChild(int_cat_value_lng)
@@ -1807,27 +1807,25 @@ function config_gramatical_list() {
         if (verificar_datos(global_proyecto["TABLAS"].CATGRAMATICAL) == false) {
             global_proyecto["TABLAS"]["CATGRAMATICAL"] = []
             Guardar_datos("TABLAS", global_proyecto["TABLAS"])
-            //_make_idiomas()
+            _make_categoria()
         } else {
-            //_make_idiomas()
+            _make_categoria()
         }
     }
 
     div_add_categoria.onclick = () => {
         global_proyecto["TABLAS"]["CATGRAMATICAL"].push(template_ps())
-
         Guardar_datos("TABLAS", global_proyecto["TABLAS"])
-
         _make_categoria()
-
     }
-    _make_categoria()
     function _make_categoria() {
         const tabla_categorias = global_proyecto["TABLAS"]["CATGRAMATICAL"]
         const panel_list = byE("panel_list_ps")
+        const panel_list_edit = byE("panel_lexicon_edit_ps")
+
         panel_list.innerHTML = ""
 
-        let cat_A = 0
+
         tabla_categorias.forEach(cat => {
             const item_collapse_categoria = newE("div", randomKey(10, '12345abcde'), "row align-items-center item-tree")
             panel_list.appendChild(item_collapse_categoria)
@@ -1835,8 +1833,9 @@ function config_gramatical_list() {
             const col_collapse_plus = newE("div", randomKey(10, '12345abcde'), "col-auto plus-tree")
             col_collapse_plus.textContent = "-"
             col_collapse_plus.setAttribute("data-bs-toggle", "collapse")
-            col_collapse_plus.setAttribute("data-bs-target", "#collapse_ps" + cat_A)
+            col_collapse_plus.setAttribute("data-bs-target", "#collapse_ps" + cat.key)
             item_collapse_categoria.appendChild(col_collapse_plus)
+
             col_collapse_plus.onclick = () => {
                 if (col_collapse_plus.textContent == "+") {
                     col_collapse_plus.textContent = "-"
@@ -1845,17 +1844,200 @@ function config_gramatical_list() {
                 }
             }
 
-            const col_collapse_name = newE("div", randomKey(10, '12345abcde'), "col")
+
+            const col_collapse_name = newE("div", "categoria" + cat.key, "col")
             col_collapse_name.textContent = cat.nombre[0].texto
             item_collapse_categoria.appendChild(col_collapse_name)
 
-            const div_collapse = newE("div", "collapse_ps" + cat_A, "collapse show ms-5 item-tree ps-2")
-            div_collapse.textContent = "Sub categoria"
-            panel_list.appendChild(div_collapse)
-            cat_A++
+            let i = cat.key
+            col_collapse_name.onclick = () => {
+                _make_panel_cat(cat, i, true)
+            }
+
+            const div_collapse_subcategoria = newE("div", "collapse_ps" + cat.key, "collapse show ms-3")
+            panel_list.appendChild(div_collapse_subcategoria)
+
+
+            cat.subcategorias.forEach(sub_B => {
+
+                const item_collapse_categoria = newE("div", randomKey(10, '12345abcde'), "row align-items-center item-tree")
+                div_collapse_subcategoria.appendChild(item_collapse_categoria)
+
+                const col_plus_b = newE("div", randomKey(10, '12345abcde'), "col-auto plus-tree")
+                col_plus_b.textContent = "-"
+                col_plus_b.setAttribute("data-bs-toggle", "collapse")
+                col_plus_b.setAttribute("data-bs-target", "#collapse_ps" + sub_B.key)
+                item_collapse_categoria.appendChild(col_plus_b)
+
+                col_plus_b.onclick = () => {
+                    if (col_plus_b.textContent == "+") {
+                        col_plus_b.textContent = "-"
+                    } else if (col_collapse_plus.textContent == "-") {
+                        col_plus_b.textContent = "+"
+                    }
+                }
+             
+                const col_collapse_name = newE("div", "categoria" + sub_B.key, "col")
+                col_collapse_name.textContent = sub_B.nombre[0].texto
+                item_collapse_categoria.appendChild(col_collapse_name)
+
+
+                let ii = sub_B.key
+                col_collapse_name.onclick = () => {
+                    _make_panel_cat(sub_B, ii, true)
+                }
+    
+                const div_collapse_AB = newE("div", "collapse_ps"  + sub_B.key, "collapse show ms-3")
+                //div_collapse_AB.textContent="AB"
+                item_collapse_categoria.appendChild(div_collapse_AB)
+
+
+
+            })
+
+
         })
 
+        _make_panel_cat(tabla_categorias[0], 0, true)
+        function _make_panel_cat(cat, id, add) {
+            panel_list_edit.innerHTML = ""
+            //Si aún no es el último nivel, permitir agregar
+            if (add == true) {
+                const div_actions = newE("div", randomKey(20, '12345abcde'), "div-fluid")
+                panel_list_edit.appendChild(div_actions)
+
+                const div_add_categoria = newE("div", randomKey(20, '12345abcde'), "item-texto-small")
+                div_add_categoria.textContent = "Agregar categoria +"
+                div_actions.appendChild(div_add_categoria)
+                panel_list_edit.appendChild(div_actions)
+
+                div_add_categoria.onclick = () => {
+                    cat.subcategorias.push(template_ps())
+                    Guardar_datos("TABLAS", global_proyecto["TABLAS"])
+                }
+            }
+            /////////////////////////////////////////////////////////////////
+            const row_nombre = newE("div", randomKey(20, '12345abcde'), "row align-items-center")
+            panel_list_edit.appendChild(row_nombre)
+
+            const col_nombre = newE("div", randomKey(20, '12345abcde'), "col-2 ms-2")
+            col_nombre.textContent = "Nombre"
+            row_nombre.appendChild(col_nombre)
+
+            const col_nombre_valores = newE("div", randomKey(20, '12345abcde'), "col")
+            row_nombre.appendChild(col_nombre_valores)
+
+
+            cat.nombre.forEach(n => {
+                const filter_lng = global_proyecto["PROYECTO"].Lngtraducion.filter(el => el.abreviacion == n.abreviacion)
+                if (filter_lng[0].visible == true) {
+                    const row_lng = newE("div", randomKey(20, '12345abcde'), "row align-items-center")
+                    col_nombre_valores.appendChild(row_lng)
+
+                    const col_nombre_lng = newE("div", randomKey(20, '12345abcde'), "col-auto tag-small")
+                    col_nombre_lng.textContent = n.abreviacion
+                    row_lng.appendChild(col_nombre_lng)
+
+                    const col_nombre_value = newE("div", randomKey(20, '12345abcde'), "col")
+                    row_lng.appendChild(col_nombre_value)
+
+                    const int_lng_value = newE("input", randomKey(20, '12345abcde'), "input-flat-dicc")
+                    col_nombre_value.appendChild(int_lng_value)
+
+                    int_lng_value.value = n.texto
+                    let campo = n
+
+                    int_lng_value.onchange = () => {
+                        campo.texto = int_lng_value.value
+                        byE("categoria" + id).textContent = cat.nombre[0].texto
+                        Guardar_datos("TABLAS", global_proyecto["TABLAS"])
+                    }
+                }
+
+            })
+
+            //////////////////////////////////////////////////////////////////////////////77
+            const row_abb = newE("div", randomKey(20, '12345abcde'), "row align-items-center mt-2")
+            panel_list_edit.appendChild(row_abb)
+
+            const col_abb = newE("div", randomKey(20, '12345abcde'), "col-2 ms-2")
+            col_abb.textContent = "Abreviación"
+            row_abb.appendChild(col_abb)
+
+            const col_abb_valores = newE("div", randomKey(20, '12345abcde'), "col")
+            row_abb.appendChild(col_abb_valores)
+
+            cat.abreviaciones.forEach(l => {
+                const filter_lng = global_proyecto["PROYECTO"].Lngtraducion.filter(el => el.abreviacion == l.abreviacion)
+                if (filter_lng[0].visible == true) {
+                    const row_lng = newE("div", randomKey(20, '12345abcde'), "row align-items-center")
+                    col_abb_valores.appendChild(row_lng)
+
+                    const col_nombre_lng = newE("div", randomKey(20, '12345abcde'), "col-auto tag-small")
+                    col_nombre_lng.textContent = l.abreviacion
+                    row_lng.appendChild(col_nombre_lng)
+
+                    const col_nombre_value = newE("div", randomKey(20, '12345abcde'), "col")
+                    row_lng.appendChild(col_nombre_value)
+
+                    const int_lng_value = newE("input", randomKey(20, '12345abcde'), "input-flat-dicc")
+                    col_nombre_value.appendChild(int_lng_value)
+
+                    let campo = l
+                    int_lng_value.value = l.texto
+                    int_lng_value.onchange = () => {
+                        campo.texto = int_lng_value.value
+                        Guardar_datos("TABLAS", global_proyecto["TABLAS"])
+                    }
+                }
+
+            })
+
+            //////////////////////////////////////////////////////////////////////////////77
+            const row_det = newE("div", randomKey(20, '12345abcde'), "row align-items-center mt-2")
+            panel_list_edit.appendChild(row_det)
+
+            const col_det = newE("div", randomKey(20, '12345abcde'), "col-2 ms-2")
+            col_det.textContent = "Definiciónes"
+            row_det.appendChild(col_det)
+
+            const col_det_valores = newE("div", randomKey(20, '12345abcde'), "col")
+            row_det.appendChild(col_det_valores)
+
+            cat.definiciones.forEach(d => {
+                const filter_lng = global_proyecto["PROYECTO"].Lngtraducion.filter(el => el.abreviacion == d.abreviacion)
+                if (filter_lng[0].visible == true) {
+                    const row_lng = newE("div", randomKey(20, '12345abcde'), "row align-items-start")
+                    col_det_valores.appendChild(row_lng)
+
+                    const col_nombre_lng = newE("div", randomKey(20, '12345abcde'), "col-auto tag-small")
+                    col_nombre_lng.textContent = d.abreviacion
+                    row_lng.appendChild(col_nombre_lng)
+
+                    const col_nombre_value = newE("div", randomKey(20, '12345abcde'), "col")
+                    row_lng.appendChild(col_nombre_value)
+
+                    const int_lng_value = newE("textarea", randomKey(20, '12345abcde'), "input-flat-dicc")
+                    col_nombre_value.appendChild(int_lng_value)
+
+                    let campo = d
+                    int_lng_value.value = campo.texto
+                    int_lng_value.onchange = () => {
+                        campo.texto = int_lng_value.value
+                        Guardar_datos("TABLAS", global_proyecto["TABLAS"])
+                    }
+                }
+
+            })
+
+
+        }
+
     }
+    byE("btnAceptar_open").onclick = () => {
+        //make_lexicon()
+    }
+
 }
 
 
@@ -2040,7 +2222,7 @@ function template_ps() {
         "nombre": ns,
         "abreviaciones": abbs,
         "definiciones": dess,
-        "subcategorias":[]
+        "subcategorias": []
     }
     return template
 }

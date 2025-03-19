@@ -36,23 +36,40 @@ loadDataBase("1dniplVXfiSFYUFfsT1Ij6cdEoAdtK7dqWf3x4s9eUSw", proyecto).then(obje
     GLOBAL.from_drive = DataPrincipal
 })
 
-function _make_contextos_items(){
-    col_contexto_values.innerHTML=""
-    entrada["clase-contexto"].contextos.forEach(contexto=>{
-        const div_contexto = newE("div", "div_contexto" + contexto.nombre, "div-fluid me-4")
-        div_contexto.style.width = "50px"
-        div_contexto.textContent = contexto.contexto
+const collapse_sub = newE("div", "collapse_ps" + cat_A, "collapse show")
+            panel_list.appendChild(collapse_sub)
 
-        const div_borrar = newE("div", "div_borrar" + contexto.nombre, "ms-2 bi bi-x-circle-fill btn-context-lx")
-        div_contexto.appendChild(div_borrar)
-        col_contexto_values.appendChild(div_contexto)
 
-        div_borrar.onclick=()=>{
-            const filter_borrar=entrada["clase-contexto"].contextos.filter(e=>e.key!=contexto.key)
-            entrada["clase-contexto"].contextos=filter_borrar
-            Guardar_datos("LEXICON", global_proyecto["LEXICON"])
-            _make_contextos_items()
-        }
+            let cat_B = 0
+            cat.subcategorias.forEach(sub_B => {
 
-    })
+                const item_collapse_categoria_b = newE("div", randomKey(10, '12345abcde'), "row align-items-center item-tree")
+                collapse_sub.appendChild(item_collapse_categoria)
+
+               
+
+
+                cat_B++
+            })
+
+            cat_A++
+        
+        
+
+const col_collapse_plus_b = newE("div", randomKey(10, '12345abcde'), "col-auto plus-tree")
+col_collapse_plus_b.textContent = "-"
+col_collapse_plus_b.setAttribute("data-bs-toggle", "collapse")
+col_collapse_plus_b.setAttribute("data-bs-target", "#collapse_ps" + cat_A)
+item_collapse_categoria_b.appendChild(col_collapse_plus_b)
+
+col_collapse_plus_b.onclick = () => {
+    if (col_collapse_plus_b.textContent == "+") {
+        col_collapse_plus_b.textContent = "-"
+    } else if (col_collapse_plus_b.textContent == "-") {
+        col_collapse_plus_b.textContent = "+"
+    }
 }
+
+const col_collapse_name_b = newE("div", "categoria" + cat_B, "col")
+col_collapse_name_b.textContent = sub_B.nombre[0].texto
+item_collapse_categoria_b.appendChild(col_collapse_name_b)

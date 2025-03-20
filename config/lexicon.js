@@ -1815,14 +1815,13 @@ function config_gramatical_list() {
 
     div_add_categoria.onclick = () => {
         global_proyecto["TABLAS"]["CATGRAMATICAL"].push(template_ps())
-        console.log(global_proyecto["TABLAS"]["CATGRAMATICAL"])
         Guardar_datos("TABLAS", global_proyecto["TABLAS"])
         _make_categoria()
     }
 
 
     function _make_categoria() {
-        const tabla_categorias = global_proyecto["TABLAS"]["CATGRAMATICAL"]
+        let tabla_categorias = global_proyecto["TABLAS"]["CATGRAMATICAL"]
         const panel_list = byE("panel_list_ps")
         const panel_list_edit = byE("panel_lexicon_edit_ps")
 
@@ -1853,7 +1852,7 @@ function config_gramatical_list() {
             let i = cat.key
             let campo = cat
             col_collapse_name.onclick = () => {
-                _make_panel_cat(campo, i, true)
+                _make_panel_cat(tabla_categorias,campo, i, true)
             }
 
             const div_collapse_subcategoria = newE("div", "collapse_ps" + cat.key, "collapse show ms-3")
@@ -1884,7 +1883,7 @@ function config_gramatical_list() {
                 let ii = sub_B.key
                 let campo = sub_B
                 col_collapse_name.onclick = () => {
-                    _make_panel_cat(campo, ii, true)
+                    _make_panel_cat(cat,campo, ii, true)
                 }
                 const div_collapse_ABC = newE("div", "collapse_ps" + sub_B.key, "collapse show ms-3")
                 item_collapse_categoria.appendChild(div_collapse_ABC)
@@ -1913,28 +1912,25 @@ function config_gramatical_list() {
                     let iii = sub_C.key
                     let campo = sub_C
                     col_collapse_name.onclick = () => {
-                        _make_panel_cat(campo, iii, false)
+                        _make_panel_cat(sub_B,campo, iii, false)
                     }
                     //const div_collapse_ABC = newE("div", "collapse_ps" + sub_C.key, "collapse show ms-3")
                     //item_collapse_categoria.appendChild(div_collapse_ABC)
                 })
             })
 
-
         })
         if (tabla_categorias.length != 0) {
-            _make_panel_cat(tabla_categorias[0], tabla_categorias[0].key, true)
+            _make_panel_cat(tabla_categorias[0], tabla_categorias[0], tabla_categorias[0].key, true)
         }
 
-        function _make_panel_cat(cat, id, add) {
-
+        function _make_panel_cat(parent,cat, id, add) {
             panel_list_edit.innerHTML = ""
             //Si aún no es el último nivel, permitir agregar
-            const div_actions = newE("div", randomKey(20, '12345abcde'), "div-fluid-rg mb-3")
+            const div_actions = newE("div", randomKey(20, '12345abcde'), "div-fluid-rg mb-3 bg-secondary p-3")
             panel_list_edit.appendChild(div_actions)
             if (add == true) {
-
-                const div_add_categoria = newE("div", randomKey(20, '12345abcde'), "item-texto-small")
+                const div_add_categoria = newE("div", randomKey(20, '12345abcde'), "item-texto-small text-white")
                 div_add_categoria.textContent = "Agregar subcategoria +"
                 div_actions.appendChild(div_add_categoria)
                 div_add_categoria.onclick = () => {
@@ -1944,14 +1940,27 @@ function config_gramatical_list() {
                 }
             }
             //Crea el menú para eliminar categorías
-            const div_del_categoria = newE("div", randomKey(20, '12345abcde'), "item-texto-small ms-2")
-            div_del_categoria.textContent = "Eliminar subcategoria +"
+            const div_del_categoria = newE("div", randomKey(20, '12345abcde'), "item-texto-small ms-2 text-white")
+            div_del_categoria.textContent = "Eliminar categoria +"
             div_actions.appendChild(div_del_categoria)
 
             div_del_categoria.onclick = () => {
-                //cat.subcategorias.push(template_ps())
-                //Guardar_datos("TABLAS", global_proyecto["TABLAS"])
-                //config_gramatical_list()
+                //Esta verfificación se hace si estamos en el nivel superior
+                //o inferior, para aplicar el filtro
+                if(verificar_datos(parent.subcategorias)==true){
+                    const filter_del = parent.subcategorias.filter(ele => ele.key != cat.key)
+                    parent.subcategorias = filter_del
+                    Guardar_datos("TABLAS", global_proyecto["TABLAS"])
+                    config_gramatical_list()
+                }else{
+                    const filter_del = parent.filter(ele => ele.key != cat.key)
+                    console.log(filter_del)
+                    global_proyecto["TABLAS"].CATGRAMATICAL = filter_del
+                    Guardar_datos("TABLAS", global_proyecto["TABLAS"])
+                    config_gramatical_list()
+
+                }
+
             }
 
             _make_nombre()
@@ -2293,7 +2302,7 @@ function template_ps() {
         lngs.forEach(l => {
             const item = {
                 "key": "lng-" + randomKey(10, '12345abcde'),
-                "texto": "Categoria en " + l.nombre,
+                "texto": "",
                 "idioma": l.nombre,
                 "abreviacion": l.abreviacion,
                 "visible": l.visible
@@ -2303,7 +2312,7 @@ function template_ps() {
         lngs.forEach(l => {
             const item = {
                 "key": "lng-" + randomKey(10, '12345abcde'),
-                "texto": "Categoria en " + l.nombre,
+                "texto": "",
                 "idioma": l.nombre,
                 "abreviacion": l.abreviacion,
                 "visible": l.visible

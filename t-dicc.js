@@ -18,3 +18,8 @@ col_menu_varianteOf.appendChild(btn_menu_varianteOf)
 
 const ul_menu_varianteOf = newE("ul", "ul_menu_varianteOf", "dropdown-menu shadow")
 col_menu_varianteOf.appendChild(ul_menu_varianteOf)
+
+//Evitar acciones de click
+ul_menu_ps.onclick = (e) => {
+    e.stopPropagation();
+}

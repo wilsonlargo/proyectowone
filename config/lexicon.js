@@ -786,7 +786,7 @@ function make_lexicon() {
             }
 
             const btn_agregar_ejemplo = newE("div", randomKey(10, '12345abcde'), "item-texto-small me-2")
-            btn_agregar_ejemplo.textContent = "Agregar ejemplo +"
+            //btn_agregar_ejemplo.textContent = "Agregar ejemplo +"
             col_acciones_sentidos.appendChild(btn_agregar_ejemplo)
 
             _make_sentido()
@@ -798,11 +798,29 @@ function make_lexicon() {
 
                 let s = 0
                 tabla_sentidos.forEach(sn => {
-                    const btn_sn_collapse = newE("div", randomKey(10, '12345abcde'), "btn-collapse-sn")
+                    const row_tool_sn = newE("div", randomKey(10, '12345abcde'), "row btn-collapse-sn mt-3")
+                    div_sentidos_list.appendChild(row_tool_sn)
+
+                    const col_tool_label = newE("div", randomKey(10, '12345abcde'), "col")
+                    row_tool_sn.appendChild(col_tool_label)
+
+                    const col_btns_sn = newE("div", randomKey(10, '12345abcde'), "col div-fluid-rg")
+                    row_tool_sn.appendChild(col_btns_sn)
+
+                    const btn_eliminar_sn = newE("div", randomKey(10, '12345abcde'), "item-texto-small me-2")
+                    btn_eliminar_sn.textContent = "Eliminar entrada"
+                    col_btns_sn.appendChild(btn_eliminar_sn)
+
+                    const btn_agregar_ejemplo = newE("div", randomKey(10, '12345abcde'), "item-texto-small me-2")
+                    btn_agregar_ejemplo.textContent = "Agregar ejemplo +"
+                    col_btns_sn.appendChild(btn_agregar_ejemplo)
+
+
+                    const btn_sn_collapse = newE("div", randomKey(10, '12345abcde'), "")
                     btn_sn_collapse.setAttribute("data-bs-toggle", "collapse")
                     btn_sn_collapse.setAttribute("data-bs-target", "#collapse_sn" + s)
                     btn_sn_collapse.textContent = "Sentido " + (s + 1)
-                    div_sentidos_list.appendChild(btn_sn_collapse)
+                    col_tool_label.appendChild(btn_sn_collapse)
 
                     const div_sn_collapse = newE("div", "collapse_sn" + s, "collapse show ms-4")
                     div_sentidos_list.appendChild(div_sn_collapse)
@@ -930,15 +948,182 @@ function make_lexicon() {
                         })
                     }
 
+                    _crear_pss()
+                    function _crear_pss() {
+                        const row_cat = newE("div", randomKey(10, '12345abcde'), "row")
+                        div_sn_collapse.appendChild(row_cat)
+
+                        const col_cat_menu = newE("div", randomKey(10, '12345abcde'), "col-auto")
+                        row_cat.appendChild(col_cat_menu)
+
+                        const row_cat_menu = newE("div", randomKey(10, '12345abcde'), "row align-items-center")
+                        col_cat_menu.appendChild(row_cat_menu)
+
+                        const col_row_catMenu = newE("div", randomKey(10, '12345abcde'), "col-auto")
+                        row_cat_menu.appendChild(col_row_catMenu)
+
+                        const btn_menu_cat = newE("div", randomKey(10, '12345abcde'), "bi bi-arrow-down-circle-fill btn-context-lx")
+                        btn_menu_cat.setAttribute("data-bs-toggle", "dropdown")
+                        col_row_catMenu.appendChild(btn_menu_cat)
+
+                        const ul_menu_cat = newE("ul", randomKey(10, '12345abcde'), "dropdown-menu shadow")
+                        col_row_catMenu.appendChild(ul_menu_cat)
+
+                        const col_row_catLabel = newE("div", randomKey(10, '12345abcde'), "col-auto")
+                        row_cat_menu.appendChild(col_row_catLabel)
+
+                        const div_col_catLabel = newE("div", randomKey(10, '12345abcde'), "sub-labels")
+                        div_col_catLabel.textContent = "Cat. gramatical"
+                        col_row_catLabel.appendChild(div_col_catLabel)
+
+                        const col_ps_value = newE("div", randomKey(10, '12345abcde'), "col")
+                        row_cat.appendChild(col_ps_value)
+
+                        const row_ps_value = newE("div", randomKey(10, '12345abcde'), "row align-items-center")
+                        col_ps_value.appendChild(row_ps_value)
+
+                        const col_ps_values = newE("div", randomKey(10, '12345abcde'), "col div-fluid ms-5")
+                        col_ps_values.textContent = sn.ps
+
+
+                        row_ps_value.appendChild(col_ps_values)
+
+                        const col_ps_items = newE("div", randomKey(10, '12345abcde'), "col-auto")
+                        row_ps_value.appendChild(col_ps_items)
+
+                        const btn_menu_ps_items = newE("button", randomKey(10, '12345abcde'), "btn btn-light btn-sm fw-bold")
+                        btn_menu_ps_items.type = "button"
+                        btn_menu_ps_items.textContent = "..."
+                        btn_menu_ps_items.setAttribute("data-bs-toggle", "dropdown")
+                        col_ps_items.appendChild(btn_menu_ps_items)
+
+                        const ul_menu_ps = newE("ul", randomKey(10, '12345abcde'), "dropdown-menu shadow")
+                        col_ps_items.appendChild(ul_menu_ps)
+
+                        ul_menu_ps.onclick = (e) => {
+                            e.stopPropagation();
+                        }
+
+                        const div_menu_ps = newE("div", randomKey(10, '12345abcde'), "m-3 menu-group-scroll div-categoria")
+                        ul_menu_ps.appendChild(div_menu_ps)
+
+
+                        _make_tree_ps()
+                        function _make_tree_ps() {
+                            if (verificar_datos(global_proyecto["TABLAS"].CATGRAMATICAL) == true) {
+
+                                let tabla_categorias = global_proyecto["TABLAS"]["CATGRAMATICAL"]
+                                const panel_list = div_menu_ps
+
+                                panel_list.innerHTML = ""
+
+                                tabla_categorias.forEach(cat => {
+                                    const item_collapse_categoria = newE("div", randomKey(10, '12345abcde'), "row align-items-center")
+                                    item_collapse_categoria.style.height = "30px"
+                                    panel_list.appendChild(item_collapse_categoria)
+
+                                    const col_collapse_plus = newE("div", randomKey(10, '12345abcde'), "col-auto plus-tree")
+                                    col_collapse_plus.textContent = "-"
+                                    col_collapse_plus.setAttribute("data-bs-toggle", "collapse")
+                                    col_collapse_plus.setAttribute("data-bs-target", "#collapse_ps" + cat.key)
+                                    item_collapse_categoria.appendChild(col_collapse_plus)
+
+                                    col_collapse_plus.onclick = () => {
+                                        if (col_collapse_plus.textContent == "+") {
+                                            col_collapse_plus.textContent = "-"
+                                        } else if (col_collapse_plus.textContent == "-") {
+                                            col_collapse_plus.textContent = "+"
+                                        }
+                                    }
+
+                                    const col_collapse_name = newE("div", "categoria" + cat.key, "col item-tree")
+                                    col_collapse_name.textContent = cat.nombre[0].texto
+                                    item_collapse_categoria.appendChild(col_collapse_name)
+
+                                    let i = cat.key
+                                    let campo = cat
+                                    col_collapse_name.onclick = () => {
+                                        alert(cat.nombre[0].texto)
+                                    }
+
+                                    const div_collapse_subcategoria = newE("div", "collapse_ps" + cat.key, "collapse show")
+                                    panel_list.appendChild(div_collapse_subcategoria)
+
+                                    cat.subcategorias.forEach(sub_B => {
+                                        const item_collapse_categoria = newE("div", randomKey(10, '12345abcde'), "row align-items-center")
+                                        item_collapse_categoria.style.height = "30px"
+                                        div_collapse_subcategoria.appendChild(item_collapse_categoria)
+
+                                        const col_plus_b = newE("div", randomKey(10, '12345abcde'), "col-auto plus-tree ms-2")
+                                        col_plus_b.textContent = "-"
+                                        col_plus_b.setAttribute("data-bs-toggle", "collapse")
+                                        col_plus_b.setAttribute("data-bs-target", "#collapse_ps" + sub_B.key)
+                                        item_collapse_categoria.appendChild(col_plus_b)
+
+                                        col_plus_b.onclick = () => {
+                                            if (col_plus_b.textContent == "+") {
+                                                col_plus_b.textContent = "-"
+                                            } else if (col_collapse_plus.textContent == "-") {
+                                                col_plus_b.textContent = "+"
+                                            }
+                                        }
+
+                                        const col_collapse_name = newE("div", "categoria" + sub_B.key, "col item-tree")
+                                        col_collapse_name.textContent = sub_B.nombre[0].texto
+                                        item_collapse_categoria.appendChild(col_collapse_name)
+
+                                        let ii = sub_B.key
+                                        let campo = sub_B
+                                        col_collapse_name.onclick = () => {
+                                            alert(sub_B.nombre[0].texto)
+                                        }
+                                        const div_collapse_ABC = newE("div", "collapse_ps" + sub_B.key, "collapse show")
+                                        item_collapse_categoria.appendChild(div_collapse_ABC)
+                                        sub_B.subcategorias.forEach(sub_C => {
+                                            const item_collapse_categoria = newE("div", randomKey(10, '12345abcde'), "row align-items-center")
+                                            item_collapse_categoria.style.height = "30px"
+                                            div_collapse_ABC.appendChild(item_collapse_categoria)
+
+                                            const col_plus_b = newE("div", randomKey(10, '12345abcde'), "col-auto plus-tree ms-2")
+                                            col_plus_b.textContent = "-"
+                                            col_plus_b.setAttribute("data-bs-toggle", "collapse")
+                                            col_plus_b.setAttribute("data-bs-target", "#collapse_ps" + sub_C.key)
+                                            item_collapse_categoria.appendChild(col_plus_b)
+
+                                            col_plus_b.onclick = () => {
+                                                if (col_plus_b.textContent == "+") {
+                                                    col_plus_b.textContent = "-"
+                                                } else if (col_collapse_plus.textContent == "-") {
+                                                    col_plus_b.textContent = "+"
+                                                }
+                                            }
+
+                                            const col_collapse_name = newE("div", "categoria" + sub_C.key, "col item-tree")
+                                            col_collapse_name.textContent = sub_C.nombre[0].texto
+                                            item_collapse_categoria.appendChild(col_collapse_name)
+
+                                            let iii = sub_C.key
+                                            let campo = sub_C
+                                            col_collapse_name.onclick = () => {
+                                                alert(sub_C.key.nombre[0].texto)
+                                            }
+                                            //const div_collapse_ABC = newE("div", "collapse_ps" + sub_C.key, "collapse show ms-3")
+                                            //item_collapse_categoria.appendChild(div_collapse_ABC)
+                                        })
+                                    })
+
+                                })
+
+                            }
+                        }
+
+
+                    }
 
                     s++
                 })
 
-
-
-
             }
-
 
         }
 
@@ -1852,7 +2037,7 @@ function config_gramatical_list() {
             let i = cat.key
             let campo = cat
             col_collapse_name.onclick = () => {
-                _make_panel_cat(tabla_categorias,campo, i, true)
+                _make_panel_cat(tabla_categorias, campo, i, true)
             }
 
             const div_collapse_subcategoria = newE("div", "collapse_ps" + cat.key, "collapse show ms-3")
@@ -1883,7 +2068,7 @@ function config_gramatical_list() {
                 let ii = sub_B.key
                 let campo = sub_B
                 col_collapse_name.onclick = () => {
-                    _make_panel_cat(cat,campo, ii, true)
+                    _make_panel_cat(cat, campo, ii, true)
                 }
                 const div_collapse_ABC = newE("div", "collapse_ps" + sub_B.key, "collapse show ms-3")
                 item_collapse_categoria.appendChild(div_collapse_ABC)
@@ -1912,7 +2097,7 @@ function config_gramatical_list() {
                     let iii = sub_C.key
                     let campo = sub_C
                     col_collapse_name.onclick = () => {
-                        _make_panel_cat(sub_B,campo, iii, false)
+                        _make_panel_cat(sub_B, campo, iii, false)
                     }
                     //const div_collapse_ABC = newE("div", "collapse_ps" + sub_C.key, "collapse show ms-3")
                     //item_collapse_categoria.appendChild(div_collapse_ABC)
@@ -1924,7 +2109,7 @@ function config_gramatical_list() {
             _make_panel_cat(tabla_categorias[0], tabla_categorias[0], tabla_categorias[0].key, true)
         }
 
-        function _make_panel_cat(parent,cat, id, add) {
+        function _make_panel_cat(parent, cat, id, add) {
             panel_list_edit.innerHTML = ""
             //Si aún no es el último nivel, permitir agregar
             const div_actions = newE("div", randomKey(20, '12345abcde'), "div-fluid-rg mb-3 bg-secondary p-3")
@@ -1947,12 +2132,12 @@ function config_gramatical_list() {
             div_del_categoria.onclick = () => {
                 //Esta verfificación se hace si estamos en el nivel superior
                 //o inferior, para aplicar el filtro
-                if(verificar_datos(parent.subcategorias)==true){
+                if (verificar_datos(parent.subcategorias) == true) {
                     const filter_del = parent.subcategorias.filter(ele => ele.key != cat.key)
                     parent.subcategorias = filter_del
                     Guardar_datos("TABLAS", global_proyecto["TABLAS"])
                     config_gramatical_list()
-                }else{
+                } else {
                     const filter_del = parent.filter(ele => ele.key != cat.key)
                     console.log(filter_del)
                     global_proyecto["TABLAS"].CATGRAMATICAL = filter_del
@@ -2112,15 +2297,11 @@ function config_gramatical_list() {
 
 
             }
-
-
-
-
         }
 
     }
     byE("btnAceptar_open").onclick = () => {
-        //make_lexicon()
+        make_lexicon()
     }
 
 }

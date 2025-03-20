@@ -266,7 +266,7 @@ font-size: 9pt;
 .menu-group-scroll{
   margin-top: 5px;
   max-height: 100px;
-  height: 200px;
+  height: 300px;
   border: #aaa solid 1px;
   overflow-y: auto; /* Show vertical scrollbar */ 
   overflow-x:hidden
@@ -283,7 +283,6 @@ font-size: 9pt;
 
 .item-tree{
   cursor: pointer;
-  margin: 2px;
 }
 .item-tree:hover{
   background-color: #555;

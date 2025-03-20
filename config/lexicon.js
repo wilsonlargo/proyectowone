@@ -1815,9 +1815,12 @@ function config_gramatical_list() {
 
     div_add_categoria.onclick = () => {
         global_proyecto["TABLAS"]["CATGRAMATICAL"].push(template_ps())
+        console.log(global_proyecto["TABLAS"]["CATGRAMATICAL"])
         Guardar_datos("TABLAS", global_proyecto["TABLAS"])
         _make_categoria()
     }
+
+
     function _make_categoria() {
         const tabla_categorias = global_proyecto["TABLAS"]["CATGRAMATICAL"]
         const panel_list = byE("panel_list_ps")
@@ -1825,9 +1828,8 @@ function config_gramatical_list() {
 
         panel_list.innerHTML = ""
 
-
         tabla_categorias.forEach(cat => {
-            const item_collapse_categoria = newE("div", randomKey(10, '12345abcde'), "row align-items-center item-tree")
+            const item_collapse_categoria = newE("div", randomKey(10, '12345abcde'), "row align-items-center")
             panel_list.appendChild(item_collapse_categoria)
 
             const col_collapse_plus = newE("div", randomKey(10, '12345abcde'), "col-auto plus-tree")
@@ -1844,23 +1846,21 @@ function config_gramatical_list() {
                 }
             }
 
-
-            const col_collapse_name = newE("div", "categoria" + cat.key, "col")
+            const col_collapse_name = newE("div", "categoria" + cat.key, "col item-tree")
             col_collapse_name.textContent = cat.nombre[0].texto
             item_collapse_categoria.appendChild(col_collapse_name)
 
             let i = cat.key
+            let campo = cat
             col_collapse_name.onclick = () => {
-                _make_panel_cat(cat, i, true)
+                _make_panel_cat(campo, i, true)
             }
 
             const div_collapse_subcategoria = newE("div", "collapse_ps" + cat.key, "collapse show ms-3")
             panel_list.appendChild(div_collapse_subcategoria)
 
-
             cat.subcategorias.forEach(sub_B => {
-
-                const item_collapse_categoria = newE("div", randomKey(10, '12345abcde'), "row align-items-center item-tree")
+                const item_collapse_categoria = newE("div", randomKey(10, '12345abcde'), "row align-items-center")
                 div_collapse_subcategoria.appendChild(item_collapse_categoria)
 
                 const col_plus_b = newE("div", randomKey(10, '12345abcde'), "col-auto plus-tree")
@@ -1876,159 +1876,235 @@ function config_gramatical_list() {
                         col_plus_b.textContent = "+"
                     }
                 }
-             
-                const col_collapse_name = newE("div", "categoria" + sub_B.key, "col")
+
+                const col_collapse_name = newE("div", "categoria" + sub_B.key, "col item-tree")
                 col_collapse_name.textContent = sub_B.nombre[0].texto
                 item_collapse_categoria.appendChild(col_collapse_name)
 
-
                 let ii = sub_B.key
+                let campo = sub_B
                 col_collapse_name.onclick = () => {
-                    _make_panel_cat(sub_B, ii, true)
+                    _make_panel_cat(campo, ii, true)
                 }
-    
-                const div_collapse_AB = newE("div", "collapse_ps"  + sub_B.key, "collapse show ms-3")
-                //div_collapse_AB.textContent="AB"
-                item_collapse_categoria.appendChild(div_collapse_AB)
+                const div_collapse_ABC = newE("div", "collapse_ps" + sub_B.key, "collapse show ms-3")
+                item_collapse_categoria.appendChild(div_collapse_ABC)
+                sub_B.subcategorias.forEach(sub_C => {
+                    const item_collapse_categoria = newE("div", randomKey(10, '12345abcde'), "row align-items-center")
+                    div_collapse_ABC.appendChild(item_collapse_categoria)
 
+                    const col_plus_b = newE("div", randomKey(10, '12345abcde'), "col-auto plus-tree")
+                    col_plus_b.textContent = "-"
+                    col_plus_b.setAttribute("data-bs-toggle", "collapse")
+                    col_plus_b.setAttribute("data-bs-target", "#collapse_ps" + sub_C.key)
+                    item_collapse_categoria.appendChild(col_plus_b)
 
+                    col_plus_b.onclick = () => {
+                        if (col_plus_b.textContent == "+") {
+                            col_plus_b.textContent = "-"
+                        } else if (col_collapse_plus.textContent == "-") {
+                            col_plus_b.textContent = "+"
+                        }
+                    }
 
+                    const col_collapse_name = newE("div", "categoria" + sub_C.key, "col item-tree")
+                    col_collapse_name.textContent = sub_C.nombre[0].texto
+                    item_collapse_categoria.appendChild(col_collapse_name)
+
+                    let iii = sub_C.key
+                    let campo = sub_C
+                    col_collapse_name.onclick = () => {
+                        _make_panel_cat(campo, iii, false)
+                    }
+                    //const div_collapse_ABC = newE("div", "collapse_ps" + sub_C.key, "collapse show ms-3")
+                    //item_collapse_categoria.appendChild(div_collapse_ABC)
+                })
             })
 
 
         })
+        if (tabla_categorias.length != 0) {
+            _make_panel_cat(tabla_categorias[0], tabla_categorias[0].key, true)
+        }
 
-        _make_panel_cat(tabla_categorias[0], 0, true)
         function _make_panel_cat(cat, id, add) {
+
             panel_list_edit.innerHTML = ""
             //Si aún no es el último nivel, permitir agregar
+            const div_actions = newE("div", randomKey(20, '12345abcde'), "div-fluid-rg mb-3")
+            panel_list_edit.appendChild(div_actions)
             if (add == true) {
-                const div_actions = newE("div", randomKey(20, '12345abcde'), "div-fluid")
-                panel_list_edit.appendChild(div_actions)
 
                 const div_add_categoria = newE("div", randomKey(20, '12345abcde'), "item-texto-small")
-                div_add_categoria.textContent = "Agregar categoria +"
+                div_add_categoria.textContent = "Agregar subcategoria +"
                 div_actions.appendChild(div_add_categoria)
-                panel_list_edit.appendChild(div_actions)
-
                 div_add_categoria.onclick = () => {
                     cat.subcategorias.push(template_ps())
                     Guardar_datos("TABLAS", global_proyecto["TABLAS"])
+                    config_gramatical_list()
                 }
             }
-            /////////////////////////////////////////////////////////////////
-            const row_nombre = newE("div", randomKey(20, '12345abcde'), "row align-items-center")
-            panel_list_edit.appendChild(row_nombre)
+            //Crea el menú para eliminar categorías
+            const div_del_categoria = newE("div", randomKey(20, '12345abcde'), "item-texto-small ms-2")
+            div_del_categoria.textContent = "Eliminar subcategoria +"
+            div_actions.appendChild(div_del_categoria)
 
-            const col_nombre = newE("div", randomKey(20, '12345abcde'), "col-2 ms-2")
-            col_nombre.textContent = "Nombre"
-            row_nombre.appendChild(col_nombre)
+            div_del_categoria.onclick = () => {
+                //cat.subcategorias.push(template_ps())
+                //Guardar_datos("TABLAS", global_proyecto["TABLAS"])
+                //config_gramatical_list()
+            }
 
-            const col_nombre_valores = newE("div", randomKey(20, '12345abcde'), "col")
-            row_nombre.appendChild(col_nombre_valores)
+            _make_nombre()
+            function _make_nombre() {
+                /////////////////////////////////////////////////////////////////
+                const row_nombre = newE("div", randomKey(20, '12345abcde'), "row align-items-center")
+                panel_list_edit.appendChild(row_nombre)
 
+                const col_nombre = newE("div", randomKey(20, '12345abcde'), "col-2 ms-2")
+                col_nombre.textContent = "Nombre"
+                row_nombre.appendChild(col_nombre)
 
-            cat.nombre.forEach(n => {
-                const filter_lng = global_proyecto["PROYECTO"].Lngtraducion.filter(el => el.abreviacion == n.abreviacion)
-                if (filter_lng[0].visible == true) {
-                    const row_lng = newE("div", randomKey(20, '12345abcde'), "row align-items-center")
-                    col_nombre_valores.appendChild(row_lng)
+                const col_nombre_valores = newE("div", randomKey(20, '12345abcde'), "col")
+                row_nombre.appendChild(col_nombre_valores)
 
-                    const col_nombre_lng = newE("div", randomKey(20, '12345abcde'), "col-auto tag-small")
-                    col_nombre_lng.textContent = n.abreviacion
-                    row_lng.appendChild(col_nombre_lng)
+                for (i in cat.nombre) {
+                    const lng = cat.nombre[i]
+                    const filter_lng = global_proyecto["PROYECTO"].Lngtraducion.filter(el => el.abreviacion == lng.abreviacion)
+                    if (filter_lng[0].visible == true) {
+                        const row_lng = newE("div", randomKey(20, '12345abcde'), "row align-items-center")
+                        col_nombre_valores.appendChild(row_lng)
 
-                    const col_nombre_value = newE("div", randomKey(20, '12345abcde'), "col")
-                    row_lng.appendChild(col_nombre_value)
+                        const col_nombre_lng = newE("div", randomKey(20, '12345abcde'), "col-auto tag-small")
+                        col_nombre_lng.textContent = lng.abreviacion
+                        row_lng.appendChild(col_nombre_lng)
 
-                    const int_lng_value = newE("input", randomKey(20, '12345abcde'), "input-flat-dicc")
-                    col_nombre_value.appendChild(int_lng_value)
+                        const col_nombre_value = newE("div", randomKey(20, '12345abcde'), "col")
+                        row_lng.appendChild(col_nombre_value)
 
-                    int_lng_value.value = n.texto
-                    let campo = n
+                        const int_lng_value = newE("input", "int-" + randomKey(20, '12345abcde'), "input-flat-dicc")
+                        col_nombre_value.appendChild(int_lng_value)
 
-                    int_lng_value.onchange = () => {
-                        campo.texto = int_lng_value.value
-                        byE("categoria" + id).textContent = cat.nombre[0].texto
-                        Guardar_datos("TABLAS", global_proyecto["TABLAS"])
+                        const valueFromLng = cat.nombre.filter(ele => ele.key == lng.key)
+
+                        int_lng_value.value = valueFromLng[0].texto
+
+                        int_lng_value.onchange = () => {
+                            //console.log(cat_gramatical.nombre[n].texto)
+                            valueFromLng[0].texto = int_lng_value.value
+                            const item = byE("categoria" + id)
+                            item.textContent = cat.nombre[0].texto
+
+                            //console.log(cat_gramatical.nombre[n].texto)
+                            Guardar_datos("TABLAS", global_proyecto["TABLAS"])
+                        }
+                    }
+                }
+            }
+
+            _make_abb()
+            function _make_abb() {
+                /////////////////////////////////////////////////////////////////
+                const row_nombre = newE("div", randomKey(20, '12345abcde'), "row align-items-center")
+                panel_list_edit.appendChild(row_nombre)
+
+                const col_nombre = newE("div", randomKey(20, '12345abcde'), "col-2 ms-2")
+                col_nombre.textContent = "Abreviación"
+                row_nombre.appendChild(col_nombre)
+
+                const col_nombre_valores = newE("div", randomKey(20, '12345abcde'), "col")
+                row_nombre.appendChild(col_nombre_valores)
+
+                for (i in cat.abreviaciones) {
+                    const lng = cat.abreviaciones[i]
+                    const filter_lng = global_proyecto["PROYECTO"].Lngtraducion.filter(el => el.abreviacion == lng.abreviacion)
+                    if (filter_lng[0].visible == true) {
+                        const row_lng = newE("div", randomKey(20, '12345abcde'), "row align-items-center")
+                        col_nombre_valores.appendChild(row_lng)
+
+                        const col_nombre_lng = newE("div", randomKey(20, '12345abcde'), "col-auto tag-small")
+                        col_nombre_lng.textContent = lng.abreviacion
+                        row_lng.appendChild(col_nombre_lng)
+
+                        const col_nombre_value = newE("div", randomKey(20, '12345abcde'), "col")
+                        row_lng.appendChild(col_nombre_value)
+
+                        const int_lng_value = newE("input", "int-" + randomKey(20, '12345abcde'), "input-flat-dicc")
+                        col_nombre_value.appendChild(int_lng_value)
+
+                        const valueFromLng = cat.abreviaciones.filter(ele => ele.key == lng.key)
+
+                        int_lng_value.value = valueFromLng[0].texto
+
+                        int_lng_value.onchange = () => {
+                            //console.log(cat_gramatical.nombre[n].texto)
+                            valueFromLng[0].texto = int_lng_value.value
+                            //console.log(cat_gramatical.nombre[n].texto)
+                            Guardar_datos("TABLAS", global_proyecto["TABLAS"])
+                        }
                     }
                 }
 
-            })
 
-            //////////////////////////////////////////////////////////////////////////////77
-            const row_abb = newE("div", randomKey(20, '12345abcde'), "row align-items-center mt-2")
-            panel_list_edit.appendChild(row_abb)
 
-            const col_abb = newE("div", randomKey(20, '12345abcde'), "col-2 ms-2")
-            col_abb.textContent = "Abreviación"
-            row_abb.appendChild(col_abb)
 
-            const col_abb_valores = newE("div", randomKey(20, '12345abcde'), "col")
-            row_abb.appendChild(col_abb_valores)
 
-            cat.abreviaciones.forEach(l => {
-                const filter_lng = global_proyecto["PROYECTO"].Lngtraducion.filter(el => el.abreviacion == l.abreviacion)
-                if (filter_lng[0].visible == true) {
-                    const row_lng = newE("div", randomKey(20, '12345abcde'), "row align-items-center")
-                    col_abb_valores.appendChild(row_lng)
 
-                    const col_nombre_lng = newE("div", randomKey(20, '12345abcde'), "col-auto tag-small")
-                    col_nombre_lng.textContent = l.abreviacion
-                    row_lng.appendChild(col_nombre_lng)
 
-                    const col_nombre_value = newE("div", randomKey(20, '12345abcde'), "col")
-                    row_lng.appendChild(col_nombre_value)
 
-                    const int_lng_value = newE("input", randomKey(20, '12345abcde'), "input-flat-dicc")
-                    col_nombre_value.appendChild(int_lng_value)
+            }
+            _make_det()
+            function _make_det() {
+                /////////////////////////////////////////////////////////////////
+                const row_nombre = newE("div", randomKey(20, '12345abcde'), "row align-items-center")
+                panel_list_edit.appendChild(row_nombre)
 
-                    let campo = l
-                    int_lng_value.value = l.texto
-                    int_lng_value.onchange = () => {
-                        campo.texto = int_lng_value.value
-                        Guardar_datos("TABLAS", global_proyecto["TABLAS"])
+                const col_nombre = newE("div", randomKey(20, '12345abcde'), "col-2 ms-2")
+                col_nombre.textContent = "Definicion"
+                row_nombre.appendChild(col_nombre)
+
+                const col_nombre_valores = newE("div", randomKey(20, '12345abcde'), "col")
+                row_nombre.appendChild(col_nombre_valores)
+
+                for (i in cat.definiciones) {
+                    const lng = cat.definiciones[i]
+                    const filter_lng = global_proyecto["PROYECTO"].Lngtraducion.filter(el => el.abreviacion == lng.abreviacion)
+                    if (filter_lng[0].visible == true) {
+                        const row_lng = newE("div", randomKey(20, '12345abcde'), "row align-items-center")
+                        col_nombre_valores.appendChild(row_lng)
+
+                        const col_nombre_lng = newE("div", randomKey(20, '12345abcde'), "col-auto tag-small")
+                        col_nombre_lng.textContent = lng.abreviacion
+                        row_lng.appendChild(col_nombre_lng)
+
+                        const col_nombre_value = newE("div", randomKey(20, '12345abcde'), "col")
+                        row_lng.appendChild(col_nombre_value)
+
+                        const int_lng_value = newE("textarea", "int-" + randomKey(20, '12345abcde'), "input-flat-dicc")
+                        col_nombre_value.appendChild(int_lng_value)
+
+                        const valueFromLng = cat.definiciones.filter(ele => ele.key == lng.key)
+
+                        int_lng_value.value = valueFromLng[0].texto
+
+                        int_lng_value.onchange = () => {
+                            //console.log(cat_gramatical.nombre[n].texto)
+                            valueFromLng[0].texto = int_lng_value.value
+                            //console.log(cat_gramatical.nombre[n].texto)
+                            Guardar_datos("TABLAS", global_proyecto["TABLAS"])
+                        }
                     }
                 }
 
-            })
 
-            //////////////////////////////////////////////////////////////////////////////77
-            const row_det = newE("div", randomKey(20, '12345abcde'), "row align-items-center mt-2")
-            panel_list_edit.appendChild(row_det)
 
-            const col_det = newE("div", randomKey(20, '12345abcde'), "col-2 ms-2")
-            col_det.textContent = "Definiciónes"
-            row_det.appendChild(col_det)
 
-            const col_det_valores = newE("div", randomKey(20, '12345abcde'), "col")
-            row_det.appendChild(col_det_valores)
 
-            cat.definiciones.forEach(d => {
-                const filter_lng = global_proyecto["PROYECTO"].Lngtraducion.filter(el => el.abreviacion == d.abreviacion)
-                if (filter_lng[0].visible == true) {
-                    const row_lng = newE("div", randomKey(20, '12345abcde'), "row align-items-start")
-                    col_det_valores.appendChild(row_lng)
 
-                    const col_nombre_lng = newE("div", randomKey(20, '12345abcde'), "col-auto tag-small")
-                    col_nombre_lng.textContent = d.abreviacion
-                    row_lng.appendChild(col_nombre_lng)
 
-                    const col_nombre_value = newE("div", randomKey(20, '12345abcde'), "col")
-                    row_lng.appendChild(col_nombre_value)
 
-                    const int_lng_value = newE("textarea", randomKey(20, '12345abcde'), "input-flat-dicc")
-                    col_nombre_value.appendChild(int_lng_value)
+            }
 
-                    let campo = d
-                    int_lng_value.value = campo.texto
-                    int_lng_value.onchange = () => {
-                        campo.texto = int_lng_value.value
-                        Guardar_datos("TABLAS", global_proyecto["TABLAS"])
-                    }
-                }
 
-            })
 
 
         }
@@ -2206,13 +2282,32 @@ function template_ps() {
         const lngs = global_proyecto["PROYECTO"].Lngtraducion
         lngs.forEach(l => {
             const item = {
+                "key": "lng-" + randomKey(10, '12345abcde'),
                 "texto": "Categoria en " + l.nombre,
                 "idioma": l.nombre,
                 "abreviacion": l.abreviacion,
                 "visible": l.visible
             }
             ns.push(item)
+        })
+        lngs.forEach(l => {
+            const item = {
+                "key": "lng-" + randomKey(10, '12345abcde'),
+                "texto": "Categoria en " + l.nombre,
+                "idioma": l.nombre,
+                "abreviacion": l.abreviacion,
+                "visible": l.visible
+            }
             abbs.push(item)
+        })
+        lngs.forEach(l => {
+            const item = {
+                "key": "lng-" + randomKey(10, '12345abcde'),
+                "texto": "Categoria en " + l.nombre,
+                "idioma": l.nombre,
+                "abreviacion": l.abreviacion,
+                "visible": l.visible
+            }
             dess.push(item)
         })
         //

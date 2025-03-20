@@ -36,40 +36,70 @@ loadDataBase("1dniplVXfiSFYUFfsT1Ij6cdEoAdtK7dqWf3x4s9eUSw", proyecto).then(obje
     GLOBAL.from_drive = DataPrincipal
 })
 
-const collapse_sub = newE("div", "collapse_ps" + cat_A, "collapse show")
-            panel_list.appendChild(collapse_sub)
 
 
-            let cat_B = 0
-            cat.subcategorias.forEach(sub_B => {
+cat.abreviaciones.forEach(l => {
+    const filter_lng = global_proyecto["PROYECTO"].Lngtraducion.filter(el => el.abreviacion == l.abreviacion)
+    if (filter_lng[0].visible == true) {
+        const row_lng = newE("div", randomKey(20, '12345abcde'), "row align-items-center")
+        col_abb_valores.appendChild(row_lng)
 
-                const item_collapse_categoria_b = newE("div", randomKey(10, '12345abcde'), "row align-items-center item-tree")
-                collapse_sub.appendChild(item_collapse_categoria)
+        const col_nombre_lng = newE("div", randomKey(20, '12345abcde'), "col-auto tag-small")
+        col_nombre_lng.textContent = l.abreviacion
+        row_lng.appendChild(col_nombre_lng)
 
-               
+        const col_nombre_value = newE("div", randomKey(20, '12345abcde'), "col")
+        row_lng.appendChild(col_nombre_value)
 
+        const int_lng_value = newE("input", randomKey(20, '12345abcde'), "input-flat-dicc")
+        col_nombre_value.appendChild(int_lng_value)
 
-                cat_B++
-            })
-
-            cat_A++
-        
-        
-
-const col_collapse_plus_b = newE("div", randomKey(10, '12345abcde'), "col-auto plus-tree")
-col_collapse_plus_b.textContent = "-"
-col_collapse_plus_b.setAttribute("data-bs-toggle", "collapse")
-col_collapse_plus_b.setAttribute("data-bs-target", "#collapse_ps" + cat_A)
-item_collapse_categoria_b.appendChild(col_collapse_plus_b)
-
-col_collapse_plus_b.onclick = () => {
-    if (col_collapse_plus_b.textContent == "+") {
-        col_collapse_plus_b.textContent = "-"
-    } else if (col_collapse_plus_b.textContent == "-") {
-        col_collapse_plus_b.textContent = "+"
+        let campo = l
+        int_lng_value.value = l.texto
+        int_lng_value.onchange = () => {
+            campo.texto = int_lng_value.value
+            Guardar_datos("TABLAS", global_proyecto["TABLAS"])
+        }
     }
-}
 
-const col_collapse_name_b = newE("div", "categoria" + cat_B, "col")
-col_collapse_name_b.textContent = sub_B.nombre[0].texto
-item_collapse_categoria_b.appendChild(col_collapse_name_b)
+})
+
+//////////////////////////////////////////////////////////////////////////////77
+const row_det = newE("div", randomKey(20, '12345abcde'), "row align-items-center mt-2")
+panel_list_edit.appendChild(row_det)
+
+const col_det = newE("div", randomKey(20, '12345abcde'), "col-2 ms-2")
+col_det.textContent = "Definiciónes"
+row_det.appendChild(col_det)
+
+const col_det_valores = newE("div", randomKey(20, '12345abcde'), "col")
+row_det.appendChild(col_det_valores)
+
+cat.definiciones.forEach(d => {
+    const filter_lng = global_proyecto["PROYECTO"].Lngtraducion.filter(el => el.abreviacion == d.abreviacion)
+    if (filter_lng[0].visible == true) {
+        const row_lng = newE("div", randomKey(20, '12345abcde'), "row align-items-start")
+        col_det_valores.appendChild(row_lng)
+
+        const col_nombre_lng = newE("div", randomKey(20, '12345abcde'), "col-auto tag-small")
+        col_nombre_lng.textContent = d.abreviacion
+        row_lng.appendChild(col_nombre_lng)
+
+        const col_nombre_value = newE("div", randomKey(20, '12345abcde'), "col")
+        row_lng.appendChild(col_nombre_value)
+
+        const int_lng_value = newE("textarea", randomKey(20, '12345abcde'), "input-flat-dicc")
+        col_nombre_value.appendChild(int_lng_value)
+
+        let campo = d
+        int_lng_value.value = campo.texto
+        int_lng_value.onchange = () => {
+            campo.texto = int_lng_value.value
+            Guardar_datos("TABLAS", global_proyecto["TABLAS"])
+        }
+    }
+
+})
+
+
+

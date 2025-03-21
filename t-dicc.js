@@ -23,3 +23,6 @@ col_menu_varianteOf.appendChild(ul_menu_varianteOf)
 ul_menu_ps.onclick = (e) => {
     e.stopPropagation();
 }
+
+//Para guardar dicc por tabla
+Guardar_datos("LEXICON", global_proyecto["LEXICON"])

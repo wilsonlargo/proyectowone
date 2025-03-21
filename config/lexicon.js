@@ -522,7 +522,6 @@ function make_lexicon() {
             int_visibleVarianteOf_label.textContent = "Visible"
             div_visible_varianteOf.appendChild(int_visibleVarianteOf_label)
 
-
             int_visible_varianteOf.checked = entrada["clase-varianteOf"].visible
             int_visible_varianteOf.onchange = () => {
                 entrada["clase-varianteOf"].visible = int_visible_varianteOf.checked

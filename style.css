@@ -178,7 +178,8 @@ div.content {
   padding: 10px;
 }
 .item-menu{
-  padding: 5px;
+  padding: 3px;
+  padding-left: 15px;
   cursor: pointer;
 }
 .item-menu:hover{

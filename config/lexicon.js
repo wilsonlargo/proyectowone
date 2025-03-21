@@ -212,6 +212,7 @@ function make_lexicon() {
         item_lx_vertodo_campos.onclick = () => {
             entrada["clase-contexto"].visible = true
             entrada["clase-varianteOf"].visible = true
+            entrada["clase-etimologia"].visible = true
             Guardar_datos("LEXICON", global_proyecto["LEXICON"])
             _make_lexicon_edit(entrada)
         }
@@ -219,7 +220,6 @@ function make_lexicon() {
         const col_menu_lx_label = newE("div", "col_menu_lx_label", "col-auto")
         col_menu_lx_label.textContent = "Lexema base"
         row_lx_label.appendChild(col_menu_lx_label)
-
 
         const col_lx_value = newE("div", "col_lx_value", "col")
         row_lx.appendChild(col_lx_value)
@@ -428,7 +428,7 @@ function make_lexicon() {
             col_menu_contexto_label.textContent = "Contexto"
             row_contexto_label.appendChild(col_menu_contexto_label)
 
-            const col_contexto_value = newE("div", randomKey(10, '12345abcde'), "col")
+            const col_contexto_value = newE("div", randomKey(10, '12345abcde'), "col input-flat-dicc")
             row_contexto.appendChild(col_contexto_value)
 
             const row_contexto_value = newE("div", randomKey(10, '12345abcde'), "row align-items-center")
@@ -487,6 +487,8 @@ function make_lexicon() {
 
         }
 
+        /////////////////////////////////////////////////////////////////
+        ///Configuración varaiciones de palabra
         if (entrada["clase-varianteOf"].visible == true) {
             const row_varianteOf = newE("div", randomKey(10, '12345abcde'), "row row align-items-end mt-2")
             div_lx.appendChild(row_varianteOf)
@@ -532,7 +534,7 @@ function make_lexicon() {
             col_menu_varianteOf_label.textContent = "Variante de"
             row_varianteOf_label.appendChild(col_menu_varianteOf_label)
 
-            const col_variateOf_value = newE("div", randomKey(10, '12345abcde'), "col")
+            const col_variateOf_value = newE("div", randomKey(10, '12345abcde'), "col input-flat-dicc")
             row_varianteOf.appendChild(col_variateOf_value)
 
             const row_varianteOf_value = newE("div", randomKey(10, '12345abcde'), "row align-items-center")
@@ -731,6 +733,149 @@ function make_lexicon() {
 
         }
 
+        /////////////////////////////////////////////////////////////////
+        ///Configuración etimologìa de palabra
+        if (entrada["clase-etimologia"].visible == true) {
+            const row_Cat = newE("div", randomKey(10, '12345abcde'), "row row align-items-center mt-2")
+            div_lx.appendChild(row_Cat)
+
+            const col_row_Cat_label = newE("div", randomKey(10, '12345abcde'), "col-auto label-wrap")
+            row_Cat.appendChild(col_row_Cat_label)
+
+            const row_Cat_label = newE("div", randomKey(10, '12345abcde'), "row align-items-center")
+            col_row_Cat_label.appendChild(row_Cat_label)
+
+            const col_menu_Cat = newE("div", randomKey(10, '12345abcde'), "col-auto")
+            row_Cat_label.appendChild(col_menu_Cat)
+
+            const btn_menu_Cat = newE("div", randomKey(10, '12345abcde'), "bi bi-arrow-down-circle-fill btn-context-lx")
+            btn_menu_Cat.setAttribute("data-bs-toggle", "dropdown")
+            col_menu_Cat.appendChild(btn_menu_Cat)
+
+            const ul_menu_Cat = newE("ul", randomKey(10, '12345abcde'), "dropdown-menu shadow")
+            col_menu_Cat.appendChild(ul_menu_Cat)
+
+            const div_visible_Cat = newE("div", randomKey(10, '12345abcde'), "form-check")
+            ul_menu_Cat.appendChild(div_visible_Cat)
+
+            const int_visible_Cat = newE("input", randomKey(10, '12345abcde'), "form-check-input-check")
+            int_visible_Cat.type = "checkbox"
+            div_visible_Cat.appendChild(int_visible_Cat)
+
+
+            const int_visibleCat_label = newE("label", randomKey(10, '12345abcde'), "form-check-label ms-2")
+            int_visibleCat_label.for = "int_visible_Cat"
+            int_visibleCat_label.textContent = "Visible"
+            div_visible_Cat.appendChild(int_visibleCat_label)
+
+
+            int_visible_Cat.checked = entrada["clase-etimologia"].visible
+            int_visible_Cat.onchange = () => {
+                entrada["clase-etimologia"].visible = int_visible_Cat.checked
+                Guardar_datos("LEXICON", global_proyecto["LEXICON"])
+                _make_lexicon_edit(entrada)
+            }
+
+            const col_menu_Cat_label = newE("div", randomKey(10, '12345abcde'), "col-auto")
+            col_menu_Cat_label.textContent = "Etimología"
+            row_Cat_label.appendChild(col_menu_Cat_label)
+
+            const col_cat_value = newE("div", randomKey(10, '12345abcde'), "col")
+            row_Cat.appendChild(col_cat_value)
+
+            const row_Cat_value = newE("div", randomKey(10, '12345abcde'), "row align-items-center")
+            col_cat_value.appendChild(row_Cat_value)
+
+            const col_cat_values = newE("div", randomKey(10, '12345abcde'), "col")
+            row_Cat_value.appendChild(col_cat_values)
+
+            const row_forma_value = newE("div", randomKey(10, '12345abcde'), "row align-items-center")
+            col_cat_values.appendChild(row_forma_value)
+
+            const col_forma_lng = newE("div", randomKey(10, '12345abcde'), "col-auto tag-small text-white")
+            col_forma_lng.textContent = global_proyecto["PROYECTO"].cod_idioma
+            row_forma_value.appendChild(col_forma_lng)
+
+            const col_forma_text = newE("div", randomKey(10, '12345abcde'), "col")
+            row_forma_value.appendChild(col_forma_text)
+
+            const int_forma = newE("input", randomKey(10, '12345abcde'), "input-flat-dicc")
+            int_forma.type = "text"
+            col_forma_text.appendChild(int_forma)
+
+            int_forma.value=entrada["clase-etimologia"].forma
+            int_forma.onchange=()=>{
+                entrada["clase-etimologia"].forma=int_forma.value
+                Guardar_datos("LEXICON", global_proyecto["LEXICON"])
+            }
+
+            const row_glosaas = newE("div", randomKey(10, '12345abcde'), "row row align-items-center mt-2")
+            div_lx.appendChild(row_glosaas)
+
+            const col_glosas_label = newE("div", randomKey(10, '12345abcde'), "col-3 label-wrap")
+            row_glosaas.appendChild(col_glosas_label)
+
+            const row_glosas_label = newE("div", randomKey(10, '12345abcde'), "row align-items-center")
+            col_glosas_label.appendChild(row_glosas_label)
+
+            const col_menu_glosas = newE("div", randomKey(10, '12345abcde'), "col-auto")
+            row_glosas_label.appendChild(col_menu_glosas)
+
+            const btn_menu_glosas = newE("div", randomKey(10, '12345abcde'), "bi bi-arrow-down-circle-fill btn-context-lx text-white")
+            //btn_menu_glosas.setAttribute("data-bs-toggle", "dropdown")
+            col_menu_glosas.appendChild(btn_menu_glosas)
+
+            const glosas_label = newE("div", randomKey(10, '12345abcde'), "col")
+            glosas_label.textContent = "Glosas"
+            row_glosas_label.appendChild(glosas_label)
+
+
+
+
+            const glosas_values = newE("div", randomKey(10, '12345abcde'), "col")
+            row_glosaas.appendChild(glosas_values)
+
+
+            entrada["clase-etimologia"].glosas.traduccion.forEach(_lng=>{
+                const filter_trad = global_proyecto["PROYECTO"].Lngtraducion.filter(l => l.abreviacion == _lng.abreviacion)
+                
+                if (filter_trad[0].visible == true) {
+                    const row_cat_values_lng = newE("div", randomKey(10, '12345abcde'), "row")
+                    glosas_values.appendChild(row_cat_values_lng)
+
+                    const col_cat_label_lng = newE("div", randomKey(10, '12345abcde'), "col-auto tag-small")
+                    col_cat_label_lng.textContent = _lng.abreviacion
+                    row_cat_values_lng.appendChild(col_cat_label_lng)
+
+                    const col_cat_value_lng = newE("div", randomKey(10, '12345abcde'), "col")
+                    row_cat_values_lng.appendChild(col_cat_value_lng)
+
+                    const int_cat_value_lng = newE("input", randomKey(10, '12345abcde'), "input-flat-dicc fst-italic")
+                    //int_cat_value_lng.rows = 1
+                    int_cat_value_lng.style.color = filter_trad[0].style["font-color"]
+                    int_cat_value_lng.style.fontSize = filter_trad[0].style["font-size"]
+                    col_cat_value_lng.appendChild(int_cat_value_lng)
+
+                    int_cat_value_lng.value = _lng.texto
+                    int_cat_value_lng.onchange = () => {
+                        _lng.texto = int_cat_value_lng.value
+                        Guardar_datos("LEXICON", global_proyecto["LEXICON"])
+                    }
+                }
+
+            })
+
+
+            //const filter_trad = global_proyecto["PROYECTO"].Lngtraducion.filter(l => l.abreviacion == _lng.abreviacion)
+            //if (filter_trad[0].visible == true){
+
+            //}
+
+
+
+        }
+
+
         ///SECCIÓN DE INGRESO SENTIDOS
         _make_sentidos_panel()
         function _make_sentidos_panel() {
@@ -768,7 +913,6 @@ function make_lexicon() {
             col_menu_AB.textContent = "Sentidos"
             row_A_label.appendChild(col_menu_AB)
 
-
             const col_acciones_sentidos = newE("div", randomKey(10, '12345abcde'), "col div-fluid-rg")
             row_titulo_sentidos.appendChild(col_acciones_sentidos)
 
@@ -781,8 +925,6 @@ function make_lexicon() {
                 Guardar_datos("LEXICON", global_proyecto["LEXICON"])
                 _make_sentido()
             }
-
-
             _make_sentido()
             function _make_sentido() {
                 div_sentidos_list.innerHTML = ""
@@ -1199,7 +1341,6 @@ function make_lexicon() {
                                 const col_cat_value = newE("div", randomKey(10, '12345abcde'), "col")
                                 row_cat.appendChild(col_cat_value)
 
-                                
                                 //Escribe la rutina de colocar el ejemplo en el idioma
                                 const row_exe_values_lng = newE("div", randomKey(10, '12345abcde'), "row")
                                 col_cat_value.appendChild(row_exe_values_lng)
@@ -1211,7 +1352,7 @@ function make_lexicon() {
                                 const col_exe_value_lng = newE("div", randomKey(10, '12345abcde'), "col")
                                 row_exe_values_lng.appendChild(col_exe_value_lng)
 
-                                
+
                                 const int_exe_value_lng = newE("textarea", randomKey(10, '12345abcde'), "input-flat-dicc fw-bolder")
                                 int_exe_value_lng.rows = 1
                                 col_exe_value_lng.appendChild(int_exe_value_lng)
@@ -1293,7 +1434,6 @@ function make_lexicon() {
                 })
 
             }
-
         }
 
         //////////////////////////////////77
@@ -2461,13 +2601,6 @@ function config_gramatical_list() {
                     }
                 }
 
-
-
-
-
-
-
-
             }
         }
 
@@ -2511,7 +2644,8 @@ function template_entry() {
         "clase-etimologia": {
             "forma": "",
             "visible": true,
-            "estructura": []
+            "glosas": template_glosas(),
+            "nota": "",
         }
         ,
         "clase-sn": {
@@ -2718,6 +2852,28 @@ function template_ex() {
         "texto": "Ejemplo en el idioma principal",
         "ejemplo": lngs,
         "traduccion": trad,
+    }
+    return template
+}
+
+function template_glosas(){
+    let lngs = []
+    if (verificar_datos(global_proyecto["PROYECTO"].Lngtraducion) == true) {
+        const lng_lx = global_proyecto["PROYECTO"].Lngtraducion
+        lng_lx.forEach(l => {
+            const item = {
+                "texto": "",
+                "idioma": l.nombre,
+                "abreviacion": l.abreviacion,
+                "visible": l.visible
+            }
+            lngs.push(item)
+        })
+    }
+
+    const template = {
+        "key": "et-" + randomKey(10, '12345abcde'),
+        "traduccion": lngs,
     }
     return template
 }

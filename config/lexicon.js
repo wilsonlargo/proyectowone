@@ -169,7 +169,7 @@ function make_lexicon() {
             entrada.id = i
             i++
             const p = newE("div", "p-" + entrada.key, "item-list-lx")
-            p.textContent = entrada.lexeme.lx
+            p.textContent = entrada.lexeme.ini + entrada.lexeme.lx + entrada.lexeme.fin
             panel_list.appendChild(p)
 
             p.onclick = () => {
@@ -224,14 +224,30 @@ function make_lexicon() {
         const col_lx_value = newE("div", "col_lx_value", "col")
         row_lx.appendChild(col_lx_value)
 
-        const input_lx_value = newE("input", "input_lx_value", "input-flat-dicc fs-5 fw-bold")
-        input_lx_value.type = "text"
-        col_lx_value.appendChild(input_lx_value)
-        input_lx_value.value = entrada.lexeme.lx
-        input_lx_value.onchange = () => {
-            entrada.lexeme.lx = input_lx_value.value
+        const row_lx_values = newE("div", "row_lx_values", "align-items-center div-fluid")
+        col_lx_value.appendChild(row_lx_values)
+
+        const col_lx_ini = newE("div", "col_lx_ini", "div fs-5 me-1")
+        col_lx_ini.style.width="2px"
+        col_lx_ini.textContent=entrada.lexeme.ini
+        row_lx_values.appendChild(col_lx_ini)
+
+        const col_lx = newE("div", "col_lx", "div")
+        row_lx_values.appendChild(col_lx)
+
+        const col_lx_fin = newE("div", "col_lx_fin", "div fs-5")
+        col_lx_fin.textContent=entrada.lexeme.fin
+        row_lx_values.appendChild(col_lx_fin)
+
+        const input_lx_value = newE("span", "input_lx_value", "fs-5 fw-bold input input-flat-dicc")
+        input_lx_value.role="textbox"
+        input_lx_value.setAttribute("contenteditable", "")
+        col_lx.appendChild(input_lx_value)
+        input_lx_value.textContent = entrada.lexeme.lx
+        input_lx_value.oninput = () => {
+            entrada.lexeme.lx = input_lx_value.textContent
             Guardar_datos("LEXICON", global_proyecto["LEXICON"])
-            byE("p-" + entrada.key).textContent = input_lx_value.value
+            byE("p-" + entrada.key).textContent = entrada.lexeme.ini +input_lx_value.textContent+entrada.lexeme.fin
         }
 
         /////////////////////////////////////////////////////////////////
@@ -419,7 +435,17 @@ function make_lexicon() {
                 const filter_morfema = global_proyecto["TABLAS"].MORFEMAS.filter(ele => ele.nombre == input_morfema_value.value)
                 entrada["clase-morfema"].tipo = input_morfema_value.value
                 entrada["clase-morfema"].abreviacion = filter_morfema[0].abreviacion
+
+                //Cmabia las marcas de afijos del lexema
+                col_lx_ini.textContent=filter_morfema[0].estructura.fin
+                col_lx_fin.textContent=filter_morfema[0].estructura.ini
+                entrada.lexeme.ini=filter_morfema[0].estructura.fin
+                entrada.lexeme.fin=filter_morfema[0].estructura.ini
+
+                //Modifica el item de la lista pero con las marcas de afijo
+                byE("p-" + entrada.key).textContent = entrada.lexeme.ini +input_lx_value.textContent+entrada.lexeme.fin
                 Guardar_datos("LEXICON", global_proyecto["LEXICON"])
+
             }
 
             const div_lx_applyTo = newE("div", randomKey(10, '12345abcde'), "")
@@ -481,27 +507,27 @@ function make_lexicon() {
 
                 //entrada["clase-morfema"].applayTo.categoria
 
-                if(entrada["clase-morfema"].applayTo.categoria.length!=0){
-                    const values=entrada["clase-morfema"].applayTo.categoria
+                if (entrada["clase-morfema"].applayTo.categoria.length != 0) {
+                    const values = entrada["clase-morfema"].applayTo.categoria
                     const div_f = byE("div_values_applyTo")
-                    div_f.innerHTML=""
-                    const valores = newE("div",randomKey(10, '12345abcde'))
-                    valores.innerHTML=`
+                    div_f.innerHTML = ""
+                    const valores = newE("div", randomKey(10, '12345abcde'))
+                    valores.innerHTML = `
                     <b class="fs-5">${values.value_ini}${values.mark_ini}</b>
                     [${values.categoria}]
                     <b class="fs-5">${values.mark_fin}${values.value_fin}</b>
                     `
                     div_f.appendChild(valores)
-    
+
                     const div_borrar = newE("div", randomKey(10, '12345abcde'), "ms-2 bi bi-x-circle-fill btn-context-lx")
                     div_f.appendChild(div_borrar)
                     div_borrar.onclick = () => {
-                        entrada["clase-morfema"].applayTo.categoria=[]
+                        entrada["clase-morfema"].applayTo.categoria = []
                         Guardar_datos("LEXICON", global_proyecto["LEXICON"])
-                        div_f.innerHTML=""
+                        div_f.innerHTML = ""
                     }
                 }
-                
+
             }
 
             //Activa o visualiza la entrada de aplicar a
@@ -658,43 +684,43 @@ function make_lexicon() {
                 div_forma.textContent = "[CAT]"
                 modal_panel_gonfig.appendChild(div_forma)
 
-                
-                let applyTo_value=[]
+
+                let applyTo_value = []
                 function _change_forma() {
                     div_forma.innerHTML = ""
                     const filter_morf = global_proyecto["TABLAS"].MORFEMAS.filter(ele => ele.abreviacion == entrada["clase-morfema"].abreviacion)
 
                     if (filter_morf[0].estructura.ini != "" && filter_morf[0].estructura.fin == "") {
                         div_forma.innerHTML = `<b class="fs-5">${entrada.lexeme.lx}</b>{${cat_sel.abreviacion}}`
-                        applyTo_value={
-                            "value_ini":entrada.lexeme.lx,
-                            "mark_ini":filter_morf[0].estructura.ini,
-                            "categoria":cat_sel.abreviacion,
-                            "mark_fin":"",
-                            "value_fin":"",
-                            
+                        applyTo_value = {
+                            "value_ini": entrada.lexeme.lx,
+                            "mark_ini": filter_morf[0].estructura.ini,
+                            "categoria": cat_sel.abreviacion,
+                            "mark_fin": "",
+                            "value_fin": "",
+
                         }
                     } else if (filter_morf[0].estructura.ini == "" && filter_morf[0].estructura.fin != "") {
                         div_forma.innerHTML = `{${cat_sel.abreviacion}}<b class="fs-5">${entrada.lexeme.lx}</b>`
-                        applyTo_value={
-                            "value_ini":"",
-                            "mark_ini":"",
-                            "categoria":cat_sel.abreviacion,
-                            "mark_fin":filter_morf[0].estructura.fin,
-                            "value_fin":entrada.lexeme.lx,
+                        applyTo_value = {
+                            "value_ini": "",
+                            "mark_ini": "",
+                            "categoria": cat_sel.abreviacion,
+                            "mark_fin": filter_morf[0].estructura.fin,
+                            "value_fin": entrada.lexeme.lx,
 
                         }
-                        
+
                     }
                     else if (filter_morf[0].estructura.ini != "" && filter_morf[0].estructura.fin != "") {
                         div_forma.innerHTML = `{${cat_sel.abreviacion}}<b class="fs-5">${entrada.lexeme.lx}</b>{${cat_sel.abreviacion}}`
-                        applyTo_value={
-                            "value_ini":cat_sel.abreviacion,
-                            "mark_ini":filter_morf[0].estructura.ini,
-                            "categoria":entrada.lexeme.lx,
-                            "mark_fin":filter_morf[0].estructura.fin,
-                            "value_fin":cat_sel.abreviacion,
-                        }                    
+                        applyTo_value = {
+                            "value_ini": cat_sel.abreviacion,
+                            "mark_ini": filter_morf[0].estructura.ini,
+                            "categoria": entrada.lexeme.lx,
+                            "mark_fin": filter_morf[0].estructura.fin,
+                            "value_fin": cat_sel.abreviacion,
+                        }
                     }
                     else if (filter_morf[0].estructura.ini == "" && filter_morf[0].estructura.fin == "") {
                     }
@@ -702,17 +728,17 @@ function make_lexicon() {
 
                 byE("btnAceptar_open").onclick = () => {
                     const div_f = byE("div_values_applyTo")
-                    div_f.innerHTML=""
-                    const valores = newE("div",randomKey(10, '12345abcde'))
-                    valores.innerHTML=`
+                    div_f.innerHTML = ""
+                    const valores = newE("div", randomKey(10, '12345abcde'))
+                    valores.innerHTML = `
                     <b class="fs-5">${applyTo_value.value_ini}${applyTo_value.mark_ini}</b>
                     [${applyTo_value.categoria}]
                     <b class="fs-5">${applyTo_value.mark_fin}${applyTo_value.value_fin}</b>
                     `
                     div_f.appendChild(valores)
-                    entrada["clase-morfema"].applayTo.categoria=applyTo_value
+                    entrada["clase-morfema"].applayTo.categoria = applyTo_value
                     Guardar_datos("LEXICON", global_proyecto["LEXICON"])
-                 }
+                }
 
             }
 

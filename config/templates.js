@@ -3,7 +3,9 @@ function template_entry() {
         "id": active_lexicon.entries.length - 1,
         "key": randomKey(20, '12345abcde'),
         "lexeme": {
+            "ini": "",
             "lx": "Nueva entrada",
+            "ini": "",
             "lx_lngs": [],
             "visible": true
         },

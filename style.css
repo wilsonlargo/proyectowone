@@ -146,6 +146,40 @@ div.content {
   padding: 5px;
 }
 
+#panel_separador_text {
+  cursor: col-resize;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='30'><path d='M2 0 v30 M5 0 v30 M8 0 v30' fill='none' stroke='black'/></svg>");
+  background-repeat: no-repeat;
+  background-position: center;
+  width: 10px;
+  height: 250%;
+
+  /* Prevent the browser's built-in drag from interfering */
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+#panel_list_text {
+  width: 30%;
+  height: 250%;
+  min-width: 200px;
+  overflow: auto;
+  white-space: nowrap;
+  border: #aaa solid 1px;
+  padding: 5px;
+}
+
+#panel_lexicon_edit_text {
+  width: 70%;
+  height: 250%;
+  min-width: 200px;
+  overflow: auto;
+  white-space: nowrap;
+  border: #aaa solid 1px;
+  padding: 5px;
+}
+
 .item-list-lx {
   margin: 2px;
   cursor: pointer;
@@ -271,6 +305,15 @@ font-size: 9pt;
   border: #aaa solid 1px;
   overflow-y: auto; /* Show vertical scrollbar */ 
   overflow-x:hidden
+}
+
+.menu-group-scroll-list{
+  margin-top: 5px;
+  max-width: 300px;
+  height: 400px;
+  border: #aaa solid 1px;
+  overflow-y: auto; /* Show vertical scrollbar */ 
+  overflow-x:auto
 }
 
 .menu-group-scroll-lg{

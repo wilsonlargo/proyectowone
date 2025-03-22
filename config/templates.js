@@ -14,9 +14,9 @@ function template_entry() {
             "abreviacion": "ind",
             "lx_lngs": [],
             "visible": true,
-            "applayTo":{
+            "applayTo": {
                 "visible": false,
-                "categoria":[]
+                "categoria": []
             }
 
         },
@@ -245,7 +245,7 @@ function template_ex() {
     return template
 }
 
-function template_glosas(){
+function template_glosas() {
     let lngs = []
     if (verificar_datos(global_proyecto["PROYECTO"].Lngtraducion) == true) {
         const lng_lx = global_proyecto["PROYECTO"].Lngtraducion
@@ -265,4 +265,42 @@ function template_glosas(){
         "traduccion": lngs,
     }
     return template
+}
+
+function template_text() {
+    let lngs = []
+    if (verificar_datos(global_proyecto["PROYECTO"].Lngtraducion) == true) {
+        const lng_lx = global_proyecto["PROYECTO"].Lngtraducion
+        lng_lx.forEach(l => {
+            const item = {
+                "texto": "",
+                "idioma": l.nombre,
+                "abreviacion": l.abreviacion,
+                "visible": l.visible
+            }
+            lngs.push(item)
+        })
+    }
+
+    let new_text = {
+        "titulo":"Título en el idioma",
+        "titulo-traduccion":lngs,
+        "autor":"Nombre de autor",
+        "idioma-base": {
+            "idioma":"",
+            "abreviacion":""
+        },
+        "analisis": {
+            "text-basic": [template_par()],
+            "text-parse": []
+        }
+    }
+    return new_text
+}
+function template_par() {
+    let par = {
+        "key": "par-" + randomKey(10, '12345abcde'),
+        "par-text":"Nuevo texto"
+    }
+    return par
 }

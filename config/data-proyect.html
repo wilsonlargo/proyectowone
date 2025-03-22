@@ -23,11 +23,7 @@
     <script src="./lexicon.js"></script>
     <script src="./config-list.js"></script>
     <script src="./templates.js"></script>
-
-
-
-
-
+    <script src="./textos.js"></script>
 </head>
 
 <body>
@@ -38,19 +34,35 @@
         </a>
         <div hidden="true" id="menu_general">
             <div class="collapse show" id="menu">
-                <a href="#" onclick="open_proyecto()">
+                <a data-bs-toggle="collapse" href="#collapseEditLx">
                     <i class="fs-3 bi-card-list"></i>
                     <span class="ms-1 d-none d-sm-inline">
                         Lexicón
                     </span>
                 </a>
-                <a href="#" id="btn_modelo">
-                    <i class="fs-3 bi-table"></i>
+                <div class="collapse bg-white" id="collapseEditLx" style="cursor: pointer;">
+                    <a onclick="open_proyecto()">
+                        <i class="fs-5 bi bi-pencil ms-2"></i>
+                        <span class="ms-1 d-none d-sm-inline">
+                            Editor
+                        </span>
+                    </a>
+                </div>
+
+                <a data-bs-toggle="collapse" href="#collapseTextos">
+                    <i class="fs-3 bi-layout-text-sidebar-reverse"></i>
                     <span class="ms-1 d-none d-sm-inline">
                         Textos
                     </span>
                 </a>
-
+                <div class="collapse bg-white" id="collapseTextos" style="cursor: pointer;">
+                    <a onclick="open_proyecto_text()">
+                        <i class="fs-5 bi bi-chat-right-text ms-2"></i>
+                        <span class="ms-1 d-none d-sm-inline">
+                            Editor
+                        </span>
+                    </a>
+                </div>
             </div>
             <a class="nav-link active text-center mb-1 fs-5" aria-current="page" data-bs-toggle="collapse"
                 href="#menu"><i class="bi bi-list"></i></a>
@@ -61,21 +73,14 @@
     <div class="content p-2">
         <div id="Nombre_proyecto" class="fw-bold fs-4 text-center"></div>
         <div id="panel_escritorio" class="m-2">
-               
-                       
-            
-         </div>
+
+
+
+        </div>
     </div>
 
 </body>
-<script>
-    // A function is used for dragging and moving
 
-
-
-
-
-</script>
 <!-- Contenedor de formulario registrarse -->
 <div class="modal" id="myModal" aria-hidden="false">
     <div class="modal-dialog">

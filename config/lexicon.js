@@ -1,7 +1,6 @@
 let active_lexicon;
 let active_lexicon_id = 0
 
-
 function make_lexicon() {
     active_lexicon = global_proyecto.LEXICON
 
@@ -746,8 +745,6 @@ function make_lexicon() {
                         Guardar_datos("LEXICON", global_proyecto["LEXICON"])
                         div_f.innerHTML = ""
                     }
-
-
                 }
 
             }

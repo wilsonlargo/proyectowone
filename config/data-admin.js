@@ -41,7 +41,7 @@ const firebaseConfig = {
     storageBucket: "woneprj.firebasestorage.app",
     messagingSenderId: "356688049122",
     appId: "1:356688049122:web:077a9972fd3762ec57bfbb"
-  };
+};
 
 // Inicializa Firebase
 const app = initializeApp(firebaseConfig);
@@ -54,10 +54,10 @@ function _sel_proyecto(proyecto) {
     //Sección para importar data del DRIVE
     // Cargar informacion de la base de datos de registros de tabla google
 
-/////////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////////////////////////////
 
-    const colectionproyectos=collection(db, proyecto)
+    const colectionproyectos = collection(db, proyecto)
     // 1.
     async function getProyecto() {
         const proyectos = [];
@@ -85,6 +85,7 @@ function _sel_proyecto(proyecto) {
     // Función para actualizar un proyecto
     async function updateProyecto(datos) {
         const docRef = doc(db, proyecto, datos.id);
+
         await setDoc(docRef, datos);
     }
 
@@ -97,13 +98,35 @@ function _sel_proyecto(proyecto) {
                 ...doc.data(),
                 id: doc.id,
             });
-        });
+        });       
         GLOBAL.state.data = data_tables;
     });
+
+    // Función para agregar un objeto de vigencia a la base de datos
+    async function addTexto(objVigencia) {
+        const docRef = await addDoc(colectionproyectos, objVigencia);      
+        open_proyecto_text()
+        return docRef.id;
+    }
+
+    async function updateTexto(texto) {
+        const docRef = doc(db, proyecto, texto.id);
+        await setDoc(docRef, texto);
+    }
+
+
+    // Funcion para eliminar un vigencia por id
+    async function borrarVigencia(id) {
+        await deleteDoc(doc(db, "vigencias", id));
+        mensajes("Se eliminó esta vigencia", "orange")
+    }
+
     GLOBAL.firestore = {
         getProyectos,
         getProyecto,
         updateProyecto,
+        addTexto,
+        updateTexto
     }
 
 }
@@ -118,8 +141,8 @@ async function Verificar_Acceso(email, password) {
         const crearcredencial = await signInWithEmailAndPassword(auth, email, password)
         const proyecto = email.split("@")
         _sel_proyecto(proyecto[0])
-        mensajes("El acceso se ha completado con éxito","green")
-        openIni(email)        
+        mensajes("El acceso se ha completado con éxito", "green")
+        openIni(email)
     } catch (error) {
         mensajes("Su usuario y contraseña no son correctos", "orange")
     }

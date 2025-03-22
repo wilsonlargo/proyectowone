@@ -13,7 +13,7 @@ function randomKey(len, arr) {
         ans +=
             arr[(Math.floor(Math.random() * arr.length))];
     }
-    return(ans);
+    return (ans);
 }
 function IniCredential() {
     //Lee la información del form,ulario de ingreso en index.html
@@ -64,8 +64,17 @@ let newE = (elemento, id, clase, ancho) => {
     return el
 }
 
+let newEk = (elemento, clase, text, id=randomKey(10, '12345abcde'), ancho) => {
+    const el = document.createElement(elemento)
+    el.id = id
+    el.className = clase
+    el.style.width = ancho
+    el.textContent=text
+    return el
+}
+
 ///////////////////////////////
-function dragElement(element, direction,panel_list_lx,panel_lexicon_edit_lx) {
+function dragElement(element, direction, panel_list_lx, panel_lexicon_edit_lx) {
     var md; // remember mouse down info
     const first = document.getElementById(panel_list_lx);
     const second = document.getElementById(panel_lexicon_edit_lx);
@@ -109,7 +118,7 @@ function dragElement(element, direction,panel_list_lx,panel_lexicon_edit_lx) {
     }
 }
 
-function verificar_datos(DATA){
+function verificar_datos(DATA) {
     if (typeof DATA == "undefined") {
         return false
     } else {
@@ -120,19 +129,28 @@ function verificar_datos(DATA){
 // Dealing with Input width
 let el = document.querySelector(".input-wrap .input");
 let widthMachine = document.querySelector(".input-wrap .width-machine");
-el.addEventListener("keyup", () => {
-  widthMachine.innerHTML = el.value;
-});
+try {
+    el.addEventListener("keyup", () => {
+        widthMachine.innerHTML = el.value;
+    });
+} catch (error) {
+
+}
+
 
 // Dealing with Textarea Height
 function calcHeight(value) {
-  let numberOfLineBreaks = (value.match(/\n/g) || []).length;
-  // min-height + lines x line-height + padding + border
-  let newHeight = 20 + numberOfLineBreaks * 20 + 12 + 2;
-  return newHeight;
+    let numberOfLineBreaks = (value.match(/\n/g) || []).length;
+    // min-height + lines x line-height + padding + border
+    let newHeight = 20 + numberOfLineBreaks * 20 + 12 + 2;
+    return newHeight;
 }
 
 let textarea = document.querySelector(".resize-ta");
-textarea.addEventListener("keyup", () => {
-  textarea.style.height = calcHeight(textarea.value) + "px";
-});
+try {
+    textarea.addEventListener("keyup", () => {
+        textarea.style.height = calcHeight(textarea.value) + "px";
+    });
+} catch (error) {
+
+}

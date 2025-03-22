@@ -738,6 +738,16 @@ function make_lexicon() {
                     div_f.appendChild(valores)
                     entrada["clase-morfema"].applayTo.categoria = applyTo_value
                     Guardar_datos("LEXICON", global_proyecto["LEXICON"])
+
+                    const div_borrar = newE("div", randomKey(10, '12345abcde'), "ms-2 bi bi-x-circle-fill btn-context-lx")
+                    div_f.appendChild(div_borrar)
+                    div_borrar.onclick = () => {
+                        entrada["clase-morfema"].applayTo.categoria = []
+                        Guardar_datos("LEXICON", global_proyecto["LEXICON"])
+                        div_f.innerHTML = ""
+                    }
+
+
                 }
 
             }

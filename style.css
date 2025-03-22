@@ -273,6 +273,15 @@ font-size: 9pt;
   overflow-x:hidden
 }
 
+.menu-group-scroll-lg{
+  margin-top: 5px;
+  max-height: 200px;
+  height: 300px;
+  border: #aaa solid 1px;
+  overflow-y: auto; /* Show vertical scrollbar */ 
+  overflow-x:hidden
+}
+
 .plus-tree{
   font-size: 18pt;
   cursor: pointer;
@@ -290,4 +299,8 @@ font-size: 9pt;
   color: white;
   border-radius: 7px;
 
+}
+
+.col-width-basic{
+  width: 200px;
 }

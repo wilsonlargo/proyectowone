@@ -26,3 +26,9 @@ ul_menu_ps.onclick = (e) => {
 
 //Para guardar dicc por tabla
 Guardar_datos("LEXICON", global_proyecto["LEXICON"])
+
+//Onchange
+
+control.onchange=()=>{
+    
+}

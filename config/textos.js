@@ -145,24 +145,39 @@ function make_text_editor() {
     const col_list_text = newEk("div", "col-3 menu-group-scroll-list", "Listas", "list_textos")
     row_panel_text.appendChild(col_list_text)
 
-    const col_edit_text = newEk("div", "col", "Editores")
+    const col_edit_text = newEk("div", "col", "Editores","edit_textos")
     row_panel_text.appendChild(col_edit_text)
-
     _make_item_list()
-
-
-
-
 }
 function _make_item_list() {
-    const a = byE("list_textos")
-    a.innerHTML=""
-    let n=0
-    global_proyecto["TEXTOS"].forEach(t=>{
-        const d= newEk("div","item-menu",t.id)
-        a.appendChild(d)
-        n++
+    const panel_list = byE("list_textos")
+    panel_list.innerHTML=""
+    const panel_edit = byE("edit_textos")
+    panel_edit.innerHTML=""
+
+    let tabla_textos=global_proyecto["TEXTOS"]
+
+    panel_list.innerHTML=""
+    tabla_textos.forEach(texto=>{
+        const item_text= newEk("div","item-menu",texto.titulo)
+        panel_list.appendChild(item_text)
+        item_text.onclick=()=>{
+            _make_edit_text(texto)
+        }
     })
+
+    function _make_edit_text(texto){
+        panel_edit.innerHTML=""
+        const input_titulo= newEk("input","form-control","")
+
+        panel_edit.appendChild(input_titulo)
+
+        input_titulo.value=texto.titulo
+        input_titulo.onchange=()=>{
+            texto.titulo=input_titulo.value
+            save_texto(texto) 
+        }
+    }
 
 }
 function save_texto(texto) {

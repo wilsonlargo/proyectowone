@@ -116,9 +116,10 @@ function _sel_proyecto(proyecto) {
 
 
     // Funcion para eliminar un vigencia por id
-    async function borrarVigencia(id) {
-        await deleteDoc(doc(db, "vigencias", id));
-        mensajes("Se eliminó esta vigencia", "orange")
+    async function borrarTexto(id) {
+        await deleteDoc(doc(db, proyecto, id));
+        open_proyecto_text()
+        mensajes("Se eliminó este texto", "orange")
     }
 
     GLOBAL.firestore = {
@@ -126,7 +127,8 @@ function _sel_proyecto(proyecto) {
         getProyecto,
         updateProyecto,
         addTexto,
-        updateTexto
+        updateTexto,
+        borrarTexto
     }
 
 }

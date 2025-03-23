@@ -227,26 +227,26 @@ function make_lexicon() {
         col_lx_value.appendChild(row_lx_values)
 
         const col_lx_ini = newE("div", "col_lx_ini", "div fs-5 me-1")
-        col_lx_ini.style.width="2px"
-        col_lx_ini.textContent=entrada.lexeme.ini
+        col_lx_ini.style.width = "2px"
+        col_lx_ini.textContent = entrada.lexeme.ini
         row_lx_values.appendChild(col_lx_ini)
 
         const col_lx = newE("div", "col_lx", "div")
         row_lx_values.appendChild(col_lx)
 
         const col_lx_fin = newE("div", "col_lx_fin", "div fs-5")
-        col_lx_fin.textContent=entrada.lexeme.fin
+        col_lx_fin.textContent = entrada.lexeme.fin
         row_lx_values.appendChild(col_lx_fin)
 
         const input_lx_value = newE("span", "input_lx_value", "fs-5 fw-bold input input-flat-dicc")
-        input_lx_value.role="textbox"
+        input_lx_value.role = "textbox"
         input_lx_value.setAttribute("contenteditable", "")
         col_lx.appendChild(input_lx_value)
         input_lx_value.textContent = entrada.lexeme.lx
         input_lx_value.oninput = () => {
             entrada.lexeme.lx = input_lx_value.textContent
             Guardar_datos("LEXICON", global_proyecto["LEXICON"])
-            byE("p-" + entrada.key).textContent = entrada.lexeme.ini +input_lx_value.textContent+entrada.lexeme.fin
+            byE("p-" + entrada.key).textContent = entrada.lexeme.ini + input_lx_value.textContent + entrada.lexeme.fin
         }
 
         /////////////////////////////////////////////////////////////////
@@ -436,13 +436,13 @@ function make_lexicon() {
                 entrada["clase-morfema"].abreviacion = filter_morfema[0].abreviacion
 
                 //Cmabia las marcas de afijos del lexema
-                col_lx_ini.textContent=filter_morfema[0].estructura.fin
-                col_lx_fin.textContent=filter_morfema[0].estructura.ini
-                entrada.lexeme.ini=filter_morfema[0].estructura.fin
-                entrada.lexeme.fin=filter_morfema[0].estructura.ini
+                col_lx_ini.textContent = filter_morfema[0].estructura.fin
+                col_lx_fin.textContent = filter_morfema[0].estructura.ini
+                entrada.lexeme.ini = filter_morfema[0].estructura.fin
+                entrada.lexeme.fin = filter_morfema[0].estructura.ini
 
                 //Modifica el item de la lista pero con las marcas de afijo
-                byE("p-" + entrada.key).textContent = entrada.lexeme.ini +input_lx_value.textContent+entrada.lexeme.fin
+                byE("p-" + entrada.key).textContent = entrada.lexeme.ini + input_lx_value.textContent + entrada.lexeme.fin
                 Guardar_datos("LEXICON", global_proyecto["LEXICON"])
 
             }

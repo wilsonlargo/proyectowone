@@ -21,10 +21,9 @@ function make_text_editor() {
         bt_add.onclick = () => {
             const data = GLOBAL.firestore.addTexto(template_text())
             open_text_data()
-            _make_item_list()
         }
 
-        const bt_del = newE("div", "bt_del", "btn btn-secondary org-btn-tool bi bi-trash3-fill")
+        const bt_del = newE("div", "bt_delete_texto", "btn btn-secondary org-btn-tool bi bi-trash3-fill")
         bts_adddel.appendChild(bt_del)
 
         const col_move = newE("div", "col_move", "col-auto")
@@ -34,29 +33,6 @@ function make_text_editor() {
         bts_move.role = "group"
         col_move.appendChild(bts_move)
 
-        const bt_ini = newE("div", "bt_ini", "btn btn-secondary org-btn-tool bi bi-skip-start")
-        bts_move.appendChild(bt_ini)
-        bt_ini.onclick = () => {
-            //_move_to_entry("ini")
-        }
-
-        const bt_prev = newE("div", "bt_prev", "btn btn-secondary org-btn-tool bi bi-skip-backward")
-        bts_move.appendChild(bt_prev)
-        bt_prev.onclick = () => {
-            //_move_to_entry("prev")
-        }
-
-        const bt_sig = newE("div", "bt_sig", "btn btn-secondary org-btn-tool bi bi-skip-forward")
-        bts_move.appendChild(bt_sig)
-        bt_sig.onclick = () => {
-            //_move_to_entry("sig")
-        }
-
-        const bt_fin = newE("div", "bt_fin", "btn btn-secondary org-btn-tool bi bi-skip-end")
-        bts_move.appendChild(bt_fin)
-        bt_fin.onclick = () => {
-            //_move_to_entry("fin")
-        }
 
         const div_dropdown_config = newE("div", "div_dropdown", "dropdown mt-1")
         bts_move.appendChild(div_dropdown_config)
@@ -78,6 +54,9 @@ function make_text_editor() {
         item_variantes.onclick = () => {
             byE("class_modal_open").className = "modal-dialog"
             config_variantes()
+            byE("btnAceptar_open").onclick = () => {
+                _make_item_list()
+            }
         }
 
         ul_menu_config.appendChild(item_variantes)
@@ -89,6 +68,9 @@ function make_text_editor() {
         item_idioma_analisis.onclick = () => {
             byE("class_modal_open").className = "modal-dialog"
             config_idioma_analisis()
+            byE("btnAceptar_open").onclick = () => {
+                _make_item_list()
+            }
         }
         ul_menu_config.appendChild(item_idioma_analisis)
 
@@ -115,6 +97,9 @@ function make_text_editor() {
         item_morfema.onclick = () => {
             byE("class_modal_open").className = "modal-dialog"
             config_morfemas()
+            byE("btnAceptar_open").onclick = () => {
+                _make_item_list()
+            }
         }
 
         const item_contexto = newE("div", "item_contexto", "item-menu")
@@ -125,6 +110,9 @@ function make_text_editor() {
         item_contexto.onclick = () => {
             byE("class_modal_open").className = "modal-dialog"
             config_contexto()
+            byE("btnAceptar_open").onclick = () => {
+                _make_item_list()
+            }
         }
 
         const item_ps = newE("div", "item_ps", "item-menu")
@@ -135,6 +123,9 @@ function make_text_editor() {
         item_ps.onclick = () => {
             byE("class_modal_open").className = "modal-dialog modal-fullscreen"
             config_gramatical_list()
+            byE("btnAceptar_open").onclick = () => {
+                _make_item_list()
+            }
         }
 
     }
@@ -142,44 +133,142 @@ function make_text_editor() {
     const row_panel_text = newEk("div", "row", "")
     panel_escritorio.appendChild(row_panel_text)
 
-    const col_list_text = newEk("div", "col-3 menu-group-scroll-list", "Listas", "list_textos")
+    const col_list_text = newEk("div", "col-2 menu-group-scroll-list mt-2", "Sin lista", "list_textos")
     row_panel_text.appendChild(col_list_text)
 
-    const col_edit_text = newEk("div", "col", "Editores","edit_textos")
+    const col_edit_text = newEk("div", "col", "Editores", "edit_textos")
     row_panel_text.appendChild(col_edit_text)
     _make_item_list()
 }
+
 function _make_item_list() {
     const panel_list = byE("list_textos")
-    panel_list.innerHTML=""
+    panel_list.innerHTML = ""
     const panel_edit = byE("edit_textos")
-    panel_edit.innerHTML=""
+    panel_edit.innerHTML = ""
 
-    let tabla_textos=global_proyecto["TEXTOS"]
+    let tabla_textos = global_proyecto["TEXTOS"]
 
-    panel_list.innerHTML=""
-    tabla_textos.forEach(texto=>{
-        const item_text= newEk("div","item-menu",texto.titulo)
+    panel_list.innerHTML = ""
+    tabla_textos.forEach(texto => {
+        const item_text = newEk("div", "item-menu", texto.titulo, texto.id)
         panel_list.appendChild(item_text)
-        item_text.onclick=()=>{
+        item_text.onclick = () => {
             _make_edit_text(texto)
         }
     })
+    _make_edit_text(tabla_textos[0])
+    function _make_edit_text(texto) {
+        panel_edit.innerHTML = ""
 
-    function _make_edit_text(texto){
-        panel_edit.innerHTML=""
-        const input_titulo= newEk("input","form-control","")
+        _make_info()
+        function _make_info() {
+            const div_info = newEk("div", "div-categoria mt-2")
+            panel_edit.appendChild(div_info)
 
-        panel_edit.appendChild(input_titulo)
+            const row_info = newEk("div", "row align-items-start", "")
+            div_info.appendChild(row_info)
 
-        input_titulo.value=texto.titulo
-        input_titulo.onchange=()=>{
-            texto.titulo=input_titulo.value
-            save_texto(texto) 
+            const col_titulo = newEk("div", "col-2 label-wrap sub-labels", "Título")
+            row_info.appendChild(col_titulo)
+
+            const col_titulo_value = newEk("div", "col", "")
+            row_info.appendChild(col_titulo_value)
+
+            const row_cat_values_loc = newEk("div", "row")
+            col_titulo_value.appendChild(row_cat_values_loc)
+
+            const col_cat_label_lng = newEk("div", "col-auto tag-small", global_proyecto["PROYECTO"].cod_idioma)
+            row_cat_values_loc.appendChild(col_cat_label_lng)
+
+            const col_cat_value_loc = newEk("div", "col")
+            row_cat_values_loc.appendChild(col_cat_value_loc)
+
+            const input_titulo = newEk("input", "input-flat-dicc", "")
+            col_cat_value_loc.appendChild(input_titulo)
+
+            input_titulo.value = texto.titulo
+            input_titulo.onchange = () => {
+                texto.titulo = input_titulo.value
+                byE(texto.id).textContent = input_titulo.value
+                save_texto(texto)
+            }
+
+            const lng_analisis = global_proyecto["PROYECTO"].Lngtraducion
+            texto["titulo-traduccion"].forEach(_lng => {
+                const filter_trad = lng_analisis.filter(l => l.abreviacion == _lng.abreviacion)
+                if (filter_trad[0].visible == true) {
+
+                    const row_cat_values_lng = newEk("div", "row")
+                    col_titulo_value.appendChild(row_cat_values_lng)
+
+                    const col_cat_label_lng = newEk("div", "col-auto tag-small", _lng.abreviacion)
+                    row_cat_values_lng.appendChild(col_cat_label_lng)
+
+                    const col_cat_value_lng = newEk("div", "col")
+                    row_cat_values_lng.appendChild(col_cat_value_lng)
+
+                    const int_cat_value_lng = newEk("input", "input-flat-dicc")
+                    int_cat_value_lng.style.color = filter_trad[0].style["font-color"]
+                    int_cat_value_lng.style.fontSize = filter_trad[0].style["font-size"]
+                    col_cat_value_lng.appendChild(int_cat_value_lng)
+
+                    int_cat_value_lng.value = _lng.texto
+                    int_cat_value_lng.onchange = () => {
+                        _lng.texto = int_cat_value_lng.value
+                        save_texto(texto)
+                    }
+                }
+
+            })
+        }
+
+        _make_text_editor()
+        function _make_text_editor() {
+            const div_analisis = newEk("div", "mt-2")
+            panel_edit.appendChild(div_analisis)
+
+            const textarea = newEk("textarea", "form-control mt-2")
+            textarea.rows = 15
+            div_analisis.appendChild(textarea)
+
+            let parrafos = texto.analisis["text-basic"]
+            parrafos.forEach(p => {
+                textarea.value = textarea.value + p["par-text"] + "\n"
+            })
+            //Leer todos los párrafos que hay en el text
+
+            textarea.onchange = () => {
+                let list_parrafos = []
+                const par = textarea.value.split("\n")
+                par.forEach(p => {
+                    list_parrafos.push(
+                        {
+                            "key": "par-" + randomKey(10, '12345abcde'),
+                            "par-text": p
+                        })
+                })
+                texto.analisis["text-basic"] = list_parrafos
+                save_texto(texto)
+            }
+
+        }
+
+
+
+        const btn_borrar = byE("bt_delete_texto")
+        btn_borrar.onclick = () => {
+            delete_texto(texto.id)
+            open_text_data()
         }
     }
+
+
 
 }
 function save_texto(texto) {
     GLOBAL.firestore.updateTexto(texto)
+}
+function delete_texto(id) {
+    GLOBAL.firestore.borrarTexto(id)
 }

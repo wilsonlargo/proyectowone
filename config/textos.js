@@ -292,8 +292,8 @@ function _make_item_list() {
             }
 
         }
-        let wts=""
-        let wt_lista=["—",".",',',"(",")","|","=","¿","?","!","¡"]
+
+
         function _make_text_parser() {
             //Debo tomar el texto en análisiis
             //Luego contar sus párrafos
@@ -310,7 +310,7 @@ function _make_item_list() {
             parrafos.forEach(p => {
                 const palabras = p["par-text"].split(" ")
 
-               _make_words(palabras)
+                _make_words(palabras)
 
                 const p_wor = newEk("div", "w-100")
                 p_wor.textContent = "*"
@@ -321,21 +321,20 @@ function _make_item_list() {
             function _make_words(palabras) {
                 palabras.forEach(w => {
                     if (w != "") {
-                        wts=w
-                        wt_lista.forEach(l=>{
-                            if(wts.includes(l)==true){
-                                wts=wts.replace(l, " " + l + " ")
-                            }
-                        })
+                        //En este paso limpiamos las palabras con una lista de cambios
+                        //Quitamos los puntos o elementos asignados
 
-                        make_w(wts)
-                        
-                        function make_w(wts){
+
+
+
+                        make_w(clear_word(w))
+
+                        function make_w(Word_clear) {
                             const c_word = newEk("div", "word-parser")
                             div_parser.appendChild(c_word)
 
                             const c_word_basic = newEk("div", "fw-bold")
-                            c_word_basic.textContent = wts
+                            c_word_basic.textContent = Word_clear
                             c_word.appendChild(c_word_basic)
 
                             const div_1 = newEk("div", "")
@@ -344,12 +343,10 @@ function _make_item_list() {
                             const div_11 = newEk("div", "div-fluid")
                             div_1.appendChild(div_11)
 
+                            const col_botones = newEk("div", " mt-1 btn-context-parser bi bi-arrow-down-circle-fill")
 
-                            const col_botones = newEk("div", " mt-1 btn-context-lx bi bi-arrow-down-circle-fill")
-
-                            col_botones.style.width="10px"
+                            col_botones.style.width = "10px"
                             div_11.appendChild(col_botones)
-
 
                             const div_lexemes = newEk("div", "div-fluid align-items-center")
                             div_11.appendChild(div_lexemes)
@@ -357,88 +354,133 @@ function _make_item_list() {
                             const div_12 = newEk("div", "div-fluid mt-1")
                             div_1.appendChild(div_12)
 
-                            const col_botones2 = newEk("div", "btn-context-lx")
-
-                            col_botones2.style.width="12px"
+                            const col_botones2 = newEk("div", "btn-context-parser bi bi-arrow-down-circle-fill")
+                            col_botones2.style.width = "12px"
                             div_12.appendChild(col_botones2)
-
-
 
                             const c_word_glosa_gen = newEk("span", "ms-1 input input-flat-dicc bg-white")
                             c_word_glosa_gen.role = "textbox"
                             c_word_glosa_gen.setAttribute("contenteditable", "")
                             div_12.appendChild(c_word_glosa_gen)
 
-                            _make_lexema_txt(div_lexemes, wts)
+                            const div_13 = newEk("div", "div-fluid mt-1")
+                            div_1.appendChild(div_13)
+
+                            const col_botones3 = newEk("div", "btn-context-parser bi bi-arrow-down-circle-fill")
+                            col_botones3.style.width = "12px"
+                            div_13.appendChild(col_botones3)
+
+                            const c_word_cat = newEk("div", "ms-1 input input-flat-dicc")
+                            div_13.appendChild(c_word_cat)
+
+                            const div_14 = newEk("div", "div-fluid-rg mt-1 me-2")
+                            div_1.appendChild(div_14)
+
+                            const btn_aprobar = newEk("div", "btn-aprovar-parser bi bi-check-square-fill")
+                            div_14.appendChild(btn_aprobar)
+
+                            btn_aprobar.onclick = () => {
+                                let new_lexemas_flat = ""
+                                let new_lexemas_ref = []
+                                let new_glosas = []
+                                let new_categorias = []
+                                let Padre1 = div_lexemes.childNodes;
+                                Padre1.forEach(P => {
+
+                                    let child = P.childNodes
+                                    child.forEach(C => {
+                                        let sub_child = C.childNodes
+                                        sub_child.forEach(sc => {
+                                            if (sc.id !== undefined) {
+                                                if (sc.id.includes("LXID-") == true) {
+                                                    new_lexemas_flat = new_lexemas_flat + sc.textContent + " "
+                                                    new_lexemas_ref.push(sc.textContent)
+                                                } else if (sc.id.includes("LXGN-") == true) {
+                                                    new_glosas.push(sc.textContent)
+                                                } else if (sc.id.includes("LXPS-") == true) {
+                                                    new_categorias.push(sc.textContent)
+                                                }
+                                            }
+                                        })
 
 
+                                    })
+                                })
+                                put_analisis(w, new_lexemas_ref, new_lexemas_flat, new_glosas, new_categorias)
+                            }
+
+                            _make_lexema_txt(div_lexemes, Word_clear)
                         }
-
-
-
                     }
                 })
             }
 
-            function _make_lexema_txt(div_lexemes, w) {
-                let new_text = ""
-                const word_process = w.split(" ")
-                word_process.forEach(wp => {
-                    if(wt_lista.includes(wp)==false){
-                        if (wp != "") {
-                            crear_wp()
-                            function crear_wp() {
-                                const lx_div = newEk("div", "me-2")
-                                div_lexemes.appendChild(lx_div)
-    
-                                const c_word_lexeme = newEk("span", "ms-1 input input-flat-dicc bg-white", "", "LX-" + randomKey(10, '12345abcde'))
-                                c_word_lexeme.role = "textbox"
-                                c_word_lexeme.setAttribute("contenteditable", "")
-                                c_word_lexeme.textContent = wp
-                                lx_div.appendChild(c_word_lexeme)
-    
-                                c_word_lexeme.oninput = () => {
-                                    //let Parent = c_word_lexeme.parentNode;
-                                    let Padre1 = div_lexemes.childNodes;
-                                    Padre1.forEach(P => {
-                                        let child = P.childNodes
-                                        child.forEach(C => {
-                                            if (C.id.includes("LX-") == true) {
-                                                new_text = new_text + C.textContent + " "
-                                            }
+            function _make_lexema_txt(div_lexemes, word_ini) {
+                const verificar_word = load_analisis(clear_word(word_ini))
+
+                if (verificar_word["includes"] == true) {
+                    console.log(verificar_word.parser.analisis[0]["lexemas-basic"])
+                    let w = verificar_word.parser.analisis[0]["lexemas-basic"]
+                    _make_parser2(w)
+                    
+                } else {
+                    _make_parser2(word_ini)
+                }
+
+
+                function _make_parser2(w) {
+                    let new_text = ""
+                    const word_process = w.split(" ")
+                    word_process.forEach(wp => {
+                        if (lista_puntuacion.includes(wp) == false) { //Variable en módulo global
+                            if (wp != "") {
+                                crear_wp()
+                                function crear_wp() {
+                                    const lx_div = newEk("div", "me-2")
+                                    div_lexemes.appendChild(lx_div)
+
+                                    const c_word_lexeme = newEk("span", "ms-1 input input-flat-dicc bg-white", "", "LX-" + randomKey(10, '12345abcde'))
+                                    c_word_lexeme.role = "textbox"
+                                    c_word_lexeme.setAttribute("contenteditable", "")
+                                    c_word_lexeme.textContent = wp
+                                    lx_div.appendChild(c_word_lexeme)
+
+                                    c_word_lexeme.oninput = () => {
+                                        //let Parent = c_word_lexeme.parentNode;
+                                        let Padre1 = div_lexemes.childNodes;
+                                        Padre1.forEach(P => {
+                                            let child = P.childNodes
+                                            child.forEach(C => {
+                                                if (C.id.includes("LX-") == true) {
+                                                    new_text = new_text + C.textContent + " "
+                                                }
+                                            })
                                         })
-                                    })
-                                    div_lexemes.innerHTML = ""
-                                    _make_lexema_txt(div_lexemes, new_text)
-                                }
-    
-                                const div_lx_analisis = newEk("div", "mt-1")
-                                lx_div.appendChild(div_lx_analisis)
-    
-                                const div_lx_id = newEk("div", "word-find-parser", wp)
-                                div_lx_analisis.appendChild(div_lx_id)
-    
-                                const div_lx_gn = newEk("div", "ms-1 text-success bg-white", "--")
-                                div_lx_analisis.appendChild(div_lx_gn)
-    
-                                const div_lx_ps = newEk("div", "ms-1 text-secondary bg-white", "--")
-                                div_lx_analisis.appendChild(div_lx_ps)
-    
-                                div_lx_id.onclick = () => {
-                                    div_lx_gn.textContent = "Glosa"
-                                }
-    
+                                        div_lexemes.innerHTML = ""
+                                        _make_lexema_txt(div_lexemes, new_text)
+                                    }
 
+                                    const div_lx_analisis = newEk("div", "mt-1", "", "PAR-" + randomKey(10, '12345abcde'))
+                                    lx_div.appendChild(div_lx_analisis)
 
+                                    const div_lx_id = newEk("div", "word-find-parser", wp, "LXID-" + randomKey(10, '12345abcde'))
+                                    div_lx_analisis.appendChild(div_lx_id)
+
+                                    const div_lx_gn = newEk("div", "ms-1 text-success bg-white", "--", "LXGN-" + randomKey(10, '12345abcde'))
+                                    div_lx_analisis.appendChild(div_lx_gn)
+
+                                    const div_lx_ps = newEk("div", "ms-1 text-secondary bg-white", "--", "LXPS-" + randomKey(10, '12345abcde'))
+                                    div_lx_analisis.appendChild(div_lx_ps)
+
+                                    div_lx_id.onclick = () => {
+                                        div_lx_gn.textContent = "Glosa"
+                                    }
+                                }
                             }
-
-    
-    
-    
                         }
-                    }
 
-                })
+                    })
+                }
 
 
 
@@ -464,9 +506,69 @@ function _make_item_list() {
 
 
 }
+
+function put_analisis(word_basic, lexemas_ref, new_lexemas_flat, glosas, categorias) {
+    //make_analisis(w, new_lexemas, new_lexemas_ref, new_glosas, new_categorias)
+
+    const word_analisis = [
+        {
+            "lexemas-basic": new_lexemas_flat.trim(),
+            "lexemas-ref": lexemas_ref,
+            "lexemas-gn": glosas,
+            "lexemas-ps": categorias,
+        }
+    ]
+
+    let tabla_analisis = global_proyecto["PARSER-WORD"].PARSER
+    const filter_word = tabla_analisis.filter(ele => ele.word == word_basic)
+
+    if (filter_word.length == 0) {
+        tabla_analisis.push(
+            {
+                "word": word_basic,
+                "analisis": word_analisis
+            }
+        )
+        save_data(global_proyecto["PARSER-WORD"])
+    } else {
+        //filter_word[0].analisis.push(word_analisis)
+        //save_data(global_proyecto["PARSER-WORD"])
+        console.log(filter_word[0].analisis[0])
+        //return filter_word
+
+    }
+}
+
+function load_analisis(word_basic) {
+    let tabla_analisis = global_proyecto["PARSER-WORD"].PARSER
+    const filter_word = tabla_analisis.filter(ele => ele.word == word_basic)
+
+    let load_word = []
+    if (filter_word.length != 0) {
+        load_word = {
+            "includes": true,
+            "parser": filter_word[0]
+        }
+    } else {
+        load_word = {
+            "includes": false,
+        }
+    }
+
+    return load_word
+
+}
+
+
+
 function save_texto(texto) {
     GLOBAL.firestore.updateTexto(texto)
 }
+
+function save_data(data) {
+    GLOBAL.firestore.updateTexto(data)
+}
+
 function delete_texto(id) {
     GLOBAL.firestore.borrarTexto(id)
 }

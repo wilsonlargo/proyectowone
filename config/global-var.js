@@ -64,12 +64,12 @@ let newE = (elemento, id, clase, ancho) => {
     return el
 }
 
-let newEk = (elemento, clase, text, id=randomKey(10, '12345abcde'), ancho) => {
+let newEk = (elemento, clase, text, id = randomKey(10, '12345abcde'), ancho) => {
     const el = document.createElement(elemento)
     el.id = id
     el.className = clase
     el.style.width = ancho
-    el.textContent=text
+    el.textContent = text
     return el
 }
 
@@ -144,6 +144,49 @@ function calcHeight(value) {
     // min-height + lines x line-height + padding + border
     let newHeight = 20 + numberOfLineBreaks * 20 + 12 + 2;
     return newHeight;
+}
+
+let lista_puntuacion = ["—", ".", ',', "(", ")", "|", "=", "¿", "?", "!", "¡"]
+function clear_word_2(word_ini) {
+    let Word_clear = word_ini
+
+    lista_puntuacion.forEach(l => {
+        if (Word_clear.includes(l) == true) {
+            Word_clear = Word_clear.replace(l, " " + l + " ")
+        }
+    })
+
+    const step2 = Word_clear.split(" ")
+    let word2=""
+
+    step2.forEach(s2=>{
+        if(lista_puntuacion.includes(s2)==false){
+            word2=word2 + s2
+        }
+    })
+
+
+    return word2.toLowerCase()
+}
+
+function clear_word(word_ini) {
+    let Word_clear = word_ini
+
+    lista_puntuacion.forEach(l => {
+        if (Word_clear.includes(l) == true) {
+            Word_clear = Word_clear.replace(l, " " + l + " ")
+        }
+    })
+
+    const step2 = Word_clear.split(" ")
+    let word2=""
+
+    step2.forEach(s2=>{
+        if(lista_puntuacion.includes(s2)==false){
+            word2=word2 + s2
+        }
+    })
+    return Word_clear.toLowerCase()
 }
 
 

@@ -255,6 +255,30 @@ font-size: 9pt;
   font-weight: bold;
 }
 
+.btn-context-parser{
+  font-size: 8pt;
+  cursor: pointer;
+  color:#f4ecf7;
+  width: 1px;
+  cursor: pointer;
+}
+.btn-context-parser:hover{
+  color:#4a235a;
+  font-weight: bold;
+}
+
+.btn-aprovar-parser{
+  font-size: 8pt;
+  cursor: pointer;
+  color:rgb(177, 239, 180);
+  width: 1px;
+  cursor: pointer;
+}
+.btn-aprovar-parser:hover{
+  color:green;
+  font-weight: bold;
+}
+
 .div-fluid {
   display: flex;
   justify-content:left;

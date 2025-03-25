@@ -292,7 +292,6 @@ function template_text() {
         },
         "analisis": {
             "text-basic": [template_par()],
-            "text-parse": []
         }
     }
     return new_text

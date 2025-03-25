@@ -1,8 +1,21 @@
 
 function make_text_editor() {
-    byE("Nombre_proyecto").textContent = global_proyecto.PROYECTO.nombre + "- Textos"
+    try {
+        byE("Nombre_proyecto").textContent = global_proyecto.PROYECTO.nombre + "- Textos"
+    } catch (error) {
+        byE("Nombre_proyecto").textContent = "- Textos"
+    }
     const panel_escritorio = byE("panel_escritorio")
     panel_escritorio.innerHTML = ""
+
+    if (verificar_datos(global_proyecto["PARSER-WORD"]) == false) {
+
+        global_proyecto["PARSER-WORD"] = {
+            "PARSER": []
+        }
+        newDataTable(global_proyecto["PARSER-WORD"], "PARSER-WORD")
+
+    }
 
     _make_toolbar()
     function _make_toolbar() {
@@ -19,7 +32,7 @@ function make_text_editor() {
         const bt_add = newE("div", "bt_add", "btn btn-secondary org-btn-tool bi bi-file-earmark-plus")
         bts_adddel.appendChild(bt_add)
         bt_add.onclick = () => {
-            const data = GLOBAL.firestore.addTexto(template_text())
+            newDataTable(template_text(), "TETX-" + randomKey(5, '12345abcde'))
             open_text_data()
         }
 
@@ -187,7 +200,11 @@ function _make_item_list() {
             const input_titulo = newEk("input", "input-flat-dicc", "")
             col_cat_value_loc.appendChild(input_titulo)
 
-            input_titulo.value = texto.titulo
+            try {
+                input_titulo.value = texto.titulo
+            } catch (error) {
+
+            }
             input_titulo.onchange = () => {
                 texto.titulo = input_titulo.value
                 byE(texto.id).textContent = input_titulo.value
@@ -223,10 +240,32 @@ function _make_item_list() {
             })
         }
 
+        _make_tool_analisis()
+        function _make_tool_analisis() {
+            const div_tool = newEk("div", "mt-2 bg-secondary  div-fluid p-3")
+            panel_edit.appendChild(div_tool)
+
+            const btn_toBasicText = newEk("div", "item-texto-small text-white ms-2", "[Texto base]", "btn_textobase")
+            div_tool.appendChild(btn_toBasicText)
+            btn_toBasicText.onclick = () => {
+                _make_text_editor()
+            }
+
+            const btn_toParserText = newEk("div", "item-texto-small text-white ms-2", "[Analizar texto]", "btn_analizarTexto")
+            div_tool.appendChild(btn_toParserText)
+            btn_toParserText.onclick = () => {
+                _make_text_parser()
+            }
+
+
+        }
+
+        const div_analisis = newEk("div", "mt-2",)
+        panel_edit.appendChild(div_analisis)
+
         _make_text_editor()
         function _make_text_editor() {
-            const div_analisis = newEk("div", "mt-2")
-            panel_edit.appendChild(div_analisis)
+            div_analisis.innerHTML = ""
 
             const textarea = newEk("textarea", "form-control mt-2")
             textarea.rows = 15
@@ -253,6 +292,165 @@ function _make_item_list() {
             }
 
         }
+        let wts=""
+        let wt_lista=["—",".",',',"(",")","|","=","¿","?","!","¡"]
+        function _make_text_parser() {
+            //Debo tomar el texto en análisiis
+            //Luego contar sus párrafos
+            //Luego separar sus palabras y crear el control por palabra
+
+            //Debo crear un contenedor de las palabras
+            div_analisis.innerHTML = ""
+
+            const div_parser = newEk("div", "box-parser")
+            div_analisis.appendChild(div_parser)
+
+            let parrafos = texto.analisis["text-basic"]
+
+            parrafos.forEach(p => {
+                const palabras = p["par-text"].split(" ")
+
+               _make_words(palabras)
+
+                const p_wor = newEk("div", "w-100")
+                p_wor.textContent = "*"
+                div_parser.appendChild(p_wor)
+
+            })
+
+            function _make_words(palabras) {
+                palabras.forEach(w => {
+                    if (w != "") {
+                        wts=w
+                        wt_lista.forEach(l=>{
+                            if(wts.includes(l)==true){
+                                wts=wts.replace(l, " " + l + " ")
+                            }
+                        })
+
+                        make_w(wts)
+                        
+                        function make_w(wts){
+                            const c_word = newEk("div", "word-parser")
+                            div_parser.appendChild(c_word)
+
+                            const c_word_basic = newEk("div", "fw-bold")
+                            c_word_basic.textContent = wts
+                            c_word.appendChild(c_word_basic)
+
+                            const div_1 = newEk("div", "")
+                            c_word.appendChild(div_1)
+
+                            const div_11 = newEk("div", "div-fluid")
+                            div_1.appendChild(div_11)
+
+
+                            const col_botones = newEk("div", " mt-1 btn-context-lx bi bi-arrow-down-circle-fill")
+
+                            col_botones.style.width="10px"
+                            div_11.appendChild(col_botones)
+
+
+                            const div_lexemes = newEk("div", "div-fluid align-items-center")
+                            div_11.appendChild(div_lexemes)
+
+                            const div_12 = newEk("div", "div-fluid mt-1")
+                            div_1.appendChild(div_12)
+
+                            const col_botones2 = newEk("div", "btn-context-lx")
+
+                            col_botones2.style.width="12px"
+                            div_12.appendChild(col_botones2)
+
+
+
+                            const c_word_glosa_gen = newEk("span", "ms-1 input input-flat-dicc bg-white")
+                            c_word_glosa_gen.role = "textbox"
+                            c_word_glosa_gen.setAttribute("contenteditable", "")
+                            div_12.appendChild(c_word_glosa_gen)
+
+                            _make_lexema_txt(div_lexemes, wts)
+
+
+                        }
+
+
+
+                    }
+                })
+            }
+
+            function _make_lexema_txt(div_lexemes, w) {
+                let new_text = ""
+                const word_process = w.split(" ")
+                word_process.forEach(wp => {
+                    if(wt_lista.includes(wp)==false){
+                        if (wp != "") {
+                            crear_wp()
+                            function crear_wp() {
+                                const lx_div = newEk("div", "me-2")
+                                div_lexemes.appendChild(lx_div)
+    
+                                const c_word_lexeme = newEk("span", "ms-1 input input-flat-dicc bg-white", "", "LX-" + randomKey(10, '12345abcde'))
+                                c_word_lexeme.role = "textbox"
+                                c_word_lexeme.setAttribute("contenteditable", "")
+                                c_word_lexeme.textContent = wp
+                                lx_div.appendChild(c_word_lexeme)
+    
+                                c_word_lexeme.oninput = () => {
+                                    //let Parent = c_word_lexeme.parentNode;
+                                    let Padre1 = div_lexemes.childNodes;
+                                    Padre1.forEach(P => {
+                                        let child = P.childNodes
+                                        child.forEach(C => {
+                                            if (C.id.includes("LX-") == true) {
+                                                new_text = new_text + C.textContent + " "
+                                            }
+                                        })
+                                    })
+                                    div_lexemes.innerHTML = ""
+                                    _make_lexema_txt(div_lexemes, new_text)
+                                }
+    
+                                const div_lx_analisis = newEk("div", "mt-1")
+                                lx_div.appendChild(div_lx_analisis)
+    
+                                const div_lx_id = newEk("div", "word-find-parser", wp)
+                                div_lx_analisis.appendChild(div_lx_id)
+    
+                                const div_lx_gn = newEk("div", "ms-1 text-success bg-white", "--")
+                                div_lx_analisis.appendChild(div_lx_gn)
+    
+                                const div_lx_ps = newEk("div", "ms-1 text-secondary bg-white", "--")
+                                div_lx_analisis.appendChild(div_lx_ps)
+    
+                                div_lx_id.onclick = () => {
+                                    div_lx_gn.textContent = "Glosa"
+                                }
+    
+
+
+                            }
+
+    
+    
+    
+                        }
+                    }
+
+                })
+
+
+
+                div_lexemes.addEventListener("keydown", (ev) => {
+
+
+                    //console.log("Has pulsado la tecla ", ev.key, ` (${ev.code})`);
+                });
+            }
+
+
+        }
 
 
 
@@ -271,4 +469,7 @@ function save_texto(texto) {
 }
 function delete_texto(id) {
     GLOBAL.firestore.borrarTexto(id)
+}
+function newDataTable(data, id) {
+    GLOBAL.firestore.addTexto(data, id)
 }

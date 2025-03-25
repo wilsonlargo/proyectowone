@@ -103,10 +103,9 @@ function _sel_proyecto(proyecto) {
     });
 
     // Función para agregar un objeto de vigencia a la base de datos
-    async function addTexto(objVigencia) {
-        const docRef = await addDoc(colectionproyectos, objVigencia);      
+    async function addTexto(objTexto, id) {
+        await setDoc(doc(db, proyecto, id), objTexto); 
         open_proyecto_text()
-        return docRef.id;
     }
 
     async function updateTexto(texto) {

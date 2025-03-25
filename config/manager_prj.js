@@ -31,14 +31,15 @@ function open_proyecto() {
             } else {
                 global_proyecto["LEXICON"] = data_project[id]
             }
-        } else if (data_project[id].id.includes("T-") == true) {//Si es un texto, guardar los textos pertenecientes a un proyecto
-            textos.push(data_project[id])
-        }
+        }else if (data_project[id].id == "PARSER-WORD") {//Guardar todas las tablas del proyecto
+            global_proyecto["PARSER-WORD"] = data_project[id]
+
+        } 
     }
     //Guardar_datos("TABLAS", global_proyecto["TEXTOS"])
     //Guardar_datos(id_vigencia, global_proyecto["vigencias"][sel_vigencia.value])
     make_lexicon()
-    
+
 }
 
 function open_proyecto_text() {
@@ -63,11 +64,16 @@ function open_proyecto_text() {
             } else {
                 global_proyecto["LEXICON"] = data_project[id]
             }
-        } else {//Si es un texto, guardar los textos pertenecientes a un proyecto
-            let txt=data_project[id]
-            txt.id=data_project[id].id
+        }else if (data_project[id].id == "PARSER-WORD") {//Guardar todas las tablas del proyecto
+            global_proyecto["PARSER-WORD"] = data_project[id]
+
+        }
+        else if (data_project[id].id.includes("TETX-") == true) {//Si es un texto, guardar los textos pertenecientes a un proyecto
+            let txt = data_project[id]
+            txt.id = data_project[id].id
             global_proyecto["TEXTOS"].push(txt)
         }
+        
     }
 
     make_text_editor()
@@ -94,9 +100,13 @@ function open_text_data() {
             } else {
                 global_proyecto["LEXICON"] = data_project[id]
             }
-        } else {//Si es un texto, guardar los textos pertenecientes a un proyecto
-            let txt=data_project[id]
-            txt.id=data_project[id].id
+        } else if (data_project[id].id == "PARSER-WORD") {//Guardar todas las tablas del proyecto
+            global_proyecto["PARSER-WORD"] = data_project[id]
+
+        }
+        else if (data_project[id].id.includes("TETX-") == true) {//Si es un texto, guardar los textos pertenecientes a un proyecto
+            let txt = data_project[id]
+            txt.id = data_project[id].id
             global_proyecto["TEXTOS"].push(txt)
         }
     }

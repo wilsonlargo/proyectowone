@@ -248,6 +248,7 @@ font-size: 9pt;
   cursor: pointer;
   color: #aaa;
   width: 1px;
+  cursor: pointer;
 }
 .btn-context-lx:hover{
   color:#4a235a;
@@ -350,6 +351,7 @@ font-size: 9pt;
   font-family: inherit;
   font-size: inherit;
   padding: 1px 6px;
+  text-wrap: nowrap;
 }
 
 .input-wrap {
@@ -364,6 +366,8 @@ font-size: 9pt;
 
 .textarea {
   display: block;
+  text-wrap: nowrap;
+  margin: 0px;
   width: 100%;
   overflow: hidden;
   resize: both;
@@ -376,6 +380,38 @@ font-size: 9pt;
   color: gray;
 }
 
+.box-parser {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+
+.word-parser{
+  margin: 3px;
+  padding: 5px;
+}
+.word-parser:hover{
+  border-radius: 3px;
+  border:#aaa solid 1px;
+
+}
+
+
+.word-find-parser{
+  border-radius: 3px;
+  margin-left: 2px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border:#aaa solid 1px;
+  cursor: pointer;
+}
+
+.word-find-parser:hover{
+  border-radius: 3px;
+  color: white;
+  background-color: #aaa;
+
+}
 
 
 

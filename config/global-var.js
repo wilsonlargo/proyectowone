@@ -146,11 +146,5 @@ function calcHeight(value) {
     return newHeight;
 }
 
-let textarea = document.querySelector(".resize-ta");
-try {
-    textarea.addEventListener("keyup", () => {
-        textarea.style.height = calcHeight(textarea.value) + "px";
-    });
-} catch (error) {
 
-}
+

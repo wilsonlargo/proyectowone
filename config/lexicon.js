@@ -4,6 +4,8 @@ let active_lexicon_id = 0
 function make_lexicon() {
     active_lexicon = global_proyecto.LEXICON
 
+    
+
     byE("Nombre_proyecto").textContent = global_proyecto.PROYECTO.nombre + "- Lexicón"
     const panel_escritorio = byE("panel_escritorio")
     panel_escritorio.innerHTML = ""

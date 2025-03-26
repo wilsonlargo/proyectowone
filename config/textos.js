@@ -410,7 +410,18 @@ function _make_item_list() {
 
                                     })
                                 })
-                                put_analisis(w, new_lexemas_ref, new_lexemas_flat, new_glosas, new_categorias,c_word_glosa_gen.textContent,"")
+                                const data = {
+                                    "text_ref": texto.id,
+                                    "word_basic": w,
+                                    "new_lexemas_ref": new_lexemas_ref,
+                                    "new_lexemas_flat": new_lexemas_flat,
+                                    "glosas": new_glosas,
+                                    "categorias": new_categorias,
+                                    "glosas_generales": c_word_glosa_gen.textContent,
+                                    "categorias_generales": "",
+                                }
+                                put_analisis(data)
+
                             }
 
                             _make_lexema_txt(div_lexemes, Word_clear, div_contador, ul_menu_lexemes, c_word_glosa_gen)
@@ -420,7 +431,9 @@ function _make_item_list() {
             }
 
             function _make_lexema_txt(div_lexemes, word_ini, div_contador, ul_menu_lexemes, c_word_glosa_gen) {
-                const verificar_word = load_analisis(clear_word(word_ini))
+                const verificar_word = load_analisis(clear_word_2(word_ini))
+
+                console.log(verificar_word.count)
 
                 if (verificar_word["includes"] == true) {
                     div_contador.textContent = verificar_word.count
@@ -431,22 +444,33 @@ function _make_item_list() {
                             div_lexemes.innerHTML = ""
                             let gns = p["lexemas-gn"]
                             let pss = p["lexemas-ps"]
-                            let glosa = p["glosa-general"]
-                            c_word_glosa_gen.textContent = p["glosa-general"]
-                            c_word_glosa_gen.oninput=()=>{
-                                p["glosa-general"]=c_word_glosa_gen.textContent
-                                save_data(global_proyecto["PARSER-WORD"])
+
+                            //Cargamos info de las glosas de esta palabra
+                            let adm_glosas = p["glosa-general"]
+                            let glosa_activa = adm_glosas.options[adm_glosas["active-glosa"]]
+
+                            let glosa = glosa_activa.text
+                            c_word_glosa_gen.textContent = glosa_activa.text
+
+                            c_word_glosa_gen.oninput = () => {
+                                //p["glosa-general"].push(c_word_glosa_gen.textContent)
+                                //save_data(global_proyecto["PARSER-WORD"])
                             }
 
-                            _make_parser2(item.textContent, gns, pss,glosa)
+                            _make_parser2(item.textContent, gns, pss, glosa)
                         }
                     })
-                    c_word_glosa_gen.textContent = verificar_word.parser[0]["glosa-general"]
-                    c_word_glosa_gen.oninput=()=>{
-                        verificar_word.parser[0]["glosa-general"]=c_word_glosa_gen.textContent
-                        save_data(global_proyecto["PARSER-WORD"])
+
+                    //Cargamos info de las glosas de esta palabra
+                    let adm_glosas = verificar_word.parser[0]["glosa-general"]
+                    let glosa_activa = adm_glosas.options[adm_glosas["active-glosa"]]
+
+                    //c_word_glosa_gen.textContent = glosa_activa.text
+                    c_word_glosa_gen.oninput = () => {
+                        //glosa_activa.text=c_word_glosa_gen.textContent
+                        //save_data(global_proyecto["PARSER-WORD"])
                     }
-                    
+
                     let w = verificar_word.parser[0]["lexemas-basic"]
                     let gns = verificar_word.parser[0]["lexemas-gn"]
                     let pss = verificar_word.parser[0]["lexemas-ps"]
@@ -527,7 +551,6 @@ function _make_item_list() {
                 });
             }
 
-
         }
 
         const btn_borrar = byE("bt_delete_texto")
@@ -541,54 +564,92 @@ function _make_item_list() {
 
 }
 
-function put_analisis(word_basic, lexemas_ref, new_lexemas_flat, glosas, categorias, glosas_generales, categorias_generales) {
+function put_analisis(data) {
     //make_analisis(w, new_lexemas, new_lexemas_ref, new_glosas, new_categorias)
     let list_lx_ref = []
     let tabla_analisis = global_proyecto["PARSER-WORD"].PARSER
-    const filter_word = tabla_analisis.filter(ele => ele.word == word_basic)
-
+    const filter_word = tabla_analisis.filter(ele => ele.word == clear_word_2(data.word_basic))
     if (filter_word.length == 0) {
         tabla_analisis.push(
             {
-                "word": word_basic,
+                "word": clear_word_2(data.word_basic),
                 "analisis": [
                     {
-                        "lexemas-basic": new_lexemas_flat.trim(),
-                        "lexemas-ref": lexemas_ref,
-                        "lexemas-gn": glosas,
-                        "lexemas-ps": categorias,
-                        "glosa-general": glosas_generales,
-                        "categoria-general": categorias_generales
+                        "lexemas-basic": data.new_lexemas_flat.trim(),
+                        "lexemas-ref": data.new_lexemas_ref,
+                        "lexemas-gn": data.glosas,
+                        "lexemas-ps": data.categorias,
+                        "glosa-general": {
+                            "active-glosa": 0,
+                            "options": [{
+                                "text": data.glosas_generales,
+                                "text-ref": data.text_ref,
+                            }]
+                        },
+                        "categoria-general": data.categorias_generales
                     }
                 ]
 
             }
         )
+
         save_data(global_proyecto["PARSER-WORD"])
     } else {//Si la palabra ya existe, entonces revisar los cortes de morfemas
-        const lexemas_local = new_lexemas_flat.trim()
+
+        const lexemas_local = data.new_lexemas_flat.trim()
+        //Cargamos todos los cortes de morfemas que existen dentro de este analis
         filter_word[0].analisis.forEach(lx_ref => {
             list_lx_ref.push(lx_ref["lexemas-basic"])
         })
 
+        //Si los cortes de morfemas o analísi de morfemas no existen
+        //entonces agregar el nuevo grupo de morfemas
+        //A la lista de análisis
         if (list_lx_ref.includes(lexemas_local) == false) {
-
             filter_word[0].analisis.push(
                 {
-                    "lexemas-basic": new_lexemas_flat.trim(),
-                    "lexemas-ref": lexemas_ref,
-                    "lexemas-gn": glosas,
-                    "lexemas-ps": categorias,
-                    "glosa-general": glosas_generales,
-                    "categoria-general": categorias_generales
+                    "lexemas-basic": data.new_lexemas_flat.trim(),
+                    "lexemas-ref": data.new_lexemas_ref,
+                    "lexemas-gn": data.glosas,
+                    "lexemas-ps": data.categorias,
+                    "glosa-general":
+                    {
+                        "active-glosa": 0,
+                        "options": [{
+                            "text": data.glosas_generales,
+                            "text-ref": data.text_ref,
+                        }]
+                    },
+                    "categoria-general": data.categorias_generales
                 }
             )
             save_data(global_proyecto["PARSER-WORD"])
+        } else {//Si ya existen los mismos cortes de morfemas, entonces revisar
+
+            //Buscamos el corte de morfemas actual
+            const filter_parser_unique = filter_word[0].analisis.filter(ele => ele["lexemas-basic"] == lexemas_local)
+            //Si se encuentra entonces cargar la tabla de glosas genral
+            let adm_glosas = filter_parser_unique[0]["glosa-general"]
+            //Dentro de esta tabla glosa general existen ociones de glosa
+            //Buscar dentro de estas opciones si la palabra actual en la entrada de glosa existe
+            const filter_exist_text = adm_glosas.options.filter(ele => ele.text == data.glosas_generales)
+            if (filter_exist_text.length == 0) {
+                //Si la palabra no existe, entonces debemos agregar una nueva opción
+                adm_glosas.options.push(
+                    {
+                        "text": data.glosas_generales, //TExto de la caja de texto
+                        "text-ref": data.text_ref, //Indica en que texto estamos
+                    }
+                )
+                console.log(adm_glosas.options)
+            }
+
+            
         }
 
         //filter_word[0].analisis.push(word_analisis)
         //save_data(global_proyecto["PARSER-WORD"])
-        //console.log(filter_word[0].analisis[0]["lexemas-basic"])
+
         //return filter_word
 
     }
@@ -596,9 +657,7 @@ function put_analisis(word_basic, lexemas_ref, new_lexemas_flat, glosas, categor
 
 function load_analisis(word_basic) {
     let tabla_analisis = global_proyecto["PARSER-WORD"].PARSER
-    const filter_word = tabla_analisis.filter(ele => ele.word == word_basic)
-
-
+    const filter_word = tabla_analisis.filter(ele => ele.word == clear_word_2(word_basic))
 
     let load_word = []
     let n = 0
@@ -615,6 +674,7 @@ function load_analisis(word_basic) {
 
     } else {
         load_word = {
+            "count": 0,
             "includes": false,
         }
     }

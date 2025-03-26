@@ -37,39 +37,24 @@ loadDataBase("1dniplVXfiSFYUFfsT1Ij6cdEoAdtK7dqWf3x4s9eUSw", proyecto).then(obje
 })
 
 
-div_lexemes.innerHTML = ""
-c_word_lexeme.textContent.split(" ")
-new_lx.forEach(lx => {
-    const btn_menu_lx = newEk("div", "bi bi-arrow-down-circle-fill btn-context-lx me-2")
-    btn_menu_lx.setAttribute("data-bs-toggle", "dropdown")
-    div_lexemes.appendChild(btn_menu_lx)
 
-    const c_word_lexeme = newEk("span", "input input-flat-dicc me-2")
-    c_word_lexeme.role = "textbox"
-    c_word_lexeme.setAttribute("contenteditable", "")
-    c_word_lexeme.textContent = lx
-    div_lexemes.appendChild(c_word_lexeme)
-})
+//ul_menu_lexemes.appendChild(item)
+item.onclick = () => {
+    div_lexemes.innerHTML = ""
+    let gns = p["lexemas-gn"]
+    let pss = p["lexemas-ps"]
 
+    //Cargamos info de las glosas de esta palabra
+    let adm_glosas = p["glosa-general"]
+    let glosa_activa = adm_glosas.options[adm_glosas["active-glosa"]]
 
-if(C.id.includes("LX-")==true){
-    
-}
+    let glosa = glosa_activa.text
+    c_word_glosa_gen.textContent = glosa_activa.text
 
-div_lexemes.addEventListener("keydown", (ev) => {
+    c_word_glosa_gen.oninput = () => {
+        //p["glosa-general"].push(c_word_glosa_gen.textContent)
+        //save_data(global_proyecto["PARSER-WORD"])
+    }
 
-
-    //console.log("Has pulsado la tecla ", ev.key, ` (${ev.code})`);
-});
-
-
-const re = new RegExp(/[.&#41,-_|—]/);
-const verificar_puntos = ""
-const found = w.match(re);
-if (found != null) {
-    const punt = w.substr(found.index, 1)
-    const newW=w.replace(punt,"")
-    make_w(newW)
-} else {
-    make_w(w)
+    _make_parser2(item.textContent, gns, pss, glosa)
 }

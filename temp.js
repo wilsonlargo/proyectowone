@@ -36,25 +36,22 @@ loadDataBase("1dniplVXfiSFYUFfsT1Ij6cdEoAdtK7dqWf3x4s9eUSw", proyecto).then(obje
     GLOBAL.from_drive = DataPrincipal
 })
 
+div_lexemes.innerHTML = ""
+let gns = p["lexemas-gn"]
+let pss = p["lexemas-ps"]
 
+//Cargamos info de las glosas de esta palabra
+let adm_glosas = p["glosa-general"]
+let glosa_activa = adm_glosas.options[adm_glosas["active-glosa"]]
 
-//ul_menu_lexemes.appendChild(item)
-item.onclick = () => {
-    div_lexemes.innerHTML = ""
-    let gns = p["lexemas-gn"]
-    let pss = p["lexemas-ps"]
+if (adm_glosas.options.length != 0) {
+    col_botones2.textContent = adm_glosas.options.length
+}
 
-    //Cargamos info de las glosas de esta palabra
-    let adm_glosas = p["glosa-general"]
-    let glosa_activa = adm_glosas.options[adm_glosas["active-glosa"]]
+let glosa = glosa_activa.text
+c_word_glosa_gen.textContent = glosa_activa.text
 
-    let glosa = glosa_activa.text
-    c_word_glosa_gen.textContent = glosa_activa.text
-
-    c_word_glosa_gen.oninput = () => {
-        //p["glosa-general"].push(c_word_glosa_gen.textContent)
-        //save_data(global_proyecto["PARSER-WORD"])
-    }
-
-    _make_parser2(item.textContent, gns, pss, glosa)
+c_word_glosa_gen.oninput = () => {
+    //p["glosa-general"].push(c_word_glosa_gen.textContent)
+    //save_data(global_proyecto["PARSER-WORD"])
 }

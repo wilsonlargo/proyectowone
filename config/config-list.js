@@ -831,97 +831,114 @@ function config_gramatical_list() {
 
     function _make_categoria() {
         let tabla_categorias = global_proyecto["TABLAS"]["CATGRAMATICAL"]
-        const panel_list = byE("panel_list_ps")
+        const ul = byE("panel_list_ps")
         const panel_list_edit = byE("panel_lexicon_edit_ps")
 
-        panel_list.innerHTML = ""
+        ul.innerHTML = ""
 
-        tabla_categorias.forEach(cat => {
-            const item_collapse_categoria = newE("div", randomKey(10, '12345abcde'), "row align-items-center")
-            panel_list.appendChild(item_collapse_categoria)
+        tabla_categorias.forEach(Nivel_1 => {
+            const collapse_Nivel_1 = newEk("div", "div-fluid align-items-center")
+            ul.appendChild(collapse_Nivel_1)
 
-            const col_collapse_plus = newE("div", randomKey(10, '12345abcde'), "col-auto plus-tree")
-            col_collapse_plus.textContent = "-"
-            col_collapse_plus.setAttribute("data-bs-toggle", "collapse")
-            col_collapse_plus.setAttribute("data-bs-target", "#collapse_ps" + cat.key)
-            item_collapse_categoria.appendChild(col_collapse_plus)
+            const plus_Nivel1 = newEk("div", "bi bi-dash-square plus-tree-ps")
+            plus_Nivel1.setAttribute("data-bs-toggle", "collapse")
+            plus_Nivel1.setAttribute("data-bs-target", "#collapse_ps" + Nivel_1.key)
+            collapse_Nivel_1.appendChild(plus_Nivel1)
 
-            col_collapse_plus.onclick = () => {
-                if (col_collapse_plus.textContent == "+") {
-                    col_collapse_plus.textContent = "-"
-                } else if (col_collapse_plus.textContent == "-") {
-                    col_collapse_plus.textContent = "+"
+
+            plus_Nivel1.onclick = () => {
+                if (plus_Nivel1.className.includes("bi-dash-square") == true) {
+                    plus_Nivel1.className = "bi bi-plus-square-fill plus-tree-ps"
+                } else if (plus_Nivel1.className.includes("bi-plus-square-fill")) {
+                    plus_Nivel1.className = "bi bi-dash-square plus-tree-ps"
                 }
             }
 
-            const col_collapse_name = newE("div", "categoria" + cat.key, "col item-tree")
-            col_collapse_name.textContent = cat.nombre[0].texto
-            item_collapse_categoria.appendChild(col_collapse_name)
+            const item_Nivel1 = newEk("div", "item-tree-ps", Nivel_1.nombre[0].texto)
+            collapse_Nivel_1.appendChild(item_Nivel1)
 
-            let i = cat.key
-            let campo = cat
-            col_collapse_name.onclick = () => {
+
+            let i = Nivel_1.key
+            let campo = Nivel_1
+            item_Nivel1.onclick = () => {
                 _make_panel_cat(tabla_categorias, campo, i, true)
             }
 
-            const div_collapse_subcategoria = newE("div", "collapse_ps" + cat.key, "collapse show ms-3")
-            panel_list.appendChild(div_collapse_subcategoria)
+            const collapse_Nivel_2 = newEk("div", "align-items-center collapse show", "", "collapse_ps" + Nivel_1.key)
+            ul.appendChild(collapse_Nivel_2)
 
-            cat.subcategorias.forEach(sub_B => {
-                const item_collapse_categoria = newE("div", randomKey(10, '12345abcde'), "row align-items-center")
-                div_collapse_subcategoria.appendChild(item_collapse_categoria)
 
-                const col_plus_b = newE("div", randomKey(10, '12345abcde'), "col-auto plus-tree")
-                col_plus_b.textContent = "-"
-                col_plus_b.setAttribute("data-bs-toggle", "collapse")
-                col_plus_b.setAttribute("data-bs-target", "#collapse_ps" + sub_B.key)
-                item_collapse_categoria.appendChild(col_plus_b)
+            Nivel_1.subcategorias.forEach(Nivel_2 => {
+                const div_Nivel2 = newEk("div", "div-fluid")
+                collapse_Nivel_2.appendChild(div_Nivel2)
 
-                col_plus_b.onclick = () => {
-                    if (col_plus_b.textContent == "+") {
-                        col_plus_b.textContent = "-"
-                    } else if (col_collapse_plus.textContent == "-") {
-                        col_plus_b.textContent = "+"
+                const div_botones_plus = newEk("div", "div-fluid")
+                div_Nivel2.appendChild(div_botones_plus)
+
+                const line_Nivel2 = newEk("div", "line-tree-ps")
+                div_botones_plus.appendChild(line_Nivel2)
+
+                const plus_Nivel2 = newEk("div", "bi bi-dash-square plus-tree-ps")
+                plus_Nivel2.setAttribute("data-bs-toggle", "collapse")
+                plus_Nivel2.setAttribute("data-bs-target", "#collapse_ps" + Nivel_2.key)
+                div_botones_plus.appendChild(plus_Nivel2)
+
+                plus_Nivel2.onclick = () => {
+                    if (plus_Nivel2.className.includes("bi-dash-square") == true) {
+                        plus_Nivel2.className = "bi bi-plus-square-fill plus-tree-ps"
+                    } else if (plus_Nivel2.className.includes("bi-plus-square-fill")) {
+                        plus_Nivel2.className = "bi bi-dash-square plus-tree-ps"
                     }
                 }
 
-                const col_collapse_name = newE("div", "categoria" + sub_B.key, "col item-tree")
-                col_collapse_name.textContent = sub_B.nombre[0].texto
-                item_collapse_categoria.appendChild(col_collapse_name)
+                const item_Nivel2 = newEk("div", "item-tree-ps", Nivel_2.nombre[0].texto)
+                div_Nivel2.appendChild(item_Nivel2)
 
-                let ii = sub_B.key
-                let campo = sub_B
-                col_collapse_name.onclick = () => {
-                    _make_panel_cat(cat, campo, ii, true)
+                let ii = Nivel_2.key
+                let campo = Nivel_2
+                item_Nivel2.onclick = () => {
+                    _make_panel_cat(Nivel_2, campo, ii, true)
                 }
-                const div_collapse_ABC = newE("div", "collapse_ps" + sub_B.key, "collapse show ms-3")
-                item_collapse_categoria.appendChild(div_collapse_ABC)
-                sub_B.subcategorias.forEach(sub_C => {
-                    const item_collapse_categoria = newE("div", randomKey(10, '12345abcde'), "row align-items-center")
-                    div_collapse_ABC.appendChild(item_collapse_categoria)
 
-                    const col_plus_b = newE("div", randomKey(10, '12345abcde'), "col-auto plus-tree")
-                    col_plus_b.textContent = "-"
-                    col_plus_b.setAttribute("data-bs-toggle", "collapse")
-                    col_plus_b.setAttribute("data-bs-target", "#collapse_ps" + sub_C.key)
-                    item_collapse_categoria.appendChild(col_plus_b)
 
-                    col_plus_b.onclick = () => {
-                        if (col_plus_b.textContent == "+") {
-                            col_plus_b.textContent = "-"
-                        } else if (col_collapse_plus.textContent == "-") {
-                            col_plus_b.textContent = "+"
+                const collapse_Nivel_3 = newEk("div", "align-items-center collapse show", "", "collapse_ps" + Nivel_2.key)
+                collapse_Nivel_2.appendChild(collapse_Nivel_3)
+
+
+                Nivel_2.subcategorias.forEach(Nivel_3 => {
+                    const div_Nivel3 = newEk("div", "div-fluid")
+                    collapse_Nivel_3.appendChild(div_Nivel3)
+
+                    const div_botones_plus = newEk("div", "div-fluid")
+                    div_Nivel3.appendChild(div_botones_plus)
+
+                    const line_Nivel0 = newEk("div", "line-tree-single")
+                    div_botones_plus.appendChild(line_Nivel0)
+
+                    const line_Nivel3 = newEk("div", "line-tree-ps")
+                    div_botones_plus.appendChild(line_Nivel3)
+
+                    const plus_Nivel3 = newEk("div", "bi bi-dash-square plus-tree-ps")
+                    plus_Nivel3.setAttribute("data-bs-toggle", "collapse")
+                    plus_Nivel3.setAttribute("data-bs-target", "#collapse_ps" + Nivel_3.key)
+                    div_botones_plus.appendChild(plus_Nivel3)
+
+
+                    plus_Nivel3.onclick = () => {
+                        if (plus_Nivel3.className.includes("bi-dash-square") == true) {
+                            plus_Nivel3.className = "bi bi-plus-square-fill plus-tree-ps"
+                        } else if (plus_Nivel3.className.includes("bi-plus-square-fill")) {
+                            plus_Nivel3.className = "bi bi-dash-square plus-tree-ps"
                         }
                     }
 
-                    const col_collapse_name = newE("div", "categoria" + sub_C.key, "col item-tree")
-                    col_collapse_name.textContent = sub_C.nombre[0].texto
-                    item_collapse_categoria.appendChild(col_collapse_name)
+                    const item_Nivel3 = newEk("div", "item-tree-ps", Nivel_3.nombre[0].texto)
+                    div_Nivel3.appendChild(item_Nivel3)
 
-                    let iii = sub_C.key
-                    let campo = sub_C
-                    col_collapse_name.onclick = () => {
-                        _make_panel_cat(sub_B, campo, iii, false)
+                    let iii = Nivel_3.key
+                    let campo = Nivel_3
+                    item_Nivel3.onclick = () => {
+                        _make_panel_cat(Nivel_3, campo, iii, false)
                     }
                     //const div_collapse_ABC = newE("div", "collapse_ps" + sub_C.key, "collapse show ms-3")
                     //item_collapse_categoria.appendChild(div_collapse_ABC)

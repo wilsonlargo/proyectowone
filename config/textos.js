@@ -325,12 +325,12 @@ function _make_item_list() {
                     if (w != "") {
                         make_w(clear_word(w))
 
-                        function make_w(Word_clear) {
+                        function make_w(word_ini) {
                             const c_word = newEk("div", "word-parser")
                             div_parser.appendChild(c_word)
 
                             const c_word_basic = newEk("div", "ms-3 fw-bold")
-                            c_word_basic.textContent = Word_clear
+                            c_word_basic.textContent = word_ini
                             c_word.appendChild(c_word_basic)
 
                             const div_1 = newEk("div", "")
@@ -343,7 +343,7 @@ function _make_item_list() {
                             col_botones.style.width = "11px"
                             div_11.appendChild(col_botones)
 
-                            const btn_menu_lexemes = newEk("div", "btn-context-parser text-secondary")
+                            const btn_menu_lexemes = newEk("div", "btn-context-parser text-secondary text-center")
                             btn_menu_lexemes.setAttribute("data-bs-toggle", "dropdown")
                             col_botones.appendChild(btn_menu_lexemes)
 
@@ -358,17 +358,16 @@ function _make_item_list() {
                             const div_contador = newEk("div", "mt-2 btn-context-parser text-secondary")
                             //col_botones.appendChild(div_contador)
 
-
                             const div_lexemes = newEk("div", "div-fluid align-items-start")
                             div_11.appendChild(div_lexemes)
 
                             const div_12 = newEk("div", "div-fluid mt-1")
                             div_1.appendChild(div_12)
 
-                            const col_botones2 = newEk("div", "mt-2 btn-context-parser text-secondary")
-                            col_botones2.setAttribute("data-bs-toggle", "dropdown")
-                            col_botones2.style.width = "12px"
-                            div_12.appendChild(col_botones2)
+                            const btn_glosas_gen = newEk("div", "btn-context-parser text-secondary text-center")
+                            btn_glosas_gen.setAttribute("data-bs-toggle", "dropdown")
+                            btn_glosas_gen.style.width = "12px"
+                            div_12.appendChild(btn_glosas_gen)
 
                             const ul_menu_glosas = newEk("ul", "dropdown-menu shadow")
                             div_12.appendChild(ul_menu_glosas)
@@ -376,7 +375,7 @@ function _make_item_list() {
                             const div_contador_glosas = newEk("div", "btn-context-parser text-secondary")
                             //col_botones2.appendChild(div_contador_glosas)
 
-                            const c_word_glosa_gen = newEk("span", "ms-1 input input-flat-dicc bg-white")
+                            const c_word_glosa_gen = newEk("span", "ms-1 input input-flat-dicc label-cat")
                             c_word_glosa_gen.role = "textbox"
                             c_word_glosa_gen.setAttribute("contenteditable", "")
                             div_12.appendChild(c_word_glosa_gen)
@@ -384,11 +383,15 @@ function _make_item_list() {
                             const div_13 = newEk("div", "div-fluid mt-1")
                             div_1.appendChild(div_13)
 
-                            const col_botones3 = newEk("div", "btn-context-parser bi bi-arrow-down-circle-fill")
-                            col_botones3.style.width = "12px"
-                            div_13.appendChild(col_botones3)
+                            const btn_categorias = newEk("div", "btn-context-parser bi bi-arrow-down-circle-fill")
+                            btn_categorias.setAttribute("data-bs-toggle", "dropdown")
+                            btn_categorias.style.width = "12px"
+                            div_13.appendChild(btn_categorias)
 
-                            const c_word_cat = newEk("div", "ms-1 input input-flat-dicc")
+                            const ul_menu_categorias = newEk("ul", "dropdown-menu shadow menu-group-scroll-lg pt-3 p-2")
+                            div_13.appendChild(ul_menu_categorias)
+
+                            const c_word_cat = newEk("div", "ms-1 input input-flat-dicc label-cat", "CAT")
                             div_13.appendChild(c_word_cat)
 
                             const div_14 = newEk("div", "div-fluid-rg mt-1 me-2")
@@ -404,16 +407,14 @@ function _make_item_list() {
                                 let new_categorias = []
                                 let Padre1 = div_lexemes.childNodes;
                                 Padre1.forEach(P => {
-                                    let child = P.childNodes 
+                                    let child = P.childNodes
                                     child.forEach(C => {
                                         let sub_child = C.childNodes
                                         sub_child.forEach(sc => {
                                             if (sc.id !== undefined) {
                                                 if (sc.id.includes("LXID-") == true) {
                                                     new_lexemas_flat = new_lexemas_flat + sc.textContent + " "
-
                                                     new_lexemas_ref.push(sc.textContent.trim())
-
                                                 } else if (sc.id.includes("LXGN-") == true) {
                                                     new_glosas.push(sc.textContent.trim())
                                                 } else if (sc.id.includes("LXPS-") == true) {
@@ -433,66 +434,67 @@ function _make_item_list() {
                                     "categorias": new_categorias,
                                     "glosas_generales": c_word_glosa_gen.textContent,
                                     "categorias_generales": "",
-
                                 }
+
                                 put_analisis(data)
-
-
                             }
 
-                            const data = {
-                                "div_lexemes": div_lexemes,
-                                "Word_clear": Word_clear,
-                                "btn_menu_lexemes": btn_menu_lexemes,
-                                "ul_menu_lexemes": ul_menu_lexemes,
-                                "c_word_glosa_gen": c_word_glosa_gen,
-                                "col_botones2": col_botones2
+                            const controls = {
+                                "panel_lexemas": div_lexemes,
+                                "btn_lexemas": btn_menu_lexemes,
+                                "menu_lexemas": ul_menu_lexemes,
+
+                                "btn_glosas_gen": btn_glosas_gen,
+                                "menu_glosas_gen": ul_menu_glosas,
+                                "input_glosas_gen": c_word_glosa_gen,
+
+                                "btn_categorias_gen": btn_categorias,
+                                "menu_categorias_gen": ul_menu_categorias,
+                                "input_categorias_gen": c_word_cat,
+
                             }
-                            _make_lexema_txt(div_lexemes, Word_clear, btn_menu_lexemes, ul_menu_lexemes, ul_menu_glosas, c_word_glosa_gen, col_botones2)
+                            _make_lexema_txt(controls, word_ini)
                         }
                     }
                 })
             }
 
-            function _make_lexema_txt(div_lexemes, word_ini, btn_menu_lexemes, ul_menu_lexemes, ul_menu_glosas, c_word_glosa_gen, col_botones2) {
+            function _make_lexema_txt(controls, word_ini) {
                 const verificar_word = load_analisis(clear_word_2(word_ini))
-                //["active-analisis"]
+
 
                 if (verificar_word["includes"] == true) {
-                  
-                    const id_active=verificar_word["active-analisis"]
+                    
+                    const id_active = verificar_word["active-analisis_id"]
 
-                    ul_menu_lexemes.innerHTML = ""
-                    ul_menu_glosas.innerHTML = ""
+                    controls.menu_lexemas.innerHTML = ""
+                    controls.menu_glosas_gen.innerHTML = ""
                     //Cuenta el número de opciones de morfemas
-                    btn_menu_lexemes.textContent = verificar_word.count
-                    //Para agregar al menu items
+                    controls.btn_lexemas.textContent = verificar_word.count
+                    //Para agregar al menu items de lexemas
                     verificar_word.parser.forEach(p => {
                         const item = newEk("div", "me-2  item-menu", p["lexemas-basic"])
-                        ul_menu_lexemes.appendChild(item)
+                        controls.menu_lexemas.appendChild(item)
                         item.onclick = () => {
-                            div_lexemes.innerHTML = ""
+                            controls.panel_lexemas.innerHTML = ""
                             let gns = p["lexemas-gn"]
                             let pss = p["lexemas-ps"]
 
                             //Cargamos info de las glosas de esta palabra
                             let adm_glosas = p["glosa-general"]
                             let glosa_activa = adm_glosas.options[adm_glosas["active-glosa"]]
-                            ul_menu_glosas.innerHTML = ""
+                            controls.menu_glosas_gen.innerHTML = ""
+
                             adm_glosas.options.forEach(g => {
                                 const item = newEk("div", "pe-2 item-menu", g.text)
-                                ul_menu_glosas.appendChild(item)
+                                controls.menu_glosas_gen.appendChild(item)
                                 item.onclick = () => {
-                                    c_word_glosa_gen.textContent = g.text
+                                    controls.input_glosas_gen.textContent = g.text
                                 }
                             })
 
-                            c_word_glosa_gen.textContent = glosa_activa.text
-
-                            c_word_glosa_gen.oninput = () => {
-
-                            }
-
+                            controls.btn_glosas_gen.textContent = adm_glosas.options.length
+                            controls.input_glosas_gen.textContent = adm_glosas["active-glosa-text"]
                             _make_parser2(item.textContent, gns, pss)
                         }
                     })
@@ -502,33 +504,43 @@ function _make_item_list() {
                     let glosa_activa = adm_glosas.options[adm_glosas["active-glosa"]]
 
                     if (adm_glosas.options.length != 0) {
-                        col_botones2.textContent = adm_glosas.options.length
+                        controls.btn_glosas_gen.textContent = adm_glosas.options.length
                     }
 
+                    controls.menu_glosas_gen.innerHTML = ""
                     adm_glosas.options.forEach(g => {
                         const item = newEk("div", "item-menu", g.text)
-                        ul_menu_glosas.appendChild(item)
+                        controls.menu_glosas_gen.appendChild(item)
                         item.onclick = () => {
-                            c_word_glosa_gen.textContent = g.text
+                            controls.input_glosas_gen.textContent = g.text
                         }
                     })
 
-                    c_word_glosa_gen.textContent = glosa_activa.text
-                    c_word_glosa_gen.oninput = () => {
-                        //glosa_activa.text=c_word_glosa_gen.textContent
+                    controls.input_glosas_gen.textContent = adm_glosas["active-glosa-text"]
+                    controls.input_glosas_gen.oninput = () => {
+                        //glosa_activa.text=controls.input_glosas_gen.textContent
                         //save_data(global_proyecto["PARSER-WORD"])
                     }
 
-                    let w = verificar_word.parser[0]["lexemas-basic"]
-                    let gns = verificar_word.parser[0]["lexemas-gn"]
-                    let pss = verificar_word.parser[0]["lexemas-ps"]
-                    if(w!=word_ini){
-                        _make_parser2(word_ini, gns, pss)
-                    }else{
-                        _make_parser2(verificar_word.parser[id_active]["lexemas-basic"], gns, pss)
+                    let w = verificar_word.parser[id_active]["lexemas-basic"]
+                    let gns = verificar_word.parser[id_active]["lexemas-gn"]
+                    let pss = verificar_word.parser[id_active]["lexemas-ps"]
+                    if (w != word_ini) {
+                        //_make_parser2(word_ini, gns, pss)
+                    } else {
+                        //_make_parser2(verificar_word.parser[id_active]["lexemas-basic"], gns, pss)
                     }
-                    
+                    _make_parser2(verificar_word.parser[id_active]["lexemas-basic"], gns, pss)
+                    //Administramos los datos de la categoría general
+                    const cat_general = verificar_word.parser[id_active]["categoria-general"]
+                    controls.input_categorias_gen.textContent = cat_general.abreviacion
+                    controls.btn_categorias_gen.onclick = () => {
+                        make_ps_tree(controls.menu_categorias_gen, controls.input_categorias_gen, verificar_word.parser[id_active])
+                    }
                 } else {
+                    controls.btn_categorias_gen.onclick = () => {
+                        make_ps_tree(controls.menu_categorias_gen, controls.input_categorias_gen, "")
+                    }
                     _make_parser2(word_ini)
                 }
 
@@ -538,14 +550,13 @@ function _make_item_list() {
 
                     let contadores_lx = 0
                     word_process.forEach(wp => {
-                        
-                        if (lista_puntuacion.includes(wp) == false) { //Variable en módulo global
+
+                       if (lista_puntuacion.includes(wp) == false) { //Variable en módulo global
                             if (wp != "") {
-                                
                                 crear_wp()
                                 function crear_wp() {
                                     const lx_div = newEk("div", "me-2")
-                                    div_lexemes.appendChild(lx_div)
+                                    controls.panel_lexemas.appendChild(lx_div)
 
                                     const c_word_lexeme = newEk("span", "ms-1 input input-flat-dicc bg-white", "", "LX-" + randomKey(10, '12345abcde'))
                                     c_word_lexeme.role = "textbox"
@@ -555,7 +566,7 @@ function _make_item_list() {
 
                                     c_word_lexeme.oninput = () => {
                                         //let Parent = c_word_lexeme.parentNode;
-                                        let Padre1 = div_lexemes.childNodes;
+                                        let Padre1 = controls.panel_lexemas.childNodes;
                                         Padre1.forEach(P => {
                                             let child = P.childNodes
                                             child.forEach(C => {
@@ -564,9 +575,9 @@ function _make_item_list() {
                                                 }
                                             })
                                         })
-                                        div_lexemes.innerHTML = ""
-                                        
-                                        _make_lexema_txt(div_lexemes, new_text, btn_menu_lexemes, ul_menu_lexemes, ul_menu_glosas, c_word_glosa_gen, col_botones2)
+                                        controls.panel_lexemas.innerHTML = ""
+
+                                        _make_lexema_txt(controls, new_text)
                                     }
 
                                     const div_lx_analisis = newEk("div", "mt-1", "", "PAR-" + randomKey(10, '12345abcde'))
@@ -612,16 +623,19 @@ function _make_item_list() {
 }
 
 function put_analisis(data) {
-    //make_analisis(w, new_lexemas, new_lexemas_ref, new_glosas, new_categorias)
+
     let list_lx_ref = []
     let tabla_analisis = global_proyecto["PARSER-WORD"].PARSER
+
+    //Buscamos en la lista de palabras si existe esta palabra
     const filter_word = tabla_analisis.filter(ele => ele.word == clear_word_2(data.word_basic))
     if (filter_word.length == 0) {
+        //Si existe debemos crear una nueva entrada con la información que nos da [data] 
         tabla_analisis.push(
             {
                 "word": clear_word_2(data.word_basic),
                 "active-analisis": data.new_lexemas_flat.trim(),
-                "active-id":0,
+                "active-id": 0,
                 "analisis": [
                     {
                         "lexemas-basic": data.new_lexemas_flat.trim(),
@@ -630,12 +644,16 @@ function put_analisis(data) {
                         "lexemas-ps": data.categorias,
                         "glosa-general": {
                             "active-glosa": 0,
+                            "active-glosa-text": data.glosas_generales,
                             "options": [{
                                 "text": data.glosas_generales,
                                 "text-ref": data.text_ref,
                             }]
                         },
-                        "categoria-general": data.categorias_generales
+                        "categoria-general": {
+                            "abreviacion": "",
+                            "nombre": ""
+                        }
                     }
                 ]
 
@@ -664,16 +682,21 @@ function put_analisis(data) {
                     "glosa-general":
                     {
                         "active-glosa": 0,
+                        "active-glosa-text": data.glosas_generales,
                         "options": [{
                             "text": data.glosas_generales,
                             "text-ref": data.text_ref,
                         }]
                     },
-                    "categoria-general": data.categorias_generales
+                    "categoria-general": {
+                        "abreviacion": "", //data.categorias_generales.abb,
+                        "nombre": "",//data.categorias_generales.nombre
+                    }
                 }
             )
             //Agregar como default esta lista
             filter_word[0]["active-analisis"] = data.new_lexemas_flat.trim()
+
             save_data(global_proyecto["PARSER-WORD"])
 
         } else {//Si ya existen los mismos cortes de morfemas, entonces revisar
@@ -686,6 +709,7 @@ function put_analisis(data) {
             //Buscar dentro de estas opciones si la palabra actual en la entrada de glosa existe
             const filter_exist_text = adm_glosas.options.filter(ele => ele.text == data.glosas_generales)
             if (filter_exist_text.length == 0) {
+
                 //Si la palabra no existe, entonces debemos agregar una nueva opción
                 adm_glosas.options.push(
                     {
@@ -693,22 +717,15 @@ function put_analisis(data) {
                         "text-ref": data.text_ref, //Indica en que texto estamos
                     }
                 )
+                adm_glosas["active-glosa-text"] = data.glosas_generales
                 filter_word[0]["active-analisis"] = data.new_lexemas_flat.trim()
                 save_data(global_proyecto["PARSER-WORD"])
-                
+
             }
-
-            //Marcar la acción actual como el indice nuevo
-            //filter_word[0]["active-analisis"] = data.new_lexemas_flat.trim()
-            //save_data(global_proyecto["PARSER-WORD"])
-            //data.funcion()
-
+            adm_glosas["active-glosa-text"] = data.glosas_generales
+            filter_word[0]["active-analisis"] = data.new_lexemas_flat.trim()
+            save_data(global_proyecto["PARSER-WORD"])
         }
-
-        //filter_word[0].analisis.push(word_analisis)
-        //save_data(global_proyecto["PARSER-WORD"])
-
-        //return filter_word
 
     }
 }
@@ -717,7 +734,6 @@ function load_analisis(word_basic) {
     let tabla_analisis = global_proyecto["PARSER-WORD"].PARSER
     const filter_word = tabla_analisis.filter(ele => ele.word == clear_word_2(word_basic))
 
-
     let load_word
     let n = 0
     let g = 0
@@ -725,9 +741,14 @@ function load_analisis(word_basic) {
         filter_word[0].analisis.forEach(a => {
             n++
         })
-        const index_active = filter_word[0].analisis.findIndex((element) => element["lexemas-basic"] ==filter_word[0]["active-analisis"]);
+
+
+        const index_active = filter_word[0].analisis.findIndex((element) => element["lexemas-basic"] == filter_word[0]["active-analisis"]);
+    
+
         load_word = {
-            "active-analisis": index_active,            
+            "active-analisis_id": index_active,
+            "active-analisis": filter_word[0]["active-analisis"],
             "includes": true,
             "count": n,
             "parser": filter_word[0].analisis
@@ -756,4 +777,148 @@ function delete_texto(id) {
 }
 function newDataTable(data, id) {
     GLOBAL.firestore.addTexto(data, id)
+}
+
+function make_ps_tree(ul, input, field) {
+
+    ul.innerHTML=""
+    ul.onclick = (e) => {
+        e.stopPropagation();
+    }
+
+
+    if (verificar_datos(global_proyecto["TABLAS"].CATGRAMATICAL) == true) {
+        //Definimos la tabla de categorias
+        let tabla_categorias = global_proyecto["TABLAS"]["CATGRAMATICAL"]
+        //Leemos cada elemento de la tabla de categorias
+        tabla_categorias.forEach(Nivel_1 => {
+            const collapse_Nivel_1 = newEk("div", "div-fluid align-items-center")
+            ul.appendChild(collapse_Nivel_1)
+
+            const plus_Nivel1 = newEk("div", "bi bi-dash-square plus-tree-ps")
+            plus_Nivel1.setAttribute("data-bs-toggle", "collapse")
+            plus_Nivel1.setAttribute("data-bs-target", "#collapse_ps" + Nivel_1.key)
+            collapse_Nivel_1.appendChild(plus_Nivel1)
+
+
+            plus_Nivel1.onclick = () => {
+                if (plus_Nivel1.className.includes("bi-dash-square") == true) {
+                    plus_Nivel1.className = "bi bi-plus-square-fill plus-tree-ps"
+                } else if (plus_Nivel1.className.includes("bi-plus-square-fill")) {
+                    plus_Nivel1.className = "bi bi-dash-square plus-tree-ps"
+                }
+            }
+
+
+            const item_Nivel1 = newEk("div", "item-tree-ps", Nivel_1.nombre[0].texto)
+            collapse_Nivel_1.appendChild(item_Nivel1)
+
+            item_Nivel1.onclick = () => {
+                input.textContent = Nivel_1.abreviaciones[0].texto
+
+                if (field == "") {
+
+                } else {
+                    field["categoria-general"] = {
+                        "abreviacion": Nivel_1.abreviaciones[0].texto,
+                        "nombre": Nivel_1.nombre[0].texto
+                    }
+                    save_data(global_proyecto["PARSER-WORD"])
+                }
+            }
+
+
+            const collapse_Nivel_2 = newEk("div", "align-items-center collapse show", "", "collapse_ps" + Nivel_1.key)
+            ul.appendChild(collapse_Nivel_2)
+
+            Nivel_1.subcategorias.forEach(Nivel_2 => {
+
+                const div_Nivel2 = newEk("div", "div-fluid")
+                collapse_Nivel_2.appendChild(div_Nivel2)
+
+                const div_botones_plus = newEk("div", "div-fluid")
+                div_Nivel2.appendChild(div_botones_plus)
+
+                const line_Nivel2 = newEk("div", "line-tree-ps")
+                div_botones_plus.appendChild(line_Nivel2)
+
+                const plus_Nivel2 = newEk("div", "bi bi-dash-square plus-tree-ps")
+                plus_Nivel2.setAttribute("data-bs-toggle", "collapse")
+                plus_Nivel2.setAttribute("data-bs-target", "#collapse_ps" + Nivel_2.key)
+                div_botones_plus.appendChild(plus_Nivel2)
+
+                plus_Nivel2.onclick = () => {
+                    if (plus_Nivel2.className.includes("bi-dash-square") == true) {
+                        plus_Nivel2.className = "bi bi-plus-square-fill plus-tree-ps"
+                    } else if (plus_Nivel2.className.includes("bi-plus-square-fill")) {
+                        plus_Nivel2.className = "bi bi-dash-square plus-tree-ps"
+                    }
+                }
+
+                const item_Nivel2 = newEk("div", "item-tree-ps", Nivel_2.nombre[0].texto)
+                div_Nivel2.appendChild(item_Nivel2)
+
+                item_Nivel2.onclick = () => {
+                    input.textContent = Nivel_2.abreviaciones[0].texto
+
+                    if (field == "") {
+
+                    } else {
+                        field["categoria-general"] = {
+                            "abreviacion": Nivel_2.abreviaciones[0].texto,
+                            "nombre": Nivel_2.nombre[0].texto
+                        }
+                        save_data(global_proyecto["PARSER-WORD"])
+                    }
+                }
+
+                const collapse_Nivel_3 = newEk("div", "align-items-center collapse show", "", "collapse_ps" + Nivel_2.key)
+                collapse_Nivel_2.appendChild(collapse_Nivel_3)
+
+                Nivel_2.subcategorias.forEach(Nivel_3 => {
+                    const div_Nivel3 = newEk("div", "div-fluid")
+                    collapse_Nivel_3.appendChild(div_Nivel3)
+
+                    const div_botones_plus = newEk("div", "div-fluid")
+                    div_Nivel3.appendChild(div_botones_plus)
+
+                    const line_Nivel0 = newEk("div", "line-tree-single")
+                    div_botones_plus.appendChild(line_Nivel0)
+
+                    const line_Nivel3 = newEk("div", "line-tree-ps")
+                    div_botones_plus.appendChild(line_Nivel3)
+
+                    const plus_Nivel3 = newEk("div", "bi bi-dash-square plus-tree-ps")
+                    plus_Nivel3.setAttribute("data-bs-toggle", "collapse")
+                    plus_Nivel3.setAttribute("data-bs-target", "#collapse_ps" + Nivel_3.key)
+                    div_botones_plus.appendChild(plus_Nivel3)
+
+                    plus_Nivel3.onclick = () => {
+                        if (plus_Nivel3.className.includes("bi-dash-square") == true) {
+                            plus_Nivel3.className = "bi bi-plus-square-fill plus-tree-ps"
+                        } else if (plus_Nivel3.className.includes("bi-plus-square-fill")) {
+                            plus_Nivel3.className = "bi bi-dash-square plus-tree-ps"
+                        }
+                    }
+
+                    const item_Nivel3 = newEk("div", "item-tree-ps", Nivel_3.nombre[0].texto)
+                    div_Nivel3.appendChild(item_Nivel3)
+
+                    item_Nivel3.onclick = () => {
+                        input.textContent = Nivel_3.abreviaciones[0].texto
+                        if (field == "") {
+
+                        } else {
+                            field["categoria-general"] = {
+                                "abreviacion": Nivel_3.abreviaciones[0].texto,
+                                "nombre": Nivel_3.nombre[0].texto
+                            }
+                            save_data(global_proyecto["PARSER-WORD"])
+                        }
+                    }
+                })
+            })
+        })
+    }
+
 }

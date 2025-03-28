@@ -36,22 +36,3 @@ loadDataBase("1dniplVXfiSFYUFfsT1Ij6cdEoAdtK7dqWf3x4s9eUSw", proyecto).then(obje
     GLOBAL.from_drive = DataPrincipal
 })
 
-div_lexemes.innerHTML = ""
-let gns = p["lexemas-gn"]
-let pss = p["lexemas-ps"]
-
-//Cargamos info de las glosas de esta palabra
-let adm_glosas = p["glosa-general"]
-let glosa_activa = adm_glosas.options[adm_glosas["active-glosa"]]
-
-if (adm_glosas.options.length != 0) {
-    col_botones2.textContent = adm_glosas.options.length
-}
-
-let glosa = glosa_activa.text
-c_word_glosa_gen.textContent = glosa_activa.text
-
-c_word_glosa_gen.oninput = () => {
-    //p["glosa-general"].push(c_word_glosa_gen.textContent)
-    //save_data(global_proyecto["PARSER-WORD"])
-}

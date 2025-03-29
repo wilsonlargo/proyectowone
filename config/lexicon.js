@@ -702,17 +702,16 @@ function make_lexicon() {
                     const filter_morf = global_proyecto["TABLAS"].MORFEMAS.filter(ele => ele.abreviacion == entrada["clase-morfema"].abreviacion)
 
                     if (filter_morf[0].estructura.ini != "" && filter_morf[0].estructura.fin == "") {
-                        div_forma.innerHTML = `<b class="fs-5">${entrada.lexeme.lx}</b>{${cat_sel.abreviacion}}`
+                        div_forma.innerHTML = `<b class="fs-5"> ${entrada.lexeme.lx} </b>{${cat_sel.abreviacion}}`
                         applyTo_value = {
                             "value_ini": entrada.lexeme.lx,
                             "mark_ini": filter_morf[0].estructura.ini,
                             "categoria": cat_sel.abreviacion,
                             "mark_fin": "",
                             "value_fin": "",
-
                         }
                     } else if (filter_morf[0].estructura.ini == "" && filter_morf[0].estructura.fin != "") {
-                        div_forma.innerHTML = `{${cat_sel.abreviacion}}<b class="fs-5">${entrada.lexeme.lx}</b>`
+                        div_forma.innerHTML = `{${cat_sel.abreviacion}}<b class="fs-5"> ${entrada.lexeme.lx}</b>`
                         applyTo_value = {
                             "value_ini": "",
                             "mark_ini": "",
@@ -724,7 +723,7 @@ function make_lexicon() {
 
                     }
                     else if (filter_morf[0].estructura.ini != "" && filter_morf[0].estructura.fin != "") {
-                        div_forma.innerHTML = `{${cat_sel.abreviacion}}<b class="fs-5">${entrada.lexeme.lx}</b>{${cat_sel.abreviacion}}`
+                        div_forma.innerHTML = `{${cat_sel.abreviacion}}<b class="fs-5"> ${entrada.lexeme.lx} </b>{${cat_sel.abreviacion}}`
                         applyTo_value = {
                             "value_ini": cat_sel.abreviacion,
                             "mark_ini": filter_morf[0].estructura.ini,
@@ -874,7 +873,7 @@ function make_lexicon() {
         }
 
         /////////////////////////////////////////////////////////////////
-        ///Configuración varaiciones de palabra
+        ///Configuración variaciones de palabra
         if (entrada["clase-varianteOf"].visible == true) {
             const row_varianteOf = newE("div", randomKey(10, '12345abcde'), "row align-items-end mt-2")
             div_lx.appendChild(row_varianteOf)
@@ -1548,7 +1547,7 @@ function make_lexicon() {
                         const div_menu_ps = newE("div", randomKey(10, '12345abcde'), "m-3 menu-group-scroll-lg div-categoria")
                         ul_menu_ps.appendChild(div_menu_ps)
 
-                        make_sn_tree(div_menu_ps, col_ps_values, sn)
+                        make_sn_tree(div_menu_ps, col_ps_values, sn, entrada)
 
                     }
 
@@ -1759,7 +1758,19 @@ function _delete_registro(DATA, CAMPO, ID) {
     return filter
 }
 
-function make_sn_tree(ul, input, sn) {
+function make_sn_tree(ul, input, sn, entrada) {
+
+    //Evaluamos si la entrada actual tiene forma de afijo
+    //Si es asì aplica una plantilla segùn la categoria
+    //Temporal por ahora
+    let pos = "Centro"
+    const lexema_Ac = entrada.lexeme
+    if (lexema_Ac.ini != "" && lexema_Ac.fin == "") {
+        pos = "Sufijo"
+    } else if (lexema_Ac.ini == "" && lexema_Ac.fin != "") {
+        pos = "Prefijo"
+    }
+
 
     ul.innerHTML = ""
     ul.onclick = (e) => {
@@ -1768,128 +1779,289 @@ function make_sn_tree(ul, input, sn) {
 
 
     if (verificar_datos(global_proyecto["TABLAS"].CATGRAMATICAL) == true) {
-        //Definimos la tabla de categorias
-        let tabla_categorias = global_proyecto["TABLAS"]["CATGRAMATICAL"]
-        //Leemos cada elemento de la tabla de categorias
-        tabla_categorias.forEach(Nivel_1 => {
-            const collapse_Nivel_1 = newEk("div", "div-fluid align-items-center")
-            ul.appendChild(collapse_Nivel_1)
-
-            const plus_Nivel1 = newEk("div", "bi bi-dash-square plus-tree-ps")
-            plus_Nivel1.setAttribute("data-bs-toggle", "collapse")
-            plus_Nivel1.setAttribute("data-bs-target", "#collapse_ps" + Nivel_1.key)
-            collapse_Nivel_1.appendChild(plus_Nivel1)
-
-
-            plus_Nivel1.onclick = () => {
-                if (plus_Nivel1.className.includes("bi-dash-square") == true) {
-                    plus_Nivel1.className = "bi bi-plus-square-fill plus-tree-ps"
-                } else if (plus_Nivel1.className.includes("bi-plus-square-fill")) {
-                    plus_Nivel1.className = "bi bi-dash-square plus-tree-ps"
-                }
+        const tipo_aplicacion = [
+            {
+                "tipo": "Sin tipo",
+                "abreviacion": "?"
+            },
+            {
+                "tipo": "Derivacional",
+                "abreviacion": "=>"
+            },
+            {
+                "tipo": "Inflexional",
+                "abreviacion": ":"
             }
+        ]
 
+        if (pos == "Prefijo" || pos == "Sufijo") {
+            //Crea un cuadro de diálogo para casos de afijos
+            const smTipo = newEk("small", "mt-2 fw-bold", "Tipo de afijo")
+            ul.appendChild(smTipo)
 
-            const item_Nivel1 = newEk("div", "item-tree-ps", Nivel_1.nombre[0].texto)
-            collapse_Nivel_1.appendChild(item_Nivel1)
+            const Sel_tipo = newEk("select", "form-control mt-1")
+            ul.appendChild(Sel_tipo)
 
-            item_Nivel1.onclick = () => {
-                const new_ps = {
-                    "nombres": Nivel_1.nombre,
-                    "abreviaciones": Nivel_1.abreviaciones
-                }
+            tipo_aplicacion.forEach(c => {
+                const item = newEk("option", "")
+                item.value = c.abreviacion
+                item.textContent = c.tipo
+                Sel_tipo.appendChild(item)
+            })
 
-                sn.ps = new_ps
-                input.innerHTML = `<b class="me-3">${sn.ps.nombres[0].texto}</b> [<i>${sn.ps.abreviaciones[0].texto}</i>]`
-                Guardar_datos("LEXICON", global_proyecto["LEXICON"])
+            const smAccion = newEk("small", "mt-2 fw-bold", "Estrutura")
+            ul.appendChild(smAccion)
 
-                return Nivel_1
-            }
+            const div_acciones = newEk("div", "div-fluid")
+            ul.appendChild(div_acciones)
+            const div_acciones2 = newEk("div", "")
+            ul.appendChild(div_acciones2)
 
+            Sel_tipo.onchange = () => {
+                div_acciones2.innerHTML=""
+                if (Sel_tipo.value == "=>") {
+                    div_acciones.innerHTML = ""
+                    const cat_input = entrada["clase-morfema"].applayTo.categoria.categoria
+                    const div_categoria = newEk("div", "bg-warning p-1")
+                    div_acciones.appendChild(div_categoria)
 
-            const collapse_Nivel_2 = newEk("div", "align-items-center collapse show", "", "collapse_ps" + Nivel_1.key)
-            ul.appendChild(collapse_Nivel_2)
-
-            Nivel_1.subcategorias.forEach(Nivel_2 => {
-
-                const div_Nivel2 = newEk("div", "div-fluid")
-                collapse_Nivel_2.appendChild(div_Nivel2)
-
-                const div_botones_plus = newEk("div", "div-fluid")
-                div_Nivel2.appendChild(div_botones_plus)
-
-                const line_Nivel2 = newEk("div", "line-tree-ps")
-                div_botones_plus.appendChild(line_Nivel2)
-
-                const plus_Nivel2 = newEk("div", "bi bi-dash-square plus-tree-ps")
-                plus_Nivel2.setAttribute("data-bs-toggle", "collapse")
-                plus_Nivel2.setAttribute("data-bs-target", "#collapse_ps" + Nivel_2.key)
-                div_botones_plus.appendChild(plus_Nivel2)
-
-                plus_Nivel2.onclick = () => {
-                    if (plus_Nivel2.className.includes("bi-dash-square") == true) {
-                        plus_Nivel2.className = "bi bi-plus-square-fill plus-tree-ps"
-                    } else if (plus_Nivel2.className.includes("bi-plus-square-fill")) {
-                        plus_Nivel2.className = "bi bi-dash-square plus-tree-ps"
+                    if (cat_input != undefined) {
+                        div_categoria.textContent = cat_input + "=>"
+                    } else {
+                        div_categoria.textContent = "?=>"
                     }
-                }
 
-                const item_Nivel2 = newEk("div", "item-tree-ps", Nivel_2.nombre[0].texto)
-                div_Nivel2.appendChild(item_Nivel2)
+                    const div_categoria2 = newEk("div", "bg-secondary text-white p-1", "?")
+                    div_categoria2.style.cursor = "pointer"
+                    div_acciones.appendChild(div_categoria2)
 
-                item_Nivel2.onclick = () => {
-                    const new_ps = {
-                        "nombres": Nivel_2.nombre,
-                        "abreviaciones": Nivel_2.abreviaciones
+
+                    div_categoria2.onclick = () => {
+                        _sub_make_ps_tree("derivar",div_categoria,div_categoria2,div_acciones2)
                     }
-                    sn.ps = new_ps
-                    input.innerHTML = `<b class="me-3">${sn.ps.nombres[0].texto}</b> [<i>${sn.ps.abreviaciones[0].texto}</i>]`
-                    Guardar_datos("LEXICON", global_proyecto["LEXICON"])
-                }
 
-                const collapse_Nivel_3 = newEk("div", "align-items-center collapse show", "", "collapse_ps" + Nivel_2.key)
-                collapse_Nivel_2.appendChild(collapse_Nivel_3)
 
-                Nivel_2.subcategorias.forEach(Nivel_3 => {
-                    const div_Nivel3 = newEk("div", "div-fluid")
-                    collapse_Nivel_3.appendChild(div_Nivel3)
+                } else if (Sel_tipo.value == ":") {
+                    div_acciones.innerHTML = ""
+                    const cat_input = entrada["clase-morfema"].applayTo.categoria.categoria
+                    const div_categoria = newEk("div", "bg-warning p-1")
+                    div_acciones.appendChild(div_categoria)
 
-                    const div_botones_plus = newEk("div", "div-fluid")
-                    div_Nivel3.appendChild(div_botones_plus)
-
-                    const line_Nivel0 = newEk("div", "line-tree-single")
-                    div_botones_plus.appendChild(line_Nivel0)
-
-                    const line_Nivel3 = newEk("div", "line-tree-ps")
-                    div_botones_plus.appendChild(line_Nivel3)
-
-                    const plus_Nivel3 = newEk("div", "bi bi-dash-square plus-tree-ps")
-                    plus_Nivel3.setAttribute("data-bs-toggle", "collapse")
-                    plus_Nivel3.setAttribute("data-bs-target", "#collapse_ps" + Nivel_3.key)
-                    div_botones_plus.appendChild(plus_Nivel3)
-
-                    plus_Nivel3.onclick = () => {
-                        if (plus_Nivel3.className.includes("bi-dash-square") == true) {
-                            plus_Nivel3.className = "bi bi-plus-square-fill plus-tree-ps"
-                        } else if (plus_Nivel3.className.includes("bi-plus-square-fill")) {
-                            plus_Nivel3.className = "bi bi-dash-square plus-tree-ps"
-                        }
+                    if (cat_input != undefined) {
+                        div_categoria.textContent = cat_input + ":"
+                    } else {
+                        div_categoria.textContent = "?:"
                     }
-                    const item_Nivel3 = newEk("div", "item-tree-ps", Nivel_3.nombre[0].texto)
-                    div_Nivel3.appendChild(item_Nivel3)
 
-                    item_Nivel3.onclick = () => {
+                    
+                    const input_infle = newEk("input", "")
+                    input_infle.value = "?"
+                    div_acciones.appendChild(input_infle)
+
+                    input_infle.onchange = () => {
+                        let tabla_categorias = global_proyecto["TABLAS"]["CATGRAMATICAL"]
+     
                         const new_ps = {
-                            "nombres": Nivel_3.nombre,
-                            "abreviaciones": Nivel_3.abreviaciones
+                            
+                            "nombres": tabla_categorias[0].nombre,
+                            "abreviaciones": tabla_categorias[0].abreviaciones
                         }
+                        new_ps.nombres[0].texto = "Inflexional"
+                        new_ps.abreviaciones[0].texto = div_categoria.textContent + input_infle.value
+                        sn.ps = new_ps
+
+                        input.innerHTML = `<b class="me-3">${sn.ps.nombres[0].texto}</b> [<i>${sn.ps.abreviaciones[0].texto}</i>]`
+                        Guardar_datos("LEXICON", global_proyecto["LEXICON"])
+
+                    }
+                }
+
+            }
+
+        } else {
+            _sub_make_ps_tree()
+        }
+
+        function _sub_make_ps_tree(option,input_A,input_B,div_acciones2) {
+            div_acciones2.innerHTML=""
+            //Definimos la tabla de categorias
+            let tabla_categorias = global_proyecto["TABLAS"]["CATGRAMATICAL"]
+            //Leemos cada elemento de la tabla de categorias
+            tabla_categorias.forEach(Nivel_1 => {
+                const collapse_Nivel_1 = newEk("div", "div-fluid align-items-center")
+                if(option=="derivar"){
+                    div_acciones2.appendChild(collapse_Nivel_1)
+                   
+                }else{
+                    ul.appendChild(collapse_Nivel_1)
+                }
+                
+                const plus_Nivel1 = newEk("div", "bi bi-dash-square plus-tree-ps")
+                plus_Nivel1.setAttribute("data-bs-toggle", "collapse")
+                plus_Nivel1.setAttribute("data-bs-target", "#collapse_ps" + Nivel_1.key)
+                collapse_Nivel_1.appendChild(plus_Nivel1)
+
+
+                plus_Nivel1.onclick = () => {
+                    if (plus_Nivel1.className.includes("bi-dash-square") == true) {
+                        plus_Nivel1.className = "bi bi-plus-square-fill plus-tree-ps"
+                    } else if (plus_Nivel1.className.includes("bi-plus-square-fill")) {
+                        plus_Nivel1.className = "bi bi-dash-square plus-tree-ps"
+                    }
+                }
+
+
+                const item_Nivel1 = newEk("div", "item-tree-ps", Nivel_1.nombre[0].texto)
+                collapse_Nivel_1.appendChild(item_Nivel1)
+
+                item_Nivel1.onclick = () => {
+                    if(option=="derivar"){
+                        input_B.textContent=Nivel_1.abreviaciones[0].texto
+                        const new_ps = {
+                            "nombres": Nivel_1.nombre,
+                            "abreviaciones":Nivel_1.abreviaciones
+                        }
+                        new_ps.nombres[0].texto="Derivacional"
+                        new_ps.abreviaciones[0].texto=input_A.textContent+input_B.textContent
+                        sn.ps = new_ps
+                        
+                        input.innerHTML = `<b class="me-3">${sn.ps.nombres[0].texto}</b> [<i>${sn.ps.abreviaciones[0].texto}</i>]`
+                        Guardar_datos("LEXICON", global_proyecto["LEXICON"])                        
+                    }else{
+                        const new_ps = {
+                            "nombres": Nivel_1.nombre,
+                            "abreviaciones": Nivel_1.abreviaciones
+                        }
+    
                         sn.ps = new_ps
                         input.innerHTML = `<b class="me-3">${sn.ps.nombres[0].texto}</b> [<i>${sn.ps.abreviaciones[0].texto}</i>]`
                         Guardar_datos("LEXICON", global_proyecto["LEXICON"])
                     }
+
+ 
+                }
+
+                const collapse_Nivel_2 = newEk("div", "align-items-center collapse show", "", "collapse_ps" + Nivel_1.key)
+
+                if(option=="derivar"){
+                    div_acciones2.appendChild(collapse_Nivel_2)
+                }else{
+                    ul.appendChild(collapse_Nivel_2)
+                }
+
+                Nivel_1.subcategorias.forEach(Nivel_2 => {
+
+                    const div_Nivel2 = newEk("div", "div-fluid")
+                    collapse_Nivel_2.appendChild(div_Nivel2)
+
+                    const div_botones_plus = newEk("div", "div-fluid")
+                    div_Nivel2.appendChild(div_botones_plus)
+
+                    const line_Nivel2 = newEk("div", "line-tree-ps")
+                    div_botones_plus.appendChild(line_Nivel2)
+
+                    const plus_Nivel2 = newEk("div", "bi bi-dash-square plus-tree-ps")
+                    plus_Nivel2.setAttribute("data-bs-toggle", "collapse")
+                    plus_Nivel2.setAttribute("data-bs-target", "#collapse_ps" + Nivel_2.key)
+                    div_botones_plus.appendChild(plus_Nivel2)
+
+                    plus_Nivel2.onclick = () => {
+                        if (plus_Nivel2.className.includes("bi-dash-square") == true) {
+                            plus_Nivel2.className = "bi bi-plus-square-fill plus-tree-ps"
+                        } else if (plus_Nivel2.className.includes("bi-plus-square-fill")) {
+                            plus_Nivel2.className = "bi bi-dash-square plus-tree-ps"
+                        }
+                    }
+
+                    const item_Nivel2 = newEk("div", "item-tree-ps", Nivel_2.nombre[0].texto)
+                    div_Nivel2.appendChild(item_Nivel2)
+
+                    item_Nivel2.onclick = () => {
+                        if(option=="derivar"){
+                            input_B.textContent=Nivel_2.abreviaciones[0].texto
+                            const new_ps = {
+                                "nombres": Nivel_2.nombre,
+                                "abreviaciones":Nivel_2.abreviaciones
+                            }
+                            new_ps.nombres[0].texto="Derivacional"
+                            new_ps.abreviaciones[0].texto=input_A.textContent+input_B.textContent
+                            sn.ps = new_ps
+                            
+                            input.innerHTML = `<b class="me-3">${sn.ps.nombres[0].texto}</b> [<i>${sn.ps.abreviaciones[0].texto}</i>]`
+                            Guardar_datos("LEXICON", global_proyecto["LEXICON"])                        
+                        }else{
+                            const new_ps = {
+                                "nombres": Nivel_2.nombre,
+                                "abreviaciones": Nivel_2.abreviaciones
+                            }
+        
+                            sn.ps = new_ps
+                            input.innerHTML = `<b class="me-3">${sn.ps.nombres[0].texto}</b> [<i>${sn.ps.abreviaciones[0].texto}</i>]`
+                            Guardar_datos("LEXICON", global_proyecto["LEXICON"])
+                        }
+                    }
+
+                    const collapse_Nivel_3 = newEk("div", "align-items-center collapse show", "", "collapse_ps" + Nivel_2.key)
+                    collapse_Nivel_2.appendChild(collapse_Nivel_3)
+
+                    Nivel_2.subcategorias.forEach(Nivel_3 => {
+                        const div_Nivel3 = newEk("div", "div-fluid")
+                        collapse_Nivel_3.appendChild(div_Nivel3)
+
+                        const div_botones_plus = newEk("div", "div-fluid")
+                        div_Nivel3.appendChild(div_botones_plus)
+
+                        const line_Nivel0 = newEk("div", "line-tree-single")
+                        div_botones_plus.appendChild(line_Nivel0)
+
+                        const line_Nivel3 = newEk("div", "line-tree-ps")
+                        div_botones_plus.appendChild(line_Nivel3)
+
+                        const plus_Nivel3 = newEk("div", "bi bi-dash-square plus-tree-ps")
+                        plus_Nivel3.setAttribute("data-bs-toggle", "collapse")
+                        plus_Nivel3.setAttribute("data-bs-target", "#collapse_ps" + Nivel_3.key)
+                        div_botones_plus.appendChild(plus_Nivel3)
+
+                        plus_Nivel3.onclick = () => {
+                            if (plus_Nivel3.className.includes("bi-dash-square") == true) {
+                                plus_Nivel3.className = "bi bi-plus-square-fill plus-tree-ps"
+                            } else if (plus_Nivel3.className.includes("bi-plus-square-fill")) {
+                                plus_Nivel3.className = "bi bi-dash-square plus-tree-ps"
+                            }
+                        }
+                        const item_Nivel3 = newEk("div", "item-tree-ps", Nivel_3.nombre[0].texto)
+                        div_Nivel3.appendChild(item_Nivel3)
+
+                        item_Nivel3.onclick = () => {
+                            if(option=="derivar"){
+                                input_B.textContent=Nivel_3.abreviaciones[0].texto
+                                const new_ps = {
+                                    "nombres": Nivel_3.nombre,
+                                    "abreviaciones":Nivel_3.abreviaciones
+                                }
+                                new_ps.nombres[0].texto="Derivacional"
+                                new_ps.abreviaciones[0].texto=input_A.textContent+input_B.textContent
+                                sn.ps = new_ps
+                                
+                                input.innerHTML = `<b class="me-3">${sn.ps.nombres[0].texto}</b> [<i>${sn.ps.abreviaciones[0].texto}</i>]`
+                                Guardar_datos("LEXICON", global_proyecto["LEXICON"])                        
+                            }else{
+                                const new_ps = {
+                                    "nombres": Nivel_3.nombre,
+                                    "abreviaciones": Nivel_3.abreviaciones
+                                }
+            
+                                sn.ps = new_ps
+                                input.innerHTML = `<b class="me-3">${sn.ps.nombres[0].texto}</b> [<i>${sn.ps.abreviaciones[0].texto}</i>]`
+                                Guardar_datos("LEXICON", global_proyecto["LEXICON"])
+                            }
+                        }
+                    })
                 })
             })
-        })
+
+        }
+
     }
 
 }

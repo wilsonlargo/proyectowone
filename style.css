@@ -502,7 +502,7 @@ div.content {
 .label-parser-lx-ref{
   color: #4a235a;
   text-align: center;
-  font-size: 11pt;
+  font-size: 10pt;
   margin-top: 5px;
 }
 
@@ -510,13 +510,13 @@ div.content {
   color: #4a235a;
   text-align: center;
   font-style: italic;
-  font-size: 11pt;
+  font-size: 10pt;
   margin-top: 5px;
 }
 
 .label-parser-ps{
   color:blue;
   text-align: center;
-  font-size: 13pt;
-  text-transform: lowercase;
+  font-size: 10pt;
+
 }

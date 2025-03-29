@@ -1,4 +1,5 @@
 
+
 function make_text_editor() {
     try {
         byE("Nombre_proyecto").textContent = global_proyecto.PROYECTO.nombre + "- Textos"
@@ -319,7 +320,7 @@ function _make_item_list() {
                 div_parser.appendChild(p_wor)
 
             })
-
+           
             function _make_words(palabras) {
                 palabras.forEach(w => {
                     if (w != "") {
@@ -343,6 +344,7 @@ function _make_item_list() {
                             col_botones.style.width = "11px"
                             div_11.appendChild(col_botones)
 
+                            //Acciones relacionadas con lso cortes de lexemas y lexemas
                             const btn_menu_lexemes = newEk("div", "btn-context-parser text-secondary text-center")
                             btn_menu_lexemes.setAttribute("data-bs-toggle", "dropdown")
                             col_botones.appendChild(btn_menu_lexemes)
@@ -350,20 +352,17 @@ function _make_item_list() {
                             const ul_menu_lexemes = newEk("ul", "dropdown-menu shadow")
                             col_botones.appendChild(ul_menu_lexemes)
 
-                            //Evitar acciones de click
-                            ul_menu_lexemes.onclick = (e) => {
-                                //e.stopPropagation();
-                            }
 
-                            const div_contador = newEk("div", "mt-2 btn-context-parser text-secondary")
-                            //col_botones.appendChild(div_contador)
-
+                            //Contenedor de los lexemas o fragmentos de palabra
                             const div_lexemes = newEk("div", "div-fluid align-items-start")
                             div_11.appendChild(div_lexemes)
 
+                            //Contiene el las glosas generales y las categorias generales
                             const div_12 = newEk("div", "div-fluid mt-1")
                             div_1.appendChild(div_12)
 
+
+                            //Administra la lìnea de glosas, boton, menu e input.
                             const btn_glosas_gen = newEk("div", "btn-context-parser text-secondary text-center")
                             btn_glosas_gen.setAttribute("data-bs-toggle", "dropdown")
                             btn_glosas_gen.style.width = "12px"
@@ -372,14 +371,12 @@ function _make_item_list() {
                             const ul_menu_glosas = newEk("ul", "dropdown-menu shadow")
                             div_12.appendChild(ul_menu_glosas)
 
-                            const div_contador_glosas = newEk("div", "btn-context-parser text-secondary")
-                            //col_botones2.appendChild(div_contador_glosas)
-
                             const c_word_glosa_gen = newEk("span", "ms-1 input input-flat-dicc label-cat")
                             c_word_glosa_gen.role = "textbox"
                             c_word_glosa_gen.setAttribute("contenteditable", "")
                             div_12.appendChild(c_word_glosa_gen)
 
+                            //Administra la lìnea de categoria general, boton, menù e input
                             const div_13 = newEk("div", "div-fluid mt-1")
                             div_1.appendChild(div_13)
 
@@ -394,12 +391,14 @@ function _make_item_list() {
                             const c_word_cat = newEk("div", "ms-1 input input-flat-dicc label-cat", "CAT")
                             div_13.appendChild(c_word_cat)
 
+                            //Administra todos los botones parte inferior.
                             const div_14 = newEk("div", "div-fluid-rg mt-1 me-2")
                             div_1.appendChild(div_14)
 
                             const btn_aprobar = newEk("div", "btn-aprovar-parser bi bi-check-square-fill")
                             div_14.appendChild(btn_aprobar)
 
+                            //Aciones para aprobar una palabra
                             btn_aprobar.onclick = () => {
                                 let new_lexemas_flat = ""
                                 let new_lexemas_ref = []
@@ -439,6 +438,7 @@ function _make_item_list() {
                                 put_analisis(data)
                             }
 
+                            //Administra todos los controles que se encuentran dentro del DIV palabra
                             const controls = {
                                 "panel_lexemas": div_lexemes,
                                 "btn_lexemas": btn_menu_lexemes,
@@ -453,60 +453,99 @@ function _make_item_list() {
                                 "input_categorias_gen": c_word_cat,
 
                             }
+                            //Llama a la funciòn analizar palabra
                             _make_lexema_txt(controls, word_ini)
                         }
                     }
                 })
             }
 
+            //Función para analizar palabra
+          
             function _make_lexema_txt(controls, word_ini) {
+             
+
+                //Ejecuta la función de buscar la palabra en la DB analisis ["PARSER-WORD"]
                 const verificar_word = load_analisis(clear_word_2(word_ini))
 
-
+                //Si la palabra se encuentra entonces proceder a cargar todas las características
                 if (verificar_word["includes"] == true) {
-                    
+
+                    //Identifica cúal es el indice que se dejó por defecto del análisis
                     const id_active = verificar_word["active-analisis_id"]
 
+                    //Limpiamos todos los menús
                     controls.menu_lexemas.innerHTML = ""
+                    //Agregamos un item para resetear la los lexemas
+                    const itemBasic = newEk("div", "me-2  item-menu", word_ini)
+                    controls.menu_lexemas.appendChild(itemBasic)
+                    itemBasic.onclick=()=>{
+                        controls.panel_lexemas.innerHTML = ""
+                        _make_parser2(itemBasic.textContent,"--","-")
+                    }
+
                     controls.menu_glosas_gen.innerHTML = ""
-                    //Cuenta el número de opciones de morfemas
+                    //Cuenta el número de opciones de análisis de morfemas
+                    //Es decir recolecta todas las fragmentaciones de palabra posibles.
+                    //La información la carga en un botón, indicando cuantas opciones hay y la muestra en un menú
                     controls.btn_lexemas.textContent = verificar_word.count
                     //Para agregar al menu items de lexemas
                     verificar_word.parser.forEach(p => {
+                        //P es la opción enumerada, contieno todas las caracteristicas de la palabra
                         const item = newEk("div", "me-2  item-menu", p["lexemas-basic"])
+                        //Agrega la opción al menú de lexemas
                         controls.menu_lexemas.appendChild(item)
+
+                        //Al seleccionar una opción de lexemas actualizar en al DB
                         item.onclick = () => {
+                            //Limpia los lexemas actuales
                             controls.panel_lexemas.innerHTML = ""
+
+                            //Usa la información de P para actualizar las glosas y categorías generales
                             let gns = p["lexemas-gn"]
                             let pss = p["lexemas-ps"]
 
                             //Cargamos info de las glosas de esta palabra
                             let adm_glosas = p["glosa-general"]
+
+                            //Verificamos cual es la glosa activa en este momento
                             let glosa_activa = adm_glosas.options[adm_glosas["active-glosa"]]
+                            //Recupera la glosa activa en esa palabra y actualiza el input
+                            //Esto sucede dentro del menú input
+
+
+                            //Limpiamos el menú glosas generales
                             controls.menu_glosas_gen.innerHTML = ""
 
+                            //Leemos los datos de las glosas generales dentro de la palabra
                             adm_glosas.options.forEach(g => {
+                                //g es cada glosa encontrada
                                 const item = newEk("div", "pe-2 item-menu", g.text)
+                                //Agregamso al menú la glosa encontrada
                                 controls.menu_glosas_gen.appendChild(item)
+                                //Al seleccionar una gloas actualizar el input y l aDB
                                 item.onclick = () => {
                                     controls.input_glosas_gen.textContent = g.text
                                 }
                             })
 
-                            controls.btn_glosas_gen.textContent = adm_glosas.options.length
                             controls.input_glosas_gen.textContent = adm_glosas["active-glosa-text"]
+
+                            //Colocamos cuantas gloas hay para esta palabra
+                            controls.btn_glosas_gen.textContent = adm_glosas.options.length
+                            //controls.input_glosas_gen.textContent = adm_glosas["active-glosa-text"]
                             _make_parser2(item.textContent, gns, pss)
                         }
                     })
 
+                    //Fuera del menú gloasas
                     //Cargamos info de las glosas de esta palabra
                     let adm_glosas = verificar_word.parser[id_active]["glosa-general"]
                     let glosa_activa = adm_glosas.options[adm_glosas["active-glosa"]]
 
-                    if (adm_glosas.options.length != 0) {
-                        controls.btn_glosas_gen.textContent = adm_glosas.options.length
-                    }
+                    controls.btn_glosas_gen.textContent = adm_glosas.options.length
 
+                    //Actualziamos el menú de las glosas que se cargan de la función load_analisis
                     controls.menu_glosas_gen.innerHTML = ""
                     adm_glosas.options.forEach(g => {
                         const item = newEk("div", "item-menu", g.text)
@@ -518,108 +557,248 @@ function _make_item_list() {
 
                     controls.input_glosas_gen.textContent = adm_glosas["active-glosa-text"]
                     controls.input_glosas_gen.oninput = () => {
-                        //glosa_activa.text=controls.input_glosas_gen.textContent
-                        //save_data(global_proyecto["PARSER-WORD"])
                     }
 
+                    //Ahora de la información obtenida por la función load_analisis
+                    //actualizamos los componentes o partes de la palabra,
+                    //ya sea un lexemas o varios lexemas, son una matris bidimencional
+
+                    //Carga todos los lexemas del análisis activo [id_active]
                     let w = verificar_word.parser[id_active]["lexemas-basic"]
+                    //Todas las glosas de cada lexema
                     let gns = verificar_word.parser[id_active]["lexemas-gn"]
+                    //Todas las categorias de cada lexema
                     let pss = verificar_word.parser[id_active]["lexemas-ps"]
-                    if (w != word_ini) {
-                        //_make_parser2(word_ini, gns, pss)
-                    } else {
-                        //_make_parser2(verificar_word.parser[id_active]["lexemas-basic"], gns, pss)
-                    }
+
+                    //Llamamos a la función parser_2, esta se encarga de fragmentar los analisis
+                    //por cada lexemamorfema entontrado
+                    //            //Usa el campo lexemas basic, y glsos y categorias.
                     _make_parser2(verificar_word.parser[id_active]["lexemas-basic"], gns, pss)
+
                     //Administramos los datos de la categoría general
+                    //esta ación actualiza la información de la categoria general de la palabra
+                    //Del análisis activo cargar la categoria
                     const cat_general = verificar_word.parser[id_active]["categoria-general"]
+                    //Actualiza el input con el valor de abreviación
                     controls.input_categorias_gen.textContent = cat_general.abreviacion
+                    //Al botón de categorias, le asigna un menú arbols para seleccionar la categoria.
                     controls.btn_categorias_gen.onclick = () => {
+                        //Contruye el arbol y asigna lso controles que se afectan por esta acción
                         make_ps_tree(controls.menu_categorias_gen, controls.input_categorias_gen, verificar_word.parser[id_active])
                     }
                 } else {
+                    //Si la palabra no se encuentra en la lista de análisis, proceder sin cortes o cargar
+
+                    //Puede mostrar categorías pero no guarda hasta tener un analisis preliminar.
                     controls.btn_categorias_gen.onclick = () => {
                         make_ps_tree(controls.menu_categorias_gen, controls.input_categorias_gen, "")
                     }
+                    //Llama la función de fragmentar palabra para un solo lexema
                     _make_parser2(word_ini)
                 }
 
-                function _make_parser2(w, gn = "", ps = "") {
+
+                //Esta es la función que fragmenta la palabra según datos previos
+                //Verfifica si hay separaciones de morfemas [" "]
+
+                
+                function _make_parser2(w, gn,ps) {
+
+
+                    //Guarda un texto actualizado de los analisis realzados
                     let new_text = ""
+
+
+                    //Fragmenta la palabra por espacios
                     const word_process = w.split(" ")
+
+                    //Cuenta los lexemas separados
 
                     let contadores_lx = 0
                     word_process.forEach(wp => {
+                        
+                        //Por cada fragmeto wp, ejecutar una acción
 
-                       if (lista_puntuacion.includes(wp) == false) { //Variable en módulo global
-                            if (wp != "") {
+                        //Si la palabra no contiene una puntuación, procede
+                        //ESta puntuación se configura en la variable global y allí se ejecuta una acción de
+                        //de limpiar palabra.
+                        if (lista_puntuacion.includes(wp) == false) { //Variable en módulo global
+                            if (wp != "") { //Si el fragmento no está vacio, entonces proceder
+                                
+                                //micro función para crear un fragmento
                                 crear_wp()
                                 function crear_wp() {
+
+                                    //A cada fragmento le asignamos un contenedor
                                     const lx_div = newEk("div", "me-2")
+                                    //Y lo colocamso en el contenedor de lexemas
                                     controls.panel_lexemas.appendChild(lx_div)
 
-                                    const c_word_lexeme = newEk("span", "ms-1 input input-flat-dicc bg-white", "", "LX-" + randomKey(10, '12345abcde'))
+                                    //Se crea un input editable para modificar la entrada
+                                    //Es un control que se ajusta al tamaño de la palabra
+                                    //Lo marca con un  id automatico pero que tenga el prefijo "LX-"
+                                    //Esto para que los pueda buscar la función childnodes
+                                    const c_word_lexeme = newEk("span", "ms-1 input input-flat-dicc text-secondary", "", "LX-" + randomKey(10, '12345abcde'))
                                     c_word_lexeme.role = "textbox"
                                     c_word_lexeme.setAttribute("contenteditable", "")
+
+                                    //Toma el valor del fragmento WP
                                     c_word_lexeme.textContent = wp
+                                    //Lo agrega al contenedor del fragmento actual.
                                     lx_div.appendChild(c_word_lexeme)
 
+                                    //Aquí una de las acciones más importantes
+                                    //El usuario puede modificar el contenido del input
+                                    //Cada vez que ingresa información se actualiza en ciclo todo
                                     c_word_lexeme.oninput = () => {
-                                        //let Parent = c_word_lexeme.parentNode;
+                                        //Identifica dentro de que contenedor está
+
                                         let Padre1 = controls.panel_lexemas.childNodes;
+                                        //Enumera cada control que se encuentra dentro del contenedor padre
                                         Padre1.forEach(P => {
+                                            //Por cada contenedor padre busca 
+                                            //que otros controles se encuentran junto a él 
                                             let child = P.childNodes
+                                            //Enumera revisa cada control
                                             child.forEach(C => {
+                                                //Si el control contiene el prefijo LX-
+                                                //Entonces actualiza la información desde la BD
                                                 if (C.id.includes("LX-") == true) {
+                                                    //Crea una cadena consecutiva de morfemas y lso separa por espacio
+                                                    //Usa los valores de cada control encontrado dentro de la palabra
+                                                    //Los suma quedando uan candena como "aa bb cc"
                                                     new_text = new_text + C.textContent + " "
                                                 }
                                             })
                                         })
+                                        //Limpia el contedenor
                                         controls.panel_lexemas.innerHTML = ""
+                                        //Ahora lo que ahce es llamar a la función que crea un control por cada fragmento
 
+                                        //Retorna ciclicamente cada vez que se hace un cambio en el input [c_word_lexeme]
+                                        //Usa la base de datos de controles y el nuevo texto creado
                                         _make_lexema_txt(controls, new_text)
                                     }
 
+                                    //ESto fuera de acciones dentro del input c_word_lexeme
+                                    //Ahora se crea una línea de analis por cada fragmento
+                                    // 
                                     const div_lx_analisis = newEk("div", "mt-1", "", "PAR-" + randomKey(10, '12345abcde'))
                                     lx_div.appendChild(div_lx_analisis)
 
+                                    //Coloca un control que puede hacerce click para buscar el fragmento en el diccionario
+                                    //Lo agrega al contenedor de analisis
+                                    //Le asignamos funciones de llamar menú
                                     const div_lx_id = newEk("div", "word-find-parser", wp, "LXID-" + randomKey(10, '12345abcde'))
+                                    div_lx_id.setAttribute("data-bs-toggle", "dropdown")
                                     div_lx_analisis.appendChild(div_lx_id)
 
-
-                                    const div_lx_gn = newEk("div", "ms-1 text-success bg-white", "---", "LXGN-" + randomKey(10, '12345abcde'))
-                                    if (gn != "") {
-                                        div_lx_gn.textContent = gn[contadores_lx]
+                                    const ul_menu_buscar = newE("ul", "ul_menu_varianteOf", "dropdown-menu shadow")
+                                    div_lx_analisis.appendChild(ul_menu_buscar)
+                                    //Evitar acciones de click
+                                    ul_menu_buscar.onclick = (e) => {
+                                        //e.stopPropagation();
                                     }
+
+                                    const ul_div_buscar = newEk("div", "", "***")
+                                    ul_menu_buscar.appendChild(ul_div_buscar)
+
+                                    const ul_item_agregar = newEk("div", "item-menu", "Agregar palabra")
+                                    ul_menu_buscar.appendChild(ul_item_agregar)
+
+
+                                    //Aquí están las acciones para abrir un cuadro de díalogo con todas las opciones de buscar
+
+                                    //Crea un contenedor de glosa del fragmento on el prefijo LXGN- para glosa
+                                    const div_lx_gn = newEk("div", "ms-1 label-parser-gn", "--", "LXGN-" + randomKey(10, '12345abcde'))
+                                    //Si en el DB hay información, entonces colocarla
                                     div_lx_analisis.appendChild(div_lx_gn)
 
+                                    let parser_id
+                                    if (gn !== undefined && gn!== "")  {
+                                        div_lx_gn.textContent=gn[contadores_lx]
+                                        parser_id=contadores_lx
+                                                                             
+                                        div_lx_id.onclick = () => {                                        
+                                            
+                                            ul_div_buscar.innerHTML = ""
+                                            const db_lexemas = global_proyecto.LEXICON.entries
+                                            const filter_lx = db_lexemas.filter(l => l.lexeme.lc == div_lx_id.textContent)
+    
+                                            const lexemas = filter_lx
+                                            lexemas.forEach(lx => {
+                                                const sentidos = lx["clase-sn"].sentidos
+                                                sentidos.forEach(s => {
+                                                    const abb_new = s.ps.abreviaciones[0].texto
+                                                    const gn_new = s.gn[0].texto
+                                                    const ul_item_lx = newEk("div", "item-menu", "")
+                                                    ul_item_lx.innerHTML = `${lx.lexeme.lc} ${abb_new.toLowerCase()}. ${gn_new}`
+                                                    ul_div_buscar.appendChild(ul_item_lx)
+    
+                                                    ul_item_lx.onclick = () => {
+                                                                                                                 
+                                                        div_lx_gn.textContent = gn_new
+                                                        gn[parser_id]=gn_new
+                                                       
+                                                        div_lx_ps.textContent = abb_new                                                   
+                                                        ps[parser_id]=abb_new
+                                                        
+                                                        save_data(global_proyecto["PARSER-WORD"])
+                                                    }
+                                                    
+                                                })
+    
+                                            })
+                                            
+                                        }
+                                    }                                   
 
-                                    const div_lx_ps = newEk("div", "ms-1 text-secondary bg-white", "--", "LXPS-" + randomKey(10, '12345abcde'))
-                                    if (ps != "") {
-                                        div_lx_ps.textContent = ps[contadores_lx]
-                                    }
+                                    //Crea un control para las categoria con el prefijo LXPS- para categorias
+                                    const div_lx_ps = newEk("div", "ms-1 label-parser-ps", "--", "LXPS-" + randomKey(10, '12345abcde'))
                                     div_lx_analisis.appendChild(div_lx_ps)
-                                    contadores_lx++
+
+                                    let ps_id
+                                    if (ps!== undefined && ps!== "") {
+                                        ps_id=contadores_lx
+                                        div_lx_ps.textContent=ps[contadores_lx]
+                                    }
+                                    let m=contadores_lx
+                                    
+
+
+                                    
+                                    
                                 }
+                                contadores_lx++ 
                             }
+                            
+                            
+                        } else {
+                            if (wp != "") { //Si el fragmento no está vacio, entonces proceder
+                                //A cada fragmento le asignamos un contenedor
+                                //const lx_div = newEk("div", "me-2", wp)
+                                //Y lo colocamso en el contenedor de lexemas
+                                //div_parser.appendChild(lx_div)
+
+                            }
+
                         }
+                        
 
                     })
+                    
+                    
                 }
-
+               
             }
 
         }
-
         const btn_borrar = byE("bt_delete_texto")
         btn_borrar.onclick = () => {
             delete_texto(texto.id)
             open_text_data()
         }
     }
-
-
-
 }
 
 function put_analisis(data) {
@@ -744,7 +923,7 @@ function load_analisis(word_basic) {
 
 
         const index_active = filter_word[0].analisis.findIndex((element) => element["lexemas-basic"] == filter_word[0]["active-analisis"]);
-    
+
 
         load_word = {
             "active-analisis_id": index_active,
@@ -781,7 +960,7 @@ function newDataTable(data, id) {
 
 function make_ps_tree(ul, input, field) {
 
-    ul.innerHTML=""
+    ul.innerHTML = ""
     ul.onclick = (e) => {
         e.stopPropagation();
     }

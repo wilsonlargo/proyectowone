@@ -4,8 +4,6 @@ let active_lexicon_id = 0
 function make_lexicon() {
     active_lexicon = global_proyecto.LEXICON
 
-
-
     byE("Nombre_proyecto").textContent = global_proyecto.PROYECTO.nombre + "- Lexicón"
     const panel_escritorio = byE("panel_escritorio")
     panel_escritorio.innerHTML = ""
@@ -245,8 +243,11 @@ function make_lexicon() {
         input_lx_value.setAttribute("contenteditable", "")
         col_lx.appendChild(input_lx_value)
         input_lx_value.textContent = entrada.lexeme.lx
+
         input_lx_value.oninput = () => {
             entrada.lexeme.lx = input_lx_value.textContent
+            entrada.lexeme["lc"] = entrada.lexeme.ini + input_lx_value.textContent + entrada.lexeme.fin
+            console.log(entrada.lexeme)
             Guardar_datos("LEXICON", global_proyecto["LEXICON"])
             byE("p-" + entrada.key).textContent = entrada.lexeme.ini + input_lx_value.textContent + entrada.lexeme.fin
         }
@@ -445,6 +446,9 @@ function make_lexicon() {
 
                 //Modifica el item de la lista pero con las marcas de afijo
                 byE("p-" + entrada.key).textContent = entrada.lexeme.ini + input_lx_value.textContent + entrada.lexeme.fin
+
+                entrada.lexeme["lc"] = entrada.lexeme.ini + entrada.lexeme.lx + entrada.lexeme.fin
+
                 Guardar_datos("LEXICON", global_proyecto["LEXICON"])
 
             }

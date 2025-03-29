@@ -436,22 +436,6 @@ div.content {
 }
 
 
-.word-find-parser {
-  border-radius: 3px;
-  margin-left: 2px;
-  padding-left: 5px;
-  padding-right: 5px;
-  border: #aaa solid 1px;
-  cursor: pointer;
-}
-
-.word-find-parser:hover {
-  border-radius: 3px;
-  color: white;
-  background-color: #aaa;
-
-}
-
 .label-cat {
   background-color: #f1f1f1;
   font-size: 9pt;
@@ -498,4 +482,41 @@ div.content {
   width: 10pt;
   height: 12pt;
   margin-left: 8px;
+}
+
+
+.word-find-parser {
+  margin-left: 2px;
+  padding-left: 5px;
+  padding-right: 5px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.word-find-parser:hover {
+  color: white;
+  background-color: #aaa;
+
+}
+
+.label-parser-lx-ref{
+  color: #4a235a;
+  text-align: center;
+  font-size: 11pt;
+  margin-top: 5px;
+}
+
+.label-parser-gn{
+  color: #4a235a;
+  text-align: center;
+  font-style: italic;
+  font-size: 11pt;
+  margin-top: 5px;
+}
+
+.label-parser-ps{
+  color:blue;
+  text-align: center;
+  font-size: 13pt;
+  text-transform: lowercase;
 }

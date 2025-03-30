@@ -93,6 +93,16 @@ function make_lexicon() {
         }
         ul_menu_config.appendChild(item_idioma_analisis)
 
+        const salvar_datos = newE("div", "salvar_datos", "item-menu")
+        salvar_datos.textContent = "Salvar datos"
+        ul_menu_config.appendChild(salvar_datos)
+        salvar_datos.onclick=()=>{
+            download(JSON.stringify(active_lexicon), 'data.json', 'txt')
+        }
+
+
+        
+
 
         /////////////////////////////////////////////
         const div_dropdown_listas = newE("div", "div_dropdown_listas", "dropdown mt-1")
@@ -547,9 +557,9 @@ function make_lexicon() {
                             div_f.innerHTML = ""
                         }
                     }
-                }else{
-                    item_applyTo.textContent=""
-                    row_cat.innerHTML=""
+                } else {
+                    item_applyTo.textContent = ""
+                    row_cat.innerHTML = ""
 
                 }
 
@@ -2084,5 +2094,23 @@ function make_sn_tree(ul, input, sn, entrada) {
 
     }
 
+}
+
+async function download(data, type) {
+    const blob = new Blob([data], { type: type });
+    const newHandle = await window.showSaveFilePicker({
+        types: [{
+            description: 'Text Files',
+            accept: {
+                'text/plain': ['.json'],
+            },
+        }],
+        id: "save-json-file-picker",
+        excludeAcceptAllOption: true,
+    });
+
+    const writableStream = await newHandle.createWritable();
+    await writableStream.write(blob);
+    await writableStream.close();
 }
 

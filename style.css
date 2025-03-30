@@ -489,7 +489,6 @@ div.content {
   margin-left: 2px;
   padding-left: 5px;
   padding-right: 5px;
-  text-align: center;
   cursor: pointer;
 }
 
@@ -501,14 +500,12 @@ div.content {
 
 .label-parser-lx-ref{
   color: #4a235a;
-  text-align: center;
   font-size: 10pt;
   margin-top: 5px;
 }
 
 .label-parser-gn{
   color: #4a235a;
-  text-align: center;
   font-style: italic;
   font-size: 10pt;
   margin-top: 5px;
@@ -516,7 +513,5 @@ div.content {
 
 .label-parser-ps{
   color:blue;
-  text-align: center;
   font-size: 10pt;
-
 }

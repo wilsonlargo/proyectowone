@@ -146,7 +146,7 @@ function calcHeight(value) {
     return newHeight;
 }
 
-let lista_puntuacion = ["—", ".", ',', "(", ")", "|", "=", "¿", "?", "!", "¡"]
+let lista_puntuacion = ["—","-", ".", ',', "(", ")", "|", "=", "¿", "?", "!", "¡"]
 function clear_word_2(word_ini) {
     let Word_clear = word_ini
 

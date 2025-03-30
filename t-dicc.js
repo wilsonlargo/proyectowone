@@ -29,11 +29,11 @@ Guardar_datos("LEXICON", global_proyecto["LEXICON"])
 
 //Onchange
 
-control.onchange=()=>{
-    
+control.onchange = () => {
+
 }
-const index_active = filter_word[0].analisis.findIndex((element) => element["lexemas-basic"] ==filter_word[0]["active-analisis"]);
-const index_active2 = filter_word[0].analisis.find((element) => element["lexemas-basic"] ==filter_word[0]["active-analisis"]);
+const index_active = filter_word[0].analisis.findIndex((element) => element["lexemas-basic"] == filter_word[0]["active-analisis"]);
+const index_active2 = filter_word[0].analisis.find((element) => element["lexemas-basic"] == filter_word[0]["active-analisis"]);
 
 
 data.div_lexemes.addEventListener("keydown", (ev) => {

@@ -389,8 +389,14 @@ function make_lexicon() {
             ul_menu_cat.appendChild(div_visible_cat)
 
             const item_applyTo = newE("div", randomKey(10, '12345abcde'), "item-menu")
+
+            //Verifica que tipo de morfema es
+            //Si es es afino entonces mostrar el menú aplicar a
+
+
             item_applyTo.textContent = "Aplicar a"
             ul_menu_cat.appendChild(item_applyTo)
+
 
             const int_visible_cat = newE("input", randomKey(10, '12345abcde'), "form-check-input-check")
             int_visible_cat.type = "checkbox"
@@ -400,7 +406,6 @@ function make_lexicon() {
             int_visiblecat_label.for = "int_visible_cat"
             int_visiblecat_label.textContent = "Visible"
             div_visible_cat.appendChild(int_visiblecat_label)
-
 
             int_visible_cat.checked = entrada["clase-morfema"].visible
             int_visible_cat.onchange = () => {
@@ -450,88 +455,104 @@ function make_lexicon() {
                 entrada.lexeme["lc"] = entrada.lexeme.ini + entrada.lexeme.lx + entrada.lexeme.fin
 
                 Guardar_datos("LEXICON", global_proyecto["LEXICON"])
-
+                _make_lexicon_edit(entrada)
+                _ver_applyTo()
             }
 
             const div_lx_applyTo = newE("div", randomKey(10, '12345abcde'), "")
             div_lx.appendChild(div_lx_applyTo)
 
             if (entrada["clase-morfema"].applayTo.visible == true) {
-                _ver_applyTo()
+
                 item_applyTo.textContent = "Ocultar aplicar a"
+                _ver_applyTo(item_applyTo)
             }
+
+
             function _ver_applyTo() {
                 div_lx_applyTo.innerHTML = ""
-
+                div_lx_applyTo.innerHTML = ""
                 const row_cat = newE("div", randomKey(10, '12345abcde'), "row align-items-end mt-2")
                 div_lx_applyTo.appendChild(row_cat)
-
-                const col_row_cat_label = newE("div", randomKey(10, '12345abcde'), "col-3 label-wrap")
-                row_cat.appendChild(col_row_cat_label)
-
-                const row_cat_label = newE("div", randomKey(10, '12345abcde'), "row align-items-end")
-                col_row_cat_label.appendChild(row_cat_label)
-
-                const col_menu_cat = newE("div", randomKey(10, '12345abcde'), "col-auto")
-                row_cat_label.appendChild(col_menu_cat)
-
-                const btn_menu_cat = newE("div", randomKey(10, '12345abcde'), "bi bi-arrow-down-circle-fill btn-context-lx text-white")
-                col_menu_cat.appendChild(btn_menu_cat)
-
-                const col_menu_cat_label = newE("div", randomKey(10, '12345abcde'), "col-auto")
-                col_menu_cat_label.textContent = "Aplicar a"
-                row_cat_label.appendChild(col_menu_cat_label)
-
-                const col_cat_value = newE("div", randomKey(10, '12345abcde'), "col")
-                row_cat.appendChild(col_cat_value)
-
-                const row_cat_value = newE("div", randomKey(10, '12345abcde'), "row align-items-end")
-                col_cat_value.appendChild(row_cat_value)
-
-                const col_cat_values = newE("div", randomKey(10, '12345abcde'), "col")
-                row_cat_value.appendChild(col_cat_values)
-
-                const div_cat_values = newE("div", "div_values_applyTo", "input-flat-dicc div-fluid")
-                col_cat_values.appendChild(div_cat_values)
-
-                const col_cat_items = newE("div", randomKey(10, '12345abcde'), "col-auto")
-                row_cat_value.appendChild(col_cat_items)
-
-                const btn_menu_cat_items = newE("button", randomKey(10, '12345abcde'), "btn btn-light btn-sm fw-bold")
-                btn_menu_cat_items.type = "button"
-                btn_menu_cat_items.textContent = "..."
-                btn_menu_cat_items.setAttribute("data-bs-toggle", "modal")
-                btn_menu_cat_items.setAttribute("data-bs-target", "#open_modal")
-                col_cat_items.appendChild(btn_menu_cat_items)
-
-                btn_menu_cat_items.onclick = () => {
-                    byE("class_modal_open").className = "modal-dialog"
-                    _open_aplicarA()
+                let pos = "Centro"
+                const lexema_Ac = entrada.lexeme
+                if (lexema_Ac.ini != "" && lexema_Ac.fin == "") {
+                    pos = "Sufijo"
+                } else if (lexema_Ac.ini == "" && lexema_Ac.fin != "") {
+                    pos = "Prefijo"
                 }
 
+                if (pos != "Centro") {
+                    const col_row_cat_label = newE("div", randomKey(10, '12345abcde'), "col-3 label-wrap")
+                    row_cat.appendChild(col_row_cat_label)
 
-                //entrada["clase-morfema"].applayTo.categoria
+                    const row_cat_label = newE("div", randomKey(10, '12345abcde'), "row align-items-end")
+                    col_row_cat_label.appendChild(row_cat_label)
 
-                if (entrada["clase-morfema"].applayTo.categoria.length != 0) {
-                    const values = entrada["clase-morfema"].applayTo.categoria
-                    const div_f = byE("div_values_applyTo")
-                    div_f.innerHTML = ""
-                    const valores = newE("div", randomKey(10, '12345abcde'))
-                    valores.innerHTML = `
+                    const col_menu_cat = newE("div", randomKey(10, '12345abcde'), "col-auto")
+                    row_cat_label.appendChild(col_menu_cat)
+
+                    const btn_menu_cat = newE("div", randomKey(10, '12345abcde'), "bi bi-arrow-down-circle-fill btn-context-lx text-white")
+                    col_menu_cat.appendChild(btn_menu_cat)
+
+                    const col_menu_cat_label = newE("div", randomKey(10, '12345abcde'), "col-auto")
+                    col_menu_cat_label.textContent = "Aplicar a"
+                    row_cat_label.appendChild(col_menu_cat_label)
+
+                    const col_cat_value = newE("div", randomKey(10, '12345abcde'), "col")
+                    row_cat.appendChild(col_cat_value)
+
+                    const row_cat_value = newE("div", randomKey(10, '12345abcde'), "row align-items-end")
+                    col_cat_value.appendChild(row_cat_value)
+
+                    const col_cat_values = newE("div", randomKey(10, '12345abcde'), "col")
+                    row_cat_value.appendChild(col_cat_values)
+
+                    const div_cat_values = newE("div", "div_values_applyTo", "input-flat-dicc div-fluid")
+                    col_cat_values.appendChild(div_cat_values)
+
+                    const col_cat_items = newE("div", randomKey(10, '12345abcde'), "col-auto")
+                    row_cat_value.appendChild(col_cat_items)
+
+                    const btn_menu_cat_items = newE("button", randomKey(10, '12345abcde'), "btn btn-light btn-sm fw-bold")
+                    btn_menu_cat_items.type = "button"
+                    btn_menu_cat_items.textContent = "..."
+                    btn_menu_cat_items.setAttribute("data-bs-toggle", "modal")
+                    btn_menu_cat_items.setAttribute("data-bs-target", "#open_modal")
+                    col_cat_items.appendChild(btn_menu_cat_items)
+
+                    btn_menu_cat_items.onclick = () => {
+                        byE("class_modal_open").className = "modal-dialog"
+                        _open_aplicarA()
+                    }
+
+
+                    if (entrada["clase-morfema"].applayTo.categoria.length != 0) {
+                        const values = entrada["clase-morfema"].applayTo.categoria
+                        const div_f = byE("div_values_applyTo")
+                        div_f.innerHTML = ""
+                        const valores = newE("div", randomKey(10, '12345abcde'))
+                        valores.innerHTML = `
                     <b class="fs-5">${values.value_ini}${values.mark_ini}</b>
                     [${values.categoria}]
                     <b class="fs-5">${values.mark_fin}${values.value_fin}</b>
                     `
-                    div_f.appendChild(valores)
+                        div_f.appendChild(valores)
 
-                    const div_borrar = newE("div", randomKey(10, '12345abcde'), "ms-2 bi bi-x-circle-fill btn-context-lx")
-                    div_f.appendChild(div_borrar)
-                    div_borrar.onclick = () => {
-                        entrada["clase-morfema"].applayTo.categoria = []
-                        Guardar_datos("LEXICON", global_proyecto["LEXICON"])
-                        div_f.innerHTML = ""
+                        const div_borrar = newE("div", randomKey(10, '12345abcde'), "ms-2 bi bi-x-circle-fill btn-context-lx")
+                        div_f.appendChild(div_borrar)
+                        div_borrar.onclick = () => {
+                            entrada["clase-morfema"].applayTo.categoria = []
+                            Guardar_datos("LEXICON", global_proyecto["LEXICON"])
+                            div_f.innerHTML = ""
+                        }
                     }
+                }else{
+                    item_applyTo.textContent=""
+                    row_cat.innerHTML=""
+
                 }
+
 
             }
 
@@ -553,7 +574,6 @@ function make_lexicon() {
 
             _open_aplicarA()
             function _open_aplicarA() {
-
                 byE("config_titulo").textContent = "Aplicar a categoría"
                 const modal_panel_gonfig = byE("modal_panel_gonfig")
                 modal_panel_gonfig.innerHTML = ""
@@ -1818,7 +1838,7 @@ function make_sn_tree(ul, input, sn, entrada) {
             ul.appendChild(div_acciones2)
 
             Sel_tipo.onchange = () => {
-                div_acciones2.innerHTML=""
+                div_acciones2.innerHTML = ""
                 if (Sel_tipo.value == "=>") {
                     div_acciones.innerHTML = ""
                     const cat_input = entrada["clase-morfema"].applayTo.categoria.categoria
@@ -1837,7 +1857,7 @@ function make_sn_tree(ul, input, sn, entrada) {
 
 
                     div_categoria2.onclick = () => {
-                        _sub_make_ps_tree("derivar",div_categoria,div_categoria2,div_acciones2)
+                        _sub_make_ps_tree("derivar", div_categoria, div_categoria2, div_acciones2)
                     }
 
 
@@ -1853,16 +1873,15 @@ function make_sn_tree(ul, input, sn, entrada) {
                         div_categoria.textContent = "?:"
                     }
 
-                    
                     const input_infle = newEk("input", "")
                     input_infle.value = "?"
                     div_acciones.appendChild(input_infle)
 
                     input_infle.onchange = () => {
                         let tabla_categorias = global_proyecto["TABLAS"]["CATGRAMATICAL"]
-     
+
                         const new_ps = {
-                            
+
                             "nombres": tabla_categorias[0].nombre,
                             "abreviaciones": tabla_categorias[0].abreviaciones
                         }
@@ -1879,23 +1898,24 @@ function make_sn_tree(ul, input, sn, entrada) {
             }
 
         } else {
-            _sub_make_ps_tree()
+            sn.ps = "Indefinido"
+            _sub_make_ps_tree(ul, "", sn, entrada)
         }
 
-        function _sub_make_ps_tree(option,input_A,input_B,div_acciones2) {
-            div_acciones2.innerHTML=""
+        function _sub_make_ps_tree(option, input_A, input_B, div_acciones2) {
+            div_acciones2.innerHTML = ""
             //Definimos la tabla de categorias
             let tabla_categorias = global_proyecto["TABLAS"]["CATGRAMATICAL"]
             //Leemos cada elemento de la tabla de categorias
             tabla_categorias.forEach(Nivel_1 => {
                 const collapse_Nivel_1 = newEk("div", "div-fluid align-items-center")
-                if(option=="derivar"){
+                if (option == "derivar") {
                     div_acciones2.appendChild(collapse_Nivel_1)
-                   
-                }else{
+
+                } else {
                     ul.appendChild(collapse_Nivel_1)
                 }
-                
+
                 const plus_Nivel1 = newEk("div", "bi bi-dash-square plus-tree-ps")
                 plus_Nivel1.setAttribute("data-bs-toggle", "collapse")
                 plus_Nivel1.setAttribute("data-bs-target", "#collapse_ps" + Nivel_1.key)
@@ -1915,37 +1935,37 @@ function make_sn_tree(ul, input, sn, entrada) {
                 collapse_Nivel_1.appendChild(item_Nivel1)
 
                 item_Nivel1.onclick = () => {
-                    if(option=="derivar"){
-                        input_B.textContent=Nivel_1.abreviaciones[0].texto
-                        const new_ps = {
-                            "nombres": Nivel_1.nombre,
-                            "abreviaciones":Nivel_1.abreviaciones
-                        }
-                        new_ps.nombres[0].texto="Derivacional"
-                        new_ps.abreviaciones[0].texto=input_A.textContent+input_B.textContent
-                        sn.ps = new_ps
-                        
-                        input.innerHTML = `<b class="me-3">${sn.ps.nombres[0].texto}</b> [<i>${sn.ps.abreviaciones[0].texto}</i>]`
-                        Guardar_datos("LEXICON", global_proyecto["LEXICON"])                        
-                    }else{
+                    if (option == "derivar") {
+                        input_B.textContent = Nivel_1.abreviaciones[0].texto
                         const new_ps = {
                             "nombres": Nivel_1.nombre,
                             "abreviaciones": Nivel_1.abreviaciones
                         }
-    
+                        new_ps.nombres[0].texto = "Derivacional"
+                        new_ps.abreviaciones[0].texto = input_A.textContent + input_B.textContent
+                        sn.ps = new_ps
+
+                        input.innerHTML = `<b class="me-3">${sn.ps.nombres[0].texto}</b> [<i>${sn.ps.abreviaciones[0].texto}</i>]`
+                        Guardar_datos("LEXICON", global_proyecto["LEXICON"])
+                    } else {
+                        const new_ps = {
+                            "nombres": Nivel_1.nombre,
+                            "abreviaciones": Nivel_1.abreviaciones
+                        }
+
                         sn.ps = new_ps
                         input.innerHTML = `<b class="me-3">${sn.ps.nombres[0].texto}</b> [<i>${sn.ps.abreviaciones[0].texto}</i>]`
                         Guardar_datos("LEXICON", global_proyecto["LEXICON"])
                     }
 
- 
+
                 }
 
                 const collapse_Nivel_2 = newEk("div", "align-items-center collapse show", "", "collapse_ps" + Nivel_1.key)
 
-                if(option=="derivar"){
+                if (option == "derivar") {
                     div_acciones2.appendChild(collapse_Nivel_2)
-                }else{
+                } else {
                     ul.appendChild(collapse_Nivel_2)
                 }
 
@@ -1977,24 +1997,24 @@ function make_sn_tree(ul, input, sn, entrada) {
                     div_Nivel2.appendChild(item_Nivel2)
 
                     item_Nivel2.onclick = () => {
-                        if(option=="derivar"){
-                            input_B.textContent=Nivel_2.abreviaciones[0].texto
-                            const new_ps = {
-                                "nombres": Nivel_2.nombre,
-                                "abreviaciones":Nivel_2.abreviaciones
-                            }
-                            new_ps.nombres[0].texto="Derivacional"
-                            new_ps.abreviaciones[0].texto=input_A.textContent+input_B.textContent
-                            sn.ps = new_ps
-                            
-                            input.innerHTML = `<b class="me-3">${sn.ps.nombres[0].texto}</b> [<i>${sn.ps.abreviaciones[0].texto}</i>]`
-                            Guardar_datos("LEXICON", global_proyecto["LEXICON"])                        
-                        }else{
+                        if (option == "derivar") {
+                            input_B.textContent = Nivel_2.abreviaciones[0].texto
                             const new_ps = {
                                 "nombres": Nivel_2.nombre,
                                 "abreviaciones": Nivel_2.abreviaciones
                             }
-        
+                            new_ps.nombres[0].texto = "Derivacional"
+                            new_ps.abreviaciones[0].texto = input_A.textContent + input_B.textContent
+                            sn.ps = new_ps
+
+                            input.innerHTML = `<b class="me-3">${sn.ps.nombres[0].texto}</b> [<i>${sn.ps.abreviaciones[0].texto}</i>]`
+                            Guardar_datos("LEXICON", global_proyecto["LEXICON"])
+                        } else {
+                            const new_ps = {
+                                "nombres": Nivel_2.nombre,
+                                "abreviaciones": Nivel_2.abreviaciones
+                            }
+
                             sn.ps = new_ps
                             input.innerHTML = `<b class="me-3">${sn.ps.nombres[0].texto}</b> [<i>${sn.ps.abreviaciones[0].texto}</i>]`
                             Guardar_datos("LEXICON", global_proyecto["LEXICON"])
@@ -2033,24 +2053,24 @@ function make_sn_tree(ul, input, sn, entrada) {
                         div_Nivel3.appendChild(item_Nivel3)
 
                         item_Nivel3.onclick = () => {
-                            if(option=="derivar"){
-                                input_B.textContent=Nivel_3.abreviaciones[0].texto
-                                const new_ps = {
-                                    "nombres": Nivel_3.nombre,
-                                    "abreviaciones":Nivel_3.abreviaciones
-                                }
-                                new_ps.nombres[0].texto="Derivacional"
-                                new_ps.abreviaciones[0].texto=input_A.textContent+input_B.textContent
-                                sn.ps = new_ps
-                                
-                                input.innerHTML = `<b class="me-3">${sn.ps.nombres[0].texto}</b> [<i>${sn.ps.abreviaciones[0].texto}</i>]`
-                                Guardar_datos("LEXICON", global_proyecto["LEXICON"])                        
-                            }else{
+                            if (option == "derivar") {
+                                input_B.textContent = Nivel_3.abreviaciones[0].texto
                                 const new_ps = {
                                     "nombres": Nivel_3.nombre,
                                     "abreviaciones": Nivel_3.abreviaciones
                                 }
-            
+                                new_ps.nombres[0].texto = "Derivacional"
+                                new_ps.abreviaciones[0].texto = input_A.textContent + input_B.textContent
+                                sn.ps = new_ps
+
+                                input.innerHTML = `<b class="me-3">${sn.ps.nombres[0].texto}</b> [<i>${sn.ps.abreviaciones[0].texto}</i>]`
+                                Guardar_datos("LEXICON", global_proyecto["LEXICON"])
+                            } else {
+                                const new_ps = {
+                                    "nombres": Nivel_3.nombre,
+                                    "abreviaciones": Nivel_3.abreviaciones
+                                }
+
                                 sn.ps = new_ps
                                 input.innerHTML = `<b class="me-3">${sn.ps.nombres[0].texto}</b> [<i>${sn.ps.abreviaciones[0].texto}</i>]`
                                 Guardar_datos("LEXICON", global_proyecto["LEXICON"])

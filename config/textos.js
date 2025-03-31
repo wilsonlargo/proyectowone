@@ -1108,11 +1108,15 @@ function make_ps_tree(ul, input, field) {
 }
 
 function open_new_entry(texto) {
+    //Almacena la categoria que se selecciono en el momento
+    let new_ps = "Indefinido";
+
+
     byE("config_titulo").textContent = "Nueva entrada"
     const modal_panel_gonfig = byE("modal_panel_gonfig")
     modal_panel_gonfig.innerHTML = ""
 
-    const sm_buscar = newEk("small", "", "Nueva entrada")
+    const sm_buscar = newEk("small", "fw-bold", "Nueva entrada")
     modal_panel_gonfig.appendChild(sm_buscar)
 
     //Si hay una palabra similar la muestra en la lista
@@ -1142,6 +1146,7 @@ function open_new_entry(texto) {
     const row1 = newEk("div", "row mt-2")
     modal_panel_gonfig.appendChild(row1)
 
+    //Administra el ingreso de informaciòn sobre el tipo de morfema
     const col_tipo = newEk("div", "col-6")
     row1.appendChild(col_tipo)
 
@@ -1167,7 +1172,8 @@ function open_new_entry(texto) {
 
     sel_tipo_lx.value = "Indefinido"
     sel_tipo_lx.onchange = () => {
-        
+        //Verifica que tipo de morfema es y que sea distinto a indefinido
+        //Todas las acciones aquì identifican si hay un prefijo u sufijo        
         if (sel_tipo_lx.value != "Indefinido") {
             const int_buscar = byE("int_nuevo_lx")
             const tipos = global_proyecto["TABLAS"].MORFEMAS
@@ -1188,57 +1194,243 @@ function open_new_entry(texto) {
                         int_buscar.setAttribute("contenteditable", "")
                         div_entrada.appendChild(int_buscar)
                     }
-
                 }
             })
-        }else{
-            
+        } else {
             const int_buscarini = byE("int_nuevo_lx")
-            const int_buscar = newEk("span", "input fs-4",  int_buscarini.textContent, "int_nuevo_lx")
+            const int_buscar = newEk("span", "input fs-4", int_buscarini.textContent, "int_nuevo_lx")
             int_buscar.role = "textbox"
             int_buscar.setAttribute("contenteditable", "")
             div_entrada.innerHTML = ""
             div_entrada.appendChild(int_buscar)
-
-           
-
         }
-
-
-
-
-
     }
-
-
-
-
     const col_cat = newEk("div", "col-6")
     row1.appendChild(col_cat)
 
     const sm_cat_lx = newEk("small", "fw-bold", "Categoria")
     col_cat.appendChild(sm_cat_lx)
 
-    const sel_cat_lx = newEk("select", "form-control")
+    const sel_cat_lx = newEk("div", "word-find-parser", "Indefinido")
+    sel_cat_lx.style.height = "35px"
+    sel_cat_lx.setAttribute("data-bs-toggle", "dropdown")
     col_cat.appendChild(sel_cat_lx)
 
+    const ul_menu_ps = newEk("ul", "dropdown-menu shadow p-3")
+    col_cat.appendChild(ul_menu_ps)
+
+    const contenedor_acciones = newEk("div", "")
+    ul_menu_ps.appendChild(contenedor_acciones)
+
+    const contenedor_ps = newEk("div", "bg-white mt-1 menu-group-scroll")
+    ul_menu_ps.appendChild(contenedor_ps)
+
+    //Evitar acciones de click
+    ul_menu_ps.onclick = (e) => {
+        e.stopPropagation();
+    }
+
+    sel_cat_lx.onclick = () => {
+        contenedor_acciones.innerHTML = ""
+        contenedor_ps.innerHTML = ""
+        if (sel_tipo_lx.value != "Indefinido") {
+            const tipos = global_proyecto["TABLAS"].MORFEMAS
+            const filter_tipo = tipos.filter(ele => ele.nombre == sel_tipo_lx.value)
+
+            if (filter_tipo[0].estructura.ini != "" && filter_tipo[0].estructura.fin == "") {
+                _make_categria()
+            } else if (filter_tipo[0].estructura.ini == "" && filter_tipo[0].estructura.fin != "") {
+                _make_categria()
+            } else {
+                make_ps_tree(contenedor_ps, sel_cat_lx, new_ps)
+            }
+
+            function _make_categria() {
+                contenedor_acciones.innerHTML = ""
+                contenedor_ps.className = "bg-white"
+
+                const sm_1 = newEk("small", "fw-bold", "Tipo de acción")
+                contenedor_acciones.appendChild(sm_1)
+
+                const tipoM = ["Derivacional", "Inflexional", "Indefinido"]
+                const sel_cat = newEk("select", "form-control")
+                contenedor_acciones.appendChild(sel_cat)
+
+                tipoM.forEach(t => {
+                    const item = newEk("option", "")
+                    item.value = t
+                    item.textContent = t
+                    sel_cat.appendChild(item)
+
+                })
+                const div_partes = newEk("div", "div-fluid mt-2")
+                contenedor_acciones.appendChild(div_partes)
+
+                sel_cat.value = "Indefinido"
+                sel_cat.onclick = () => {
+                    if (sel_cat.value != "Indefinido") {
+                        if (sel_cat.value == "Derivacional") {
+                            div_partes.innerHTML = ""
+                            contenedor_ps.innerHTML = ""
+
+                            const div_lx = newEk("div", "bg-warning ps-1 pe-1", "?")
+                            div_lx.style.cursor = "pointer"
+                            div_partes.appendChild(div_lx)
+                            div_lx.onclick = () => {
+                                contenedor_ps.innerHTML = ""
+                                contenedor_ps.className = "bg-white"
+                                make_ps_tree(contenedor_ps, div_lx, "")
+                            }
+
+                            const div_s = newEk("div", "bg-white ps-1 pe-1", ":")
+                            div_partes.appendChild(div_s)
+
+                            const div_der = newEk("div", "bg-secondary ps-1 pe-1 text-white", "?")
+                            div_der.style.cursor = "pointer"
+                            div_partes.appendChild(div_der)
+
+                            div_der.onclick = () => {
+                                contenedor_ps.innerHTML = ""
+                                contenedor_ps.className = "bg-info"
+                                make_ps_tree(contenedor_ps, div_der, "")
+                            }
+                            new_ps = template_ps()
+
+                            const div_ok = newEk("div", "ms-3 bg-success text-white ps-1 pe-1", "Ok")
+                            div_ok.style.cursor = "pointer"
+                            div_partes.appendChild(div_ok)
+
+                            div_ok.onclick = () => {
+                                new_ps.nombre[0].texto = "Derivacional"
+                                new_ps.abreviaciones[0].texto = div_der.value
+                                sel_cat_lx.textContent = "Derivacional [" + div_lx.textContent + "=>" + div_der.textContent + "]"
+                            }
+
+
+                            //sel_cat_lx.textContent = div_entrada.textContent + ":" + div_der.value
+
+                        } else if (sel_cat.value == "Inflexional") {
+                            contenedor_ps.innerHTML = ""
+                            div_partes.innerHTML = ""
+                            //const int_buscarini = byE("int_nuevo_lx")
+                            const div_entrada = newEk("div", "ps-1 bg-warning pe-1", "?")
+                            div_partes.appendChild(div_entrada)
+
+                            const div_s = newEk("div", "bg-white ps-1 pe-1", "=>")
+                            div_partes.appendChild(div_s)
+
+                            const div_der = newEk("input", "form-control ms-2", "?")
+                            div_partes.appendChild(div_der)
+                            new_ps = template_ps()
+
+                            const div_ok = newEk("div", "ms-3 bg-success text-white ps-1 pe-1", "Ok")
+                            div_ok.style.cursor = "pointer"
+                            div_partes.appendChild(div_ok)
+
+                            div_ok.onclick = () => {
+                                new_ps.nombre[0].texto = "Inflexional"
+                                new_ps.abreviaciones[0].texto = div_der.value
+                                sel_cat_lx.textContent = "Inflexional [" + div_entrada.textContent + ":" + div_der.value + "]"
+                            }
+
+                            make_ps_tree(contenedor_ps, div_entrada, new_ps)
+
+                        }
+
+                    }
+
+                }
+
+            }
+
+
+        }
+
+
+    }
+
+    const sm_glos_lx = newEk("small", "fw-bold", "Glosa")
+    modal_panel_gonfig.appendChild(sm_glos_lx)
+
+    const int_glos_lx = newEk("input", "form-control")
+    modal_panel_gonfig.appendChild(int_glos_lx)
+
+    int_glos_lx.oninput = () => {
+
+        div_resultados.innerHTML = ""
+        const fuente = ["sentidos",""]
+        if (fuente[0] == "lexeme") {
+            //Leo todas las entradas y su lexema
+            global_proyecto["LEXICON"].entries.forEach(lx => {
+                let cadena_ini = lx.lexeme.lx.toLowerCase()
+                if (cadena_ini.startsWith(int_buscar.textContent.toLowerCase()) == true
+                    && int_buscar.textContent != "") {
+                    const item = newE("div", randomKey(10, '12345abcde'), "item-menu")
+                    //Contrar traducciones para colocar en la lista
+                    let glosas = ""
+                    lx["clase-sn"].sentidos.forEach(sn => {
+                        glosas = glosas + ", " + sn.gn[0].texto
+                    })
+                    item.innerHTML = `<b>${lx.lexeme.lx}</b> ${glosas}`
+                    div_resultados.appendChild(item)
+                    item.onclick = () => {
+                        sel_resultados.innerHTML = ""
+                        const res = newE("option", randomKey(10, '12345abcde'), "")
+                        res.value = lx.lexeme.lx + "_" + lx.key
+                        res.textContent = lx.lexeme.lx
+                        sel_resultados.appendChild(res)
+                        sel_resultados.value = lx.lexeme.lx + "_" + lx.key
+                    }
+                }
+            })
+        } else if (fuente[0] == "sentidos") {
+
+            //Leo todas las entradas y su sentido
+            global_proyecto["LEXICON"].entries.forEach(lx => {
+                lx["clase-sn"].sentidos.forEach(sn => {
+                    sn.gn.forEach(l => {
+                        if (l.abreviacion == sn.gn[0].abreviacion) {
+                            let cadena_ini = l.texto.toLowerCase()
+                            if (cadena_ini.startsWith(int_glos_lx.value.toLowerCase()) == true
+                                && int_glos_lx.value != "") {
+                                const item = newE("div", randomKey(10, '12345abcde'), "item-menu")
+                                item.textContent = l.texto
+                                item.innerHTML = `<b>${l.texto}</b> ${lx.lexeme.lx}`
+                                div_resultados.appendChild(item)
+                                item.onclick = () => {
+                                    sel_resultados.innerHTML = ""
+                                    const res = newE("option", randomKey(10, '12345abcde'), "")
+                                    res.value = lx.lexeme.lx + "_" + lx.key
+                                    res.textContent = lx.lexeme.lx
+                                    sel_resultados.appendChild(res)
+                                    sel_resultados.value = lx.lexeme.lx + "_" + lx.key
+                                }
+                            }
+                        }
+                    })
+
+                })
+
+            })
+        }
+    }
 
 
     //Creamos una lista de idiomas
     const sm_idiomas = newE("small", randomKey(10, '12345abcde'), "")
     sm_idiomas.textContent = "Idioma de búsqueda"
-    modal_panel_gonfig.appendChild(sm_idiomas)
+    //modal_panel_gonfig.appendChild(sm_idiomas)
 
     const sel_buscar = newE("select", randomKey(10, '12345abcde'), "form-control")
-    modal_panel_gonfig.appendChild(sel_buscar)
+    //modal_panel_gonfig.appendChild(sel_buscar)
 
     //Primero creo el idioma principal
     const Op_principal = newE("option", randomKey(10, '12345abcde'), "")
-    Op_principal.value = "lexeme_lx"
+    //Op_principal.value = "lexeme_lx"
 
     const lngP = global_proyecto["PROYECTO"]
     Op_principal.textContent = lngP.idioma + " (" + lngP.cod_idioma + ")"
-    sel_buscar.appendChild(Op_principal)
+    //sel_buscar.appendChild(Op_principal)
 
     //Segundo busco idiomas de análisis
     const lngS = global_proyecto["PROYECTO"].Lngtraducion
@@ -1249,29 +1441,34 @@ function open_new_entry(texto) {
         sel_buscar.appendChild(Op_secundaria)
     })
 
+    const sm_res = newE("small", randomKey(10, '12345abcde'), "fw-bold")
+    sm_res.textContent = "Coincidencias"
+    modal_panel_gonfig.appendChild(sm_res)
+
     //Creamos un contenedor de listas
     const div_resultados = newE("div", randomKey(10, '12345abcde'), "menu-group-scroll")
     modal_panel_gonfig.appendChild(div_resultados)
 
+
     //Creamos una lista de idiomas
     const sm_resultado = newE("small", randomKey(10, '12345abcde'), "")
     sm_resultado.textContent = "Selección"
-    modal_panel_gonfig.appendChild(sm_resultado)
+    //modal_panel_gonfig.appendChild(sm_resultado)
 
     //Creamos un contenedor de listas
     const sel_resultados = newE("select", randomKey(10, '12345abcde'), "form-coltrol")
     sel_resultados.style.width = "100%"
-    modal_panel_gonfig.appendChild(sel_resultados)
+    //modal_panel_gonfig.appendChild(sel_resultados)
 
     //Creamos una lista de idiomas
     const sm_tipo = newE("small", randomKey(10, '12345abcde'), "")
     sm_tipo.textContent = "Tipo de variación"
-    modal_panel_gonfig.appendChild(sm_tipo)
+    //modal_panel_gonfig.appendChild(sm_tipo)
 
     //Creamos un contenedor de listas
     const sel_tipos = newE("select", randomKey(10, '12345abcde'), "form-coltrol")
     sel_tipos.style.width = "100%"
-    modal_panel_gonfig.appendChild(sel_tipos)
+    //modal_panel_gonfig.appendChild(sel_tipos)
 
     const tipos = ["Dialectal", "Ortográfica", "Morfológica"]
     tipos.forEach(t => {
@@ -1285,7 +1482,7 @@ function open_new_entry(texto) {
     const int_buscar = byE("int_nuevo_lx")
     int_buscar.oninput = () => {
         div_resultados.innerHTML = ""
-        const fuente = sel_buscar.value.split("_")
+        const fuente = ["lexeme",""]
         if (fuente[0] == "lexeme") {
             //Leo todas las entradas y su lexema
             global_proyecto["LEXICON"].entries.forEach(lx => {

@@ -68,7 +68,7 @@ function make_lexicon() {
         btn_menu_config.textContent = "Configuración"
         div_dropdown_config.appendChild(btn_menu_config)
 
-        const ul_menu_config = newE("ul", "ul_menu_config", "dropdown-menu shadow")
+        const ul_menu_config = newEk("ul", "dropdown-menu shadow menu-group-scroll-lg")
         ul_menu_config.style.width = "200px"
         div_dropdown_config.appendChild(ul_menu_config)
 
@@ -1890,11 +1890,7 @@ function make_sn_tree(ul, input, sn, entrada) {
                     input_infle.onchange = () => {
                         let tabla_categorias = global_proyecto["TABLAS"]["CATGRAMATICAL"]
 
-                        const new_ps = {
-
-                            "nombres": tabla_categorias[0].nombre,
-                            "abreviaciones": tabla_categorias[0].abreviaciones
-                        }
+                        const new_ps = template_ps()
                         new_ps.nombres[0].texto = "Inflexional"
                         new_ps.abreviaciones[0].texto = div_categoria.textContent + input_infle.value
                         sn.ps = new_ps

@@ -68,10 +68,23 @@ function make_lexicon() {
         btn_menu_config.textContent = "Configuración"
         div_dropdown_config.appendChild(btn_menu_config)
 
-        const ul_menu_config = newEk("ul", "dropdown-menu shadow menu-group-scroll-lg")
+        const ul_menu_config = newEk("ul", "dropdown-menu shadow")
         ul_menu_config.style.width = "200px"
         div_dropdown_config.appendChild(ul_menu_config)
 
+        
+        const item_proyecto = newE("div", "item_variantes", "item-menu")
+        item_proyecto.textContent = "Proyecto"
+        item_proyecto.setAttribute("data-bs-toggle", "modal")
+        item_proyecto.setAttribute("data-bs-target", "#open_modal")
+        item_proyecto.onclick = () => {
+            byE("class_modal_open").className = "modal-dialog"
+            config_proyecto()
+        }
+
+        ul_menu_config.appendChild(item_proyecto)
+        
+        
         const item_variantes = newE("div", "item_variantes", "item-menu")
         item_variantes.textContent = "Variantes de idioma"
         item_variantes.setAttribute("data-bs-toggle", "modal")

@@ -1140,3 +1140,100 @@ function config_gramatical_list() {
     }
 
 }
+
+function config_proyecto() {
+    const proyecto = global_proyecto["PROYECTO"]
+    const titulo = byE("config_titulo")
+    titulo.textContent = "Configurar proyecto"
+
+    const panel = byE("modal_panel_gonfig")
+    panel.innerHTML = ""
+
+    const sm1 = newEk("small", "fw-bold", "Nombre del proyecto")
+    panel.appendChild(sm1)
+
+    const in_nombre = newEk("input", "mt-2 form-control")
+    panel.appendChild(in_nombre)
+
+    in_nombre.value = proyecto.nombre
+    in_nombre.onchange = () => {
+        proyecto.nombre = in_nombre.value
+        Guardar_datos("PROYECTO", global_proyecto["PROYECTO"])
+    }
+
+    const sm2 = newEk("small", "fw-bold", "Idioma")
+    panel.appendChild(sm2)
+
+    const in_idioma = newEk("input", "mt-2 form-control")
+    panel.appendChild(in_idioma)
+
+    in_idioma.value = proyecto.idioma
+    in_idioma.onchange = () => {
+        proyecto.idioma = in_idioma.value
+        Guardar_datos("PROYECTO", global_proyecto["PROYECTO"])
+    }
+
+    const sm3 = newEk("small", "fw-bold", "Código Idioma")
+    panel.appendChild(sm3)
+
+    const in_codigo = newEk("input", "mt-2 form-control")
+    panel.appendChild(in_codigo)
+    in_codigo.value = proyecto.cod_idioma
+    in_codigo.onchange = () => {
+        proyecto.cod_idioma = in_codigo.value
+        Guardar_datos("PROYECTO", global_proyecto["PROYECTO"])
+    }
+    const sm4 = newEk("small", "fw-bold", "Puntuación")
+    panel.appendChild(sm4)
+
+    const div_info1 = newEk("div", "text-justificado")
+    div_info1.textContent = `Por favor ingresar los símbolos de puntuación 
+    que considera forman parte de la escritura separados por un espacio (" "). Estos no forman 
+    parte de los carácteres del sistema de escritura.`
+    panel.appendChild(div_info1)
+
+    const in_puntos = newEk("input", "mt-2 form-control")
+    panel.appendChild(in_puntos)
+
+    if (verificar_datos(proyecto.puntuacion) == true) {
+        in_puntos.value = proyecto.puntuacion
+    }else{
+        proyecto.puntuacion="— - , . ( ) | = ¿ ? ! ¡ [ ] { } _"
+        in_puntos.value = proyecto.puntuacion
+        Guardar_datos("PROYECTO", global_proyecto["PROYECTO"])
+    }
+
+    in_puntos.onchange = () => {
+        proyecto.puntuacion = in_puntos.value
+        Guardar_datos("PROYECTO", global_proyecto["PROYECTO"])
+    }
+
+    const sm5 = newEk("small", "fw-bold", "Orden alfabético")
+    panel.appendChild(sm5)
+
+    const div_info2 = newEk("div", "text-justificado")
+    div_info2.textContent = `Por favor ingresar el orden de los carácteres separado por espacio (" ").`
+    panel.appendChild(div_info2)
+
+    const in_orden = newEk("textarea", "mt-2 form-control")
+    in_orden.rows=2
+    panel.appendChild(in_orden)
+
+    if (verificar_datos(proyecto.orden) == true) {
+        in_orden.value = proyecto.orden
+    }else{
+        proyecto.orden="a b c d e f g h i j k l m n ñ o p q r s t u v w x y z"
+        in_orden.value = proyecto.orden
+        Guardar_datos("PROYECTO", global_proyecto["PROYECTO"])
+    }
+
+
+
+
+
+    const btn_aceptar = byE("btnAceptar_open")
+    btn_aceptar.onclick=()=>{
+
+    }
+
+}

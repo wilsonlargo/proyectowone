@@ -146,8 +146,21 @@ function calcHeight(value) {
     return newHeight;
 }
 
-let lista_puntuacion = ["—","-", ".", ',', "(", ")", "|", "=", "¿", "?", "!", "¡"]
+let lista_puntuacion = []
+function load_puntuacion(){
+    const proyecto = global_proyecto["PROYECTO"]
+    const puntos= proyecto.puntuacion.split(" ")
+
+    puntos.forEach(p=>{
+        if(p!=""){
+            lista_puntuacion.push(p.trim())
+        }
+    })
+    
+}
+
 function clear_word_2(word_ini) {
+    load_puntuacion()
     let Word_clear = word_ini
 
     lista_puntuacion.forEach(l => {
@@ -170,6 +183,7 @@ function clear_word_2(word_ini) {
 }
 
 function clear_word(word_ini) {
+    load_puntuacion()
     let Word_clear = word_ini
 
     lista_puntuacion.forEach(l => {

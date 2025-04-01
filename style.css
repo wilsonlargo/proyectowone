@@ -311,6 +311,16 @@ div.content {
   font-size: 10pt;
 }
 
+.item-texto-small-w{
+  color:white;
+  cursor: pointer;
+  font-size: 10pt;
+}
+
+.item-texto-small-w:hover{
+  font-weight: bold;
+} 
+
 .item-texto-small:hover {
   color: #4a235a;
   font-weight: bolder;

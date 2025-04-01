@@ -1,4 +1,5 @@
-
+let parrafos //Administra todos los párrafos del texto actual
+let id_parrafo = 0
 
 function make_text_editor() {
     try {
@@ -287,13 +288,12 @@ function _make_item_list() {
         _make_text_editor()
         function _make_text_editor() {
             div_analisis.innerHTML = ""
-
             const textarea = newEk("textarea", "form-control mt-2")
             textarea.rows = 15
             div_analisis.appendChild(textarea)
 
             //Carga del DB el texto base plano, este está separado por párrafos.
-            let parrafos = texto.analisis["text-basic"]
+            parrafos = texto.analisis["text-basic"]
             parrafos.forEach(p => {
                 //Cargo cada párrafo y lo agrego al visualizador plano
                 textarea.value = textarea.value + p["par-text"] + "\n"
@@ -302,16 +302,16 @@ function _make_item_list() {
 
             //Si hay cmabios en el textobase, crear o actualizar nuevos párrafos
             textarea.onchange = () => {
-                let list_parrafos = []
+                parrafos = []
                 const par = textarea.value.split("\n")
                 par.forEach(p => {
-                    list_parrafos.push(
+                    parrafos.push(
                         {
                             "key": "par-" + randomKey(10, '12345abcde'),
                             "par-text": p
                         })
                 })
-                texto.analisis["text-basic"] = list_parrafos
+                texto.analisis["text-basic"] = parrafos
                 save_texto(texto)
             }
 
@@ -324,18 +324,94 @@ function _make_item_list() {
             div_analisis.appendChild(div_parser)
 
             //Lee l avariable de párrafos
-            let parrafos = texto.analisis["text-basic"]
+            //let parrafos = texto.analisis["text-basic"]
 
             //Por cada párrafo una acción
-            parrafos.forEach(p => {
-                //alert("Párrafo nuevo?")
-                const palabras = p["par-text"].split(" ")
-                _make_words(palabras)
+            //Aquí se debe cargar los párrafor unopor uno, en el caso de textos grandes 
+            //y conectividad limitada 
+            _ver_parrafos()
+            function _ver_parrafos() {
+                div_parser.innerHTML = ""
+                //Una barra de acciones por párrafo
+                const bar_parrafo = newEk("div", "bg-info w-100 mb-2 p-1 div-fluid align-items-start")
+                div_parser.appendChild(bar_parrafo)
+                const tit_parrafo = newEk("div", "fw-bold me-2", "Párrafo " + (id_parrafo + 1))
+                bar_parrafo.appendChild(tit_parrafo)
 
-                const p_wor = newEk("div", "w-100")
-                p_wor.textContent = "*"
-                div_parser.appendChild(p_wor)
-            })
+
+                //Botones mover
+                const limit_end = parrafos.length - 1
+
+                const bt_primero = newEk("div", "item-texto-small-w me-2 text-white", "|<<")
+                bar_parrafo.appendChild(bt_primero)
+                bt_primero.onclick = () =>{
+                    id_parrafo = 0
+                    _ver_parrafos()
+                }
+
+
+                const bt_anterior = newEk("div", "item-texto-small-w me-2 text-white", "<<")
+                bar_parrafo.appendChild(bt_anterior)
+
+                bt_anterior.onclick = () => {
+                    if (id_parrafo > 0) {
+
+                        id_parrafo = id_parrafo - 1
+                        let palabras = parrafos[id_parrafo]["par-text"].split(" ")
+
+                        if (palabras == "") {
+                            id_parrafo = id_parrafo - 1
+                            _ver_parrafos()
+                        } else {
+                            _ver_parrafos()
+                        }
+                    } else {
+                        alert("Primer registro")
+                    }
+
+                }
+
+                const bt_siguiente = newEk("div", "item-texto-small-w me-2 text-white", ">>")
+                bar_parrafo.appendChild(bt_siguiente)
+                bt_siguiente.onclick = () => {
+                    if (id_parrafo < limit_end) {
+                        
+                        id_parrafo = id_parrafo + 1
+                        let palabras = parrafos[id_parrafo]["par-text"].split(" ")
+
+                        if (palabras == "") {
+                            id_parrafo = id_parrafo + 1
+                            _ver_parrafos()
+                        } else {
+                            _ver_parrafos()
+                        }
+                    } else {
+                        alert("Último registro")
+                    }
+                }
+
+                const bt_fin = newEk("div", "item-texto-small-w me-2 text-white", ">>|")
+                bar_parrafo.appendChild(bt_fin)
+                bt_fin.onclick = () =>{
+                    id_parrafo = limit_end
+                    _ver_parrafos()
+                }
+
+                _load_parser(id_parrafo, "")
+                function _load_parser(id, mov) {
+                    let palabras = parrafos[id]["par-text"].split(" ")
+                    _make_words(palabras)
+                    const p_wor = newEk("div", "w-100")
+                    p_wor.textContent = "*"
+                    div_parser.appendChild(p_wor)
+                }
+
+
+
+
+            }
+
+
 
             function _make_words(palabras) {
                 palabras.forEach(w => {
@@ -498,7 +574,7 @@ function _make_item_list() {
             function _make_lexema_txt(controls, word_ini) {
                 //Ejecuta la función de buscar la palabra en la DB analisis ["PARSER-WORD"]
                 const verificar_word = load_analisis(clear_word_2(word_ini))
-               
+
                 //Si la palabra se encuentra entonces proceder a cargar todas las características
                 if (verificar_word["includes"] == true) {
                     //_make_exist()

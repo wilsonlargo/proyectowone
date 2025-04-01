@@ -1,6 +1,6 @@
 function template_entry() {
     const template = {
-        "id": active_lexicon.entries.length - 1,
+        "id": "0",
         "key": randomKey(20, '12345abcde'),
         "lexeme": {
             "ini": "",

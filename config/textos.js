@@ -260,6 +260,7 @@ function _make_item_list() {
             })
         }
 
+        //Aquí la barra de herramientas que administras las acciones del texto
         _make_tool_analisis()
         function _make_tool_analisis() {
             const div_tool = newEk("div", "mt-2 bg-secondary  div-fluid p-3")
@@ -271,18 +272,18 @@ function _make_item_list() {
                 _make_text_editor()
             }
 
+            //Esta opción administra la visualización del analizador de textos
             const btn_toParserText = newEk("div", "item-texto-small text-white ms-2", "[Analizar texto]", "btn_analizarTexto")
             div_tool.appendChild(btn_toParserText)
             btn_toParserText.onclick = () => {
                 _make_text_parser()
             }
-
-
         }
 
         const div_analisis = newEk("div", "mt-2",)
         panel_edit.appendChild(div_analisis)
 
+        //Abre el visualizador de textos planos
         _make_text_editor()
         function _make_text_editor() {
             div_analisis.innerHTML = ""
@@ -291,12 +292,15 @@ function _make_item_list() {
             textarea.rows = 15
             div_analisis.appendChild(textarea)
 
+            //Carga del DB el texto base plano, este está separado por párrafos.
             let parrafos = texto.analisis["text-basic"]
             parrafos.forEach(p => {
+                //Cargo cada párrafo y lo agrego al visualizador plano
                 textarea.value = textarea.value + p["par-text"] + "\n"
             })
             //Leer todos los párrafos que hay en el text
 
+            //Si hay cmabios en el textobase, crear o actualizar nuevos párrafos
             textarea.onchange = () => {
                 let list_parrafos = []
                 const par = textarea.value.split("\n")
@@ -313,28 +317,27 @@ function _make_item_list() {
 
         }
 
-
+        //Abre el visualizador de texto analizador
         function _make_text_parser() {
             div_analisis.innerHTML = ""
-
             const div_parser = newEk("div", "box-parser")
             div_analisis.appendChild(div_parser)
 
+            //Lee l avariable de párrafos
             let parrafos = texto.analisis["text-basic"]
 
+            //Por cada párrafo una acción
             parrafos.forEach(p => {
+                //alert("Párrafo nuevo?")
                 const palabras = p["par-text"].split(" ")
-
                 _make_words(palabras)
 
                 const p_wor = newEk("div", "w-100")
                 p_wor.textContent = "*"
                 div_parser.appendChild(p_wor)
-
             })
 
             function _make_words(palabras) {
-
                 palabras.forEach(w => {
 
                     //Estas acciones saparan los símbolos de las palabras
@@ -488,29 +491,23 @@ function _make_item_list() {
                         }
 
                     })
-
-
-
-
                 })
             }
 
             //Función para analizar palabra
-
             function _make_lexema_txt(controls, word_ini) {
-
                 //Ejecuta la función de buscar la palabra en la DB analisis ["PARSER-WORD"]
                 const verificar_word = load_analisis(clear_word_2(word_ini))
-
+               
                 //Si la palabra se encuentra entonces proceder a cargar todas las características
                 if (verificar_word["includes"] == true) {
-
+                    //_make_exist()
                     //Identifica cúal es el indice que se dejó por defecto del análisis
                     const id_active = verificar_word["active-analisis_id"]
-
                     //Limpiamos todos los menús
                     controls.menu_lexemas.innerHTML = ""
-                    //Agregamos un item para resetear la los lexemas
+
+                    //Agregamos un item para resetear los lexemas
                     const itemBasic = newEk("div", "me-2  item-menu", word_ini)
                     controls.menu_lexemas.appendChild(itemBasic)
                     itemBasic.onclick = () => {
@@ -572,7 +569,7 @@ function _make_item_list() {
                         }
                     })
 
-                    //Fuera del menú gloasas
+                    //Fuera del menú glosas
                     //Cargamos info de las glosas de esta palabra
                     let adm_glosas = verificar_word.parser[id_active]["glosa-general"]
 
@@ -588,6 +585,7 @@ function _make_item_list() {
                         }
                     })
 
+                    //Agrega la información enel input de glosa general                    
                     controls.input_glosas_gen.textContent = adm_glosas["active-glosa-text"]
                     controls.input_glosas_gen.oninput = () => {
                     }
@@ -605,8 +603,10 @@ function _make_item_list() {
 
                     //Llamamos a la función parser_2, esta se encarga de fragmentar los analisis
                     //por cada lexemamorfema entontrado
-                    //            //Usa el campo lexemas basic, y glsos y categorias.
+                    //            //Usa el campo lexemas basic, y glosas y categorias.
                     _make_parser2(verificar_word.parser[id_active]["lexemas-basic"], gns, pss)
+
+                    //**** */
 
                     //Administramos los datos de la categoría general
                     //esta ación actualiza la información de la categoria general de la palabra
@@ -627,8 +627,8 @@ function _make_item_list() {
                     }
                     //Llama la función de fragmentar palabra para un solo lexema
                     _make_parser2(word_ini)
+                    //_make_parser2(verificar_word.parser[id_active]["lexemas-basic"], gns, pss)
                 }
-
 
                 //Esta es la función que fragmenta la palabra según datos previos
                 //Verfifica si hay separaciones de morfemas [" "]
@@ -730,8 +730,6 @@ function _make_item_list() {
                                 const ul_item_agregar = newEk("div", "item-menu", "Agregar palabra")
                                 ul_menu_buscar.appendChild(ul_item_agregar)
 
-
-
                                 //Aquí están las acciones para abrir un cuadro de díalogo con todas las opciones de buscar
 
                                 //Crea un contenedor de glosa del fragmento on el prefijo LXGN- para glosa
@@ -740,10 +738,15 @@ function _make_item_list() {
                                 div_lx_analisis.appendChild(div_lx_gn)
 
                                 let parser_id
+                                //Verifica si la entrada de glosa no está vacia o no tiene antecedente en la db
                                 if (gn !== undefined && gn !== "") {
+                                    //Lee la variable gn y coloca la información en el control de visialización.
                                     div_lx_gn.textContent = gn[contadores_lx]
                                     parser_id = contadores_lx
 
+
+                                    //Le agrega la función al boton de referencias de lexema
+                                    //al hacer click muestra menu desplegable.
                                     div_lx_id.onclick = () => {
                                         ul_div_buscar.innerHTML = ""
                                         const db_lexemas = global_proyecto.LEXICON.entries
@@ -775,17 +778,52 @@ function _make_item_list() {
                                         })
 
                                     }
+
+                                    //Crea un menu desplegable opciones de de agregar o buscar glosa
+                                    ul_item_agregar.setAttribute("data-bs-toggle", "modal")
+                                    ul_item_agregar.setAttribute("data-bs-target", "#open_modal")
+                                    ul_item_agregar.onclick = () => {
+                                        //Abre la función para crear nuevas palabras
+                                        byE("class_modal_open").className = "modal-dialog"
+                                        open_new_entry(wp)
+                                    }
+
+                                } else {//Estas acciones son similares en el caso de que la palabra o glosa no
+                                    //se encuentre o tenga referencia en la db
+                                    div_lx_gn.textContent = "?"
+                                    parser_id = contadores_lx
+                                    div_lx_id.onclick = () => {
+                                        ul_div_buscar.innerHTML = ""
+                                        const db_lexemas = global_proyecto.LEXICON.entries
+                                        const filter_lx = db_lexemas.filter(l => l.lexeme.lc == div_lx_id.textContent)
+                                        const lexemas = filter_lx
+                                        lexemas.forEach(lx => {
+                                            const sentidos = lx["clase-sn"].sentidos
+                                            sentidos.forEach(s => {
+                                                const abb_new = s.ps.abreviaciones[0].texto
+                                                const gn_new = s.gn[0].texto
+                                                const ul_item_lx = newEk("div", "item-menu", "")
+                                                ul_item_lx.innerHTML = `${lx.lexeme.lc} ${abb_new.toLowerCase()}. ${gn_new}`
+                                                ul_div_buscar.appendChild(ul_item_lx)
+
+                                                ul_item_lx.onclick = () => {
+                                                    div_lx_gn.textContent = gn_new
+                                                    div_lx_ps.textContent = abb_new
+                                                }
+
+                                            })
+
+                                        })
+
+                                    }
                                     ul_item_agregar.setAttribute("data-bs-toggle", "modal")
                                     ul_item_agregar.setAttribute("data-bs-target", "#open_modal")
                                     ul_item_agregar.onclick = () => {
                                         const db_lexemas = global_proyecto.LEXICON.entries
                                         byE("class_modal_open").className = "modal-dialog"
                                         open_new_entry(wp)
-
                                         //const filter_lx = db_lexemas.filter(l => l.lexeme.lc == div_lx_id.textContent)
-
                                     }
-
                                 }
 
                                 //Crea un control para las categoria con el prefijo LXPS- para categorias
@@ -1646,11 +1684,7 @@ function open_new_entry(texto) {
     const bt_aceptar = byE("btnAceptar_open")
 
     bt_aceptar.onclick = () => {
-
         _make_put_entrada()
-
-
-
         Guardar_datos("LEXICON", global_proyecto["LEXICON"])
     }
     function _make_put_entrada() {

@@ -645,7 +645,7 @@ function _make_item_list() {
                     let adm_glosas = verificar_word.parser[id_active]["glosa-general"]
 
                     controls.btn_glosas_gen.textContent = adm_glosas.options.length
-                    controls.btn_glosas_gen.onclick = () => {
+                    controls.btn_glosas_gen.onclick=()=>{
                         controls.menu_glosas_gen.innerHTML = ""
                         _make_menu_glosasGen()
                     }
@@ -789,9 +789,24 @@ function _make_item_list() {
                                 //Lo agrega al contenedor de analisis
                                 //Le asignamos funciones de llamar menú
                                 const div_lx_id = newEk("div", "word-find-parser", wp, "LXID-" + randomKey(10, '12345abcde'))
-                                //div_lx_id.setAttribute("data-bs-toggle", "dropdown")
+                                div_lx_id.setAttribute("data-bs-toggle", "dropdown")
                                 div_lx_analisis.appendChild(div_lx_id)
+                                
 
+                                const ul_menu_buscar = newE("ul", "ul_menu_varianteOf", "dropdown-menu shadow")
+                                div_lx_analisis.appendChild(ul_menu_buscar)
+                                //Evitar acciones de click
+                                ul_menu_buscar.onclick = (e) => {
+                                    //e.stopPropagation();
+                                }
+
+                                const ul_div_buscar = newEk("div", "", "***")
+                                ul_menu_buscar.appendChild(ul_div_buscar)
+
+                                const ul_item_agregar = newEk("div", "item-menu", "Agregar palabra")
+                                ul_menu_buscar.appendChild(ul_item_agregar)
+
+                                //Aquí están las acciones para abrir un cuadro de díalogo con todas las opciones de buscar
 
                                 //Crea un contenedor de glosa del fragmento on el prefijo LXGN- para glosa
                                 const div_lx_gn = newEk("div", "ms-1 label-parser-gn", "--", "LXGN-" + randomKey(10, '12345abcde'))
@@ -799,18 +814,17 @@ function _make_item_list() {
                                 div_lx_analisis.appendChild(div_lx_gn)
 
                                 let parser_id
-                                let ul_menu_buscar
                                 //Verifica si la entrada de glosa no está vacia o no tiene antecedente en la db
                                 if (gn !== undefined && gn !== "") {
                                     //Lee la variable gn y coloca la información en el control de visialización.
                                     div_lx_gn.textContent = gn[contadores_lx]
                                     parser_id = contadores_lx
 
+
                                     //Le agrega la función al boton de referencias de lexema
                                     //al hacer click muestra menu desplegable.
                                     div_lx_id.onclick = () => {
-                                        _make_menu_buscar()
-
+                                        ul_div_buscar.innerHTML = ""
                                         const db_lexemas = global_proyecto.LEXICON.entries
                                         const filter_lx = db_lexemas.filter(l => l.lexeme.lc == div_lx_id.textContent)
 
@@ -841,30 +855,13 @@ function _make_item_list() {
 
                                     }
 
-                                    function _make_menu_buscar() {
-                                        div_lx_id.setAttribute("data-bs-toggle", "dropdown")
-                                        ul_menu_buscar=[]
-                                        ul_menu_buscar = newE("ul", "ul_menu_varianteOf", "dropdown-menu shadow")
-                                        div_lx_analisis.appendChild(ul_menu_buscar)
-                                        //Evitar acciones de click
-                                        ul_menu_buscar.onclick = (e) => {
-                                            //e.stopPropagation();
-                                        }
-
-                                        const ul_div_buscar = newEk("div", "", "***")
-                                        ul_menu_buscar.appendChild(ul_div_buscar)
-
-                                        const ul_item_agregar = newEk("div", "item-menu", "Agregar palabra")
-                                        ul_menu_buscar.appendChild(ul_item_agregar)
-
-                                        //Crea un menu desplegable opciones de de agregar o buscar glosa
-                                        ul_item_agregar.setAttribute("data-bs-toggle", "modal")
-                                        ul_item_agregar.setAttribute("data-bs-target", "#open_modal")
-                                        ul_item_agregar.onclick = () => {
-                                            //Abre la función para crear nuevas palabras
-                                            byE("class_modal_open").className = "modal-dialog"
-                                            open_new_entry(wp)
-                                        }
+                                    //Crea un menu desplegable opciones de de agregar o buscar glosa
+                                    ul_item_agregar.setAttribute("data-bs-toggle", "modal")
+                                    ul_item_agregar.setAttribute("data-bs-target", "#open_modal")
+                                    ul_item_agregar.onclick = () => {
+                                        //Abre la función para crear nuevas palabras
+                                        byE("class_modal_open").className = "modal-dialog"
+                                        open_new_entry(wp)
                                     }
 
                                 } else {//Estas acciones son similares en el caso de que la palabra o glosa no
@@ -872,7 +869,7 @@ function _make_item_list() {
                                     div_lx_gn.textContent = "?"
                                     parser_id = contadores_lx
                                     div_lx_id.onclick = () => {
-                                        _make_menu_buscar()
+                                        ul_div_buscar.innerHTML = ""
                                         const db_lexemas = global_proyecto.LEXICON.entries
                                         const filter_lx = db_lexemas.filter(l => l.lexeme.lc == div_lx_id.textContent)
                                         const lexemas = filter_lx
@@ -895,32 +892,14 @@ function _make_item_list() {
                                         })
 
                                     }
-                                    function _make_menu_buscar() {
-                                        div_lx_id.setAttribute("data-bs-toggle", "dropdown")
-                                        ul_menu_buscar=[]
-                                        ul_menu_buscar = newE("ul", "ul_menu_varianteOf", "dropdown-menu shadow")
-                                        div_lx_analisis.appendChild(ul_menu_buscar)
-                                        //Evitar acciones de click
-                                        ul_menu_buscar.onclick = (e) => {
-                                            //e.stopPropagation();
-                                        }
-
-                                        const ul_div_buscar = newEk("div", "", "***")
-                                        ul_menu_buscar.appendChild(ul_div_buscar)
-
-                                        const ul_item_agregar = newEk("div", "item-menu", "Agregar palabra")
-                                        ul_menu_buscar.appendChild(ul_item_agregar)
-
-                                        //Crea un menu desplegable opciones de de agregar o buscar glosa
-                                        ul_item_agregar.setAttribute("data-bs-toggle", "modal")
-                                        ul_item_agregar.setAttribute("data-bs-target", "#open_modal")
-                                        ul_item_agregar.onclick = () => {
-                                            const db_lexemas = global_proyecto.LEXICON.entries
-                                            byE("class_modal_open").className = "modal-dialog"
-                                            open_new_entry(wp)
-                                         }
+                                    ul_item_agregar.setAttribute("data-bs-toggle", "modal")
+                                    ul_item_agregar.setAttribute("data-bs-target", "#open_modal")
+                                    ul_item_agregar.onclick = () => {
+                                        const db_lexemas = global_proyecto.LEXICON.entries
+                                        byE("class_modal_open").className = "modal-dialog"
+                                        open_new_entry(wp)
+                                        //const filter_lx = db_lexemas.filter(l => l.lexeme.lc == div_lx_id.textContent)
                                     }
-
                                 }
 
                                 //Crea un control para las categoria con el prefijo LXPS- para categorias

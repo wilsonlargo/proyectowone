@@ -175,6 +175,9 @@ function _make_item_list() {
     })
     _make_edit_text(tabla_textos[0])
     function _make_edit_text(texto) {
+        console.log(texto)
+        id_parrafo= texto.analisis["analisis-activo"]
+
         panel_edit.innerHTML = ""
 
         const barra = newEk("div", "progress mt-2")
@@ -390,8 +393,10 @@ function _make_item_list() {
                     _ver_parrafos()
                 }
 
-                _load_parser(id_parrafo, "")
-                function _load_parser(id, mov) {
+                _load_parser(id_parrafo)
+                function _load_parser(id) {
+                    texto.analisis["analisis-activo"]=id_parrafo
+                    save_texto(texto)
                     let palabras = parrafos[id]["par-text"].split(" ")
                     _make_words(palabras)
                 }

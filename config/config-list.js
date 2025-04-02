@@ -831,6 +831,7 @@ function config_gramatical_list() {
 
     function _make_categoria() {
         let tabla_categorias = global_proyecto["TABLAS"]["CATGRAMATICAL"]
+
         const ul = byE("panel_list_ps")
         const panel_list_edit = byE("panel_lexicon_edit_ps")
 
@@ -845,7 +846,6 @@ function config_gramatical_list() {
             plus_Nivel1.setAttribute("data-bs-target", "#collapse_ps" + Nivel_1.key)
             collapse_Nivel_1.appendChild(plus_Nivel1)
 
-
             plus_Nivel1.onclick = () => {
                 if (plus_Nivel1.className.includes("bi-dash-square") == true) {
                     plus_Nivel1.className = "bi bi-plus-square-fill plus-tree-ps"
@@ -854,7 +854,7 @@ function config_gramatical_list() {
                 }
             }
 
-            const item_Nivel1 = newEk("div", "item-tree-ps", Nivel_1.nombre[0].texto)
+            const item_Nivel1 = newEk("div", "item-tree-ps", Nivel_1.nombre[0].texto,"categoria"+Nivel_1.key)
             collapse_Nivel_1.appendChild(item_Nivel1)
 
 
@@ -891,13 +891,13 @@ function config_gramatical_list() {
                     }
                 }
 
-                const item_Nivel2 = newEk("div", "item-tree-ps", Nivel_2.nombre[0].texto)
+                const item_Nivel2 = newEk("div", "item-tree-ps", Nivel_2.nombre[0].texto,"categoria"+Nivel_2.key)
                 div_Nivel2.appendChild(item_Nivel2)
 
                 let ii = Nivel_2.key
                 let campo = Nivel_2
                 item_Nivel2.onclick = () => {
-                    _make_panel_cat(Nivel_2, campo, ii, true)
+                    _make_panel_cat(Nivel_1, campo, ii, true)
                 }
 
 
@@ -932,13 +932,13 @@ function config_gramatical_list() {
                         }
                     }
 
-                    const item_Nivel3 = newEk("div", "item-tree-ps", Nivel_3.nombre[0].texto)
+                    const item_Nivel3 = newEk("div", "item-tree-ps", Nivel_3.nombre[0].texto,"categoria"+Nivel_3.key)
                     div_Nivel3.appendChild(item_Nivel3)
 
                     let iii = Nivel_3.key
                     let campo = Nivel_3
                     item_Nivel3.onclick = () => {
-                        _make_panel_cat(Nivel_3, campo, iii, false)
+                        _make_panel_cat(Nivel_2, campo, iii, false)
                     }
                     //const div_collapse_ABC = newE("div", "collapse_ps" + sub_C.key, "collapse show ms-3")
                     //item_collapse_categoria.appendChild(div_collapse_ABC)
@@ -967,10 +967,11 @@ function config_gramatical_list() {
             }
             //Crea el menú para eliminar categorías
             const div_del_categoria = newE("div", randomKey(20, '12345abcde'), "item-texto-small ms-2 text-white")
-            div_del_categoria.textContent = "Eliminar categoria +"
+            div_del_categoria.textContent = "Eliminar categoria -"
             div_actions.appendChild(div_del_categoria)
 
             div_del_categoria.onclick = () => {
+                
                 //Esta verfificación se hace si estamos en el nivel superior
                 //o inferior, para aplicar el filtro
                 if (verificar_datos(parent.subcategorias) == true) {
@@ -980,7 +981,6 @@ function config_gramatical_list() {
                     config_gramatical_list()
                 } else {
                     const filter_del = parent.filter(ele => ele.key != cat.key)
-
                     global_proyecto["TABLAS"].CATGRAMATICAL = filter_del
                     Guardar_datos("TABLAS", global_proyecto["TABLAS"])
                     config_gramatical_list()
@@ -1024,11 +1024,9 @@ function config_gramatical_list() {
                         int_lng_value.value = valueFromLng[0].texto
 
                         int_lng_value.onchange = () => {
-
                             valueFromLng[0].texto = int_lng_value.value
                             const item = byE("categoria" + id)
                             item.textContent = cat.nombre[0].texto
-
 
                             Guardar_datos("TABLAS", global_proyecto["TABLAS"])
                         }
@@ -1197,8 +1195,8 @@ function config_proyecto() {
 
     if (verificar_datos(proyecto.puntuacion) == true) {
         in_puntos.value = proyecto.puntuacion
-    }else{
-        proyecto.puntuacion="— - , . ( ) | = ¿ ? ! ¡ [ ] { } _"
+    } else {
+        proyecto.puntuacion = "— - , . ( ) | = ¿ ? ! ¡ [ ] { } _"
         in_puntos.value = proyecto.puntuacion
         Guardar_datos("PROYECTO", global_proyecto["PROYECTO"])
     }
@@ -1216,13 +1214,13 @@ function config_proyecto() {
     panel.appendChild(div_info2)
 
     const in_orden = newEk("textarea", "mt-2 form-control")
-    in_orden.rows=2
+    in_orden.rows = 2
     panel.appendChild(in_orden)
 
     if (verificar_datos(proyecto.orden) == true) {
         in_orden.value = proyecto.orden
-    }else{
-        proyecto.orden="a b c d e f g h i j k l m n ñ o p q r s t u v w x y z"
+    } else {
+        proyecto.orden = "a b c d e f g h i j k l m n ñ o p q r s t u v w x y z"
         in_orden.value = proyecto.orden
         Guardar_datos("PROYECTO", global_proyecto["PROYECTO"])
     }
@@ -1232,7 +1230,7 @@ function config_proyecto() {
 
 
     const btn_aceptar = byE("btnAceptar_open")
-    btn_aceptar.onclick=()=>{
+    btn_aceptar.onclick = () => {
 
     }
 

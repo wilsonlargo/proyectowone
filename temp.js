@@ -36,4 +36,18 @@ loadDataBase("1dniplVXfiSFYUFfsT1Ij6cdEoAdtK7dqWf3x4s9eUSw", proyecto).then(obje
     GLOBAL.from_drive = DataPrincipal
 })
 
+              //Esta verfificación se hace si estamos en el nivel superior
+                //o inferior, para aplicar el filtro
+                if (verificar_datos(parent.subcategorias) == true) {
+                    const filter_del = parent.subcategorias.filter(ele => ele.key != cat.key)
+                    parent.subcategorias = filter_del
+                    Guardar_datos("TABLAS", global_proyecto["TABLAS"])
+                    config_gramatical_list()
+                } else {
+                    const filter_del = parent.filter(ele => ele.key != cat.key)
+                    global_proyecto["TABLAS"].CATGRAMATICAL = filter_del
+                    Guardar_datos("TABLAS", global_proyecto["TABLAS"])
+                    config_gramatical_list()
+
+                }
 

@@ -72,7 +72,7 @@ function make_lexicon() {
         ul_menu_config.style.width = "200px"
         div_dropdown_config.appendChild(ul_menu_config)
 
-        
+
         const item_proyecto = newE("div", "item_variantes", "item-menu")
         item_proyecto.textContent = "Proyecto"
         item_proyecto.setAttribute("data-bs-toggle", "modal")
@@ -83,8 +83,8 @@ function make_lexicon() {
         }
 
         ul_menu_config.appendChild(item_proyecto)
-        
-        
+
+
         const item_variantes = newE("div", "item_variantes", "item-menu")
         item_variantes.textContent = "Variantes de idioma"
         item_variantes.setAttribute("data-bs-toggle", "modal")
@@ -109,12 +109,12 @@ function make_lexicon() {
         const salvar_datos = newE("div", "salvar_datos", "item-menu")
         salvar_datos.textContent = "Salvar datos"
         ul_menu_config.appendChild(salvar_datos)
-        salvar_datos.onclick=()=>{
+        salvar_datos.onclick = () => {
             download(JSON.stringify(active_lexicon), 'data.json', 'txt')
         }
 
 
-        
+
 
 
         /////////////////////////////////////////////
@@ -1576,22 +1576,12 @@ function make_lexicon() {
                         const btn_menu_ps_items = newE("button", randomKey(10, '12345abcde'), "btn btn-light btn-sm fw-bold")
                         btn_menu_ps_items.type = "button"
                         btn_menu_ps_items.textContent = "..."
-                        btn_menu_ps_items.setAttribute("data-bs-toggle", "dropdown")
+                        btn_menu_ps_items.setAttribute("data-bs-toggle", "modal")
+                        btn_menu_ps_items.setAttribute("data-bs-target", "#dialog_modal")
                         col_ps_items.appendChild(btn_menu_ps_items)
 
-                        const ul_menu_ps = newE("ul", randomKey(10, '12345abcde'), "dropdown-menu shadow")
-                        ul_menu_ps.style.width = "300px"
-                        col_ps_items.appendChild(ul_menu_ps)
-
-                        ul_menu_ps.onclick = (e) => {
-                            e.stopPropagation();
-                        }
-
                         const div_menu_ps = newE("div", randomKey(10, '12345abcde'), "m-3 menu-group-scroll-lg div-categoria")
-                        ul_menu_ps.appendChild(div_menu_ps)
-
                         make_sn_tree(div_menu_ps, col_ps_values, sn, entrada)
-
                     }
 
                     const div_sec_ejemplos = newE("div", randomKey(10, '12345abcde'), "")
@@ -1814,11 +1804,9 @@ function make_sn_tree(ul, input, sn, entrada) {
         pos = "Prefijo"
     }
 
-
-    ul.innerHTML = ""
-    ul.onclick = (e) => {
-        e.stopPropagation();
-    }
+    const modal_panel=byE("modal_panel_dialog")
+    modal_panel.className="modal-body"
+    modal_panel.innerHTML=""
 
 
     if (verificar_datos(global_proyecto["TABLAS"].CATGRAMATICAL) == true) {
@@ -1840,10 +1828,10 @@ function make_sn_tree(ul, input, sn, entrada) {
         if (pos == "Prefijo" || pos == "Sufijo") {
             //Crea un cuadro de diálogo para casos de afijos
             const smTipo = newEk("small", "mt-2 fw-bold", "Tipo de afijo")
-            ul.appendChild(smTipo)
+            modal_panel.appendChild(smTipo)
 
             const Sel_tipo = newEk("select", "form-control mt-1")
-            ul.appendChild(Sel_tipo)
+            modal_panel.appendChild(Sel_tipo)
 
             tipo_aplicacion.forEach(c => {
                 const item = newEk("option", "")
@@ -1853,12 +1841,13 @@ function make_sn_tree(ul, input, sn, entrada) {
             })
 
             const smAccion = newEk("small", "mt-2 fw-bold", "Estrutura")
-            ul.appendChild(smAccion)
+            modal_panel.appendChild(smAccion)
 
             const div_acciones = newEk("div", "div-fluid")
-            ul.appendChild(div_acciones)
-            const div_acciones2 = newEk("div", "")
-            ul.appendChild(div_acciones2)
+            modal_panel.appendChild(div_acciones)
+
+            const div_acciones2 = newEk("div", "menu-group-scroll")
+            modal_panel.appendChild(div_acciones2)
 
             Sel_tipo.onchange = () => {
                 div_acciones2.innerHTML = ""
@@ -1901,14 +1890,12 @@ function make_sn_tree(ul, input, sn, entrada) {
                     div_acciones.appendChild(input_infle)
 
                     input_infle.onchange = () => {
-                        let tabla_categorias = global_proyecto["TABLAS"]["CATGRAMATICAL"]
-
-                        const new_ps = template_ps()
-                        new_ps.nombres[0].texto = "Inflexional"
+                        new_ps = template_ps()
+                        new_ps.nombre[0].texto = "Inflexional"
                         new_ps.abreviaciones[0].texto = div_categoria.textContent + input_infle.value
-                        sn.ps = new_ps
+                        sn.ps = new_ps 
 
-                        input.innerHTML = `<b class="me-3">${sn.ps.nombres[0].texto}</b> [<i>${sn.ps.abreviaciones[0].texto}</i>]`
+                        input.innerHTML = `<b class="me-3">${sn.ps.nombre[0].texto}</b> [<i>${sn.ps.abreviaciones[0].texto}</i>]`
                         Guardar_datos("LEXICON", global_proyecto["LEXICON"])
 
                     }
@@ -1918,7 +1905,7 @@ function make_sn_tree(ul, input, sn, entrada) {
 
         } else {
             sn.ps = "Indefinido"
-            _sub_make_ps_tree(ul, "", sn, entrada)
+            _sub_make_ps_tree(modal_panel, "", sn, entrada)
         }
 
         function _sub_make_ps_tree(option, input_A, input_B, div_acciones2) {
@@ -1932,7 +1919,8 @@ function make_sn_tree(ul, input, sn, entrada) {
                     div_acciones2.appendChild(collapse_Nivel_1)
 
                 } else {
-                    ul.appendChild(collapse_Nivel_1)
+                    modal_panel.className="modal-body menu-group-scroll-lg"
+                    modal_panel.appendChild(collapse_Nivel_1)
                 }
 
                 const plus_Nivel1 = newEk("div", "bi bi-dash-square plus-tree-ps")
@@ -1985,11 +1973,10 @@ function make_sn_tree(ul, input, sn, entrada) {
                 if (option == "derivar") {
                     div_acciones2.appendChild(collapse_Nivel_2)
                 } else {
-                    ul.appendChild(collapse_Nivel_2)
+                    modal_panel.appendChild(collapse_Nivel_2)
                 }
 
                 Nivel_1.subcategorias.forEach(Nivel_2 => {
-
                     const div_Nivel2 = newEk("div", "div-fluid")
                     collapse_Nivel_2.appendChild(div_Nivel2)
 

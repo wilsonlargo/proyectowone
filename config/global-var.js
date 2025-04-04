@@ -204,4 +204,17 @@ function clear_word(word_ini) {
 }
 
 
+function sort_data(orden, data, campo) {
+    const data_sort_ini = data
+    let sortedDataArray
+
+    const DataArray = Object.entries(data_sort_ini).map(([key, value]) => ({ ...value, key: key }))
+    if (orden == "AZ") {
+        sortedDataArray = DataArray.sort((a, b) => b[campo] - a[campo])
+    } else {
+        sortedDataArray = DataArray.sort((a, b) => a[campo] - b[campo])
+    }
+    return sortedDataArray
+
+}
 

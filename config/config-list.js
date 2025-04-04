@@ -828,7 +828,6 @@ function config_gramatical_list() {
         _make_categoria()
     }
 
-
     function _make_categoria() {
         let tabla_categorias = global_proyecto["TABLAS"]["CATGRAMATICAL"]
 
@@ -854,7 +853,7 @@ function config_gramatical_list() {
                 }
             }
 
-            const item_Nivel1 = newEk("div", "item-tree-ps", Nivel_1.nombre[0].texto,"categoria"+Nivel_1.key)
+            const item_Nivel1 = newEk("div", "item-tree-ps", Nivel_1.nombre[0].texto, "categoria" + Nivel_1.key)
             collapse_Nivel_1.appendChild(item_Nivel1)
 
 
@@ -891,7 +890,7 @@ function config_gramatical_list() {
                     }
                 }
 
-                const item_Nivel2 = newEk("div", "item-tree-ps", Nivel_2.nombre[0].texto,"categoria"+Nivel_2.key)
+                const item_Nivel2 = newEk("div", "item-tree-ps", Nivel_2.nombre[0].texto, "categoria" + Nivel_2.key)
                 div_Nivel2.appendChild(item_Nivel2)
 
                 let ii = Nivel_2.key
@@ -932,7 +931,7 @@ function config_gramatical_list() {
                         }
                     }
 
-                    const item_Nivel3 = newEk("div", "item-tree-ps", Nivel_3.nombre[0].texto,"categoria"+Nivel_3.key)
+                    const item_Nivel3 = newEk("div", "item-tree-ps", Nivel_3.nombre[0].texto, "categoria" + Nivel_3.key)
                     div_Nivel3.appendChild(item_Nivel3)
 
                     let iii = Nivel_3.key
@@ -971,7 +970,6 @@ function config_gramatical_list() {
             div_actions.appendChild(div_del_categoria)
 
             div_del_categoria.onclick = () => {
-                
                 //Esta verfificación se hace si estamos en el nivel superior
                 //o inferior, para aplicar el filtro
                 if (verificar_datos(parent.subcategorias) == true) {
@@ -1027,7 +1025,7 @@ function config_gramatical_list() {
                             valueFromLng[0].texto = int_lng_value.value
                             const item = byE("categoria" + id)
                             item.textContent = cat.nombre[0].texto
-
+                            _make_plantilla()
                             Guardar_datos("TABLAS", global_proyecto["TABLAS"])
                         }
                     }
@@ -1113,7 +1111,7 @@ function config_gramatical_list() {
                         row_lng.appendChild(col_nombre_value)
 
                         const int_lng_value = newE("textarea", "int-" + randomKey(20, '12345abcde'), "input-flat-dicc")
-                        int_lng_value.rows = 1
+                        int_lng_value.rows = 3
                         col_nombre_value.appendChild(int_lng_value)
 
                         const valueFromLng = cat.definiciones.filter(ele => ele.key == lng.key)
@@ -1129,6 +1127,261 @@ function config_gramatical_list() {
                     }
                 }
 
+            }
+
+            const sm_titulo_plantilla = newEk("small", "fw-bold ms-2 mt-5", "Plantilla de categoría")
+            panel_list_edit.appendChild(sm_titulo_plantilla)
+
+            const div_acciones = newEk("div", "ms-2 div-fluid bg-secondary ps-2 pt-2 pb-2")
+            panel_list_edit.appendChild(div_acciones)
+
+            const div_plantilla = newEk("div", "ms-2")
+            panel_list_edit.appendChild(div_plantilla)
+
+            const btn_anteriores = newEk("div", "item-texto-small-w", "Elementos anteriores +")
+            div_acciones.appendChild(btn_anteriores)
+
+            const btn_posteriores = newEk("div", "ms-4 item-texto-small-w", "Elementos Posteriores +")
+            div_acciones.appendChild(btn_posteriores)
+
+            if (verificar_datos(cat["plantilla"]) == false) {
+                cat["plantilla"] = {
+                    "prefijos": [],
+                    "sufijos": []
+                }
+                Guardar_datos("TABLAS", global_proyecto["TABLAS"])
+            }
+            let plantilla_cat = cat["plantilla"]
+
+            _make_plantilla()
+            function _make_plantilla() {
+                _make_tabla()
+                function _make_tabla() {
+                    div_plantilla.innerHTML = ""
+                    //<table class="table">
+                    const tabla = newEk("table", "table")
+                    div_plantilla.appendChild(tabla)
+                    //<thead>
+                    const thead = newEk("thead", "")
+                    tabla.appendChild(thead)
+                    //<tr>
+                    const trh = newEk("tr", "")
+                    thead.appendChild(trh)
+
+
+                    //Primero ordeno los prefijo en su orden de aparición
+                    //Aquí coloco las columnas previas si las hay
+
+                    let data_prefijos = plantilla_cat["prefijos"]
+                    var sorted = data_prefijos.sort(function (a, b) { return b.orden - a.orden });
+                    plantilla_cat["prefijos"] = sorted
+
+                    const n_end = plantilla_cat["prefijos"].length - 1
+                    let n_orden_pref = plantilla_cat["prefijos"].length - 1
+
+                    for (id in plantilla_cat["prefijos"]) {
+                        plantilla_cat["prefijos"][id].orden = n_orden_pref
+                        n_orden_pref = n_orden_pref - 1
+                        Guardar_datos("TABLAS", global_proyecto["TABLAS"])
+                        const th = newEk("th", "")
+                        trh.appendChild(th)
+                        const row_th = newEk("div", "row align-items-center")
+                        th.appendChild(row_th)
+
+                        const col_btn = newEk("div", "col-auto")
+                        row_th.appendChild(col_btn)
+
+                        const _btn = newEk("i", "bi bi-arrow-down-circle-fill btn-context-lx")
+                        _btn.setAttribute("data-bs-toggle", "dropdown")
+                        col_btn.appendChild(_btn)
+
+                        const ul_menu = newEk("ul", "dropdown-menu shadow")
+                        col_btn.appendChild(ul_menu)
+
+                        const item_borrar = newEk("div", "bi bi-trash item-menu-s ps-2 pe-2", "  Eliminar")
+                        ul_menu.appendChild(item_borrar)
+                        let id_item = parseInt(id)
+
+                        item_borrar.onclick = () => {
+                            const filter_del = plantilla_cat["prefijos"].filter(ele => ele.key != plantilla_cat["prefijos"][id_item].key)
+
+                            //delete plantilla_cat["prefijos"][id_item]
+                            plantilla_cat["prefijos"] = filter_del
+                            Guardar_datos("TABLAS", global_proyecto["TABLAS"])
+                            _make_plantilla()
+
+                        }
+
+
+
+                        if (plantilla_cat["prefijos"][id].orden != 0) {
+                            const item_adelante = newEk("div", "bi bi-arrow-right-square item-menu-s ps-2 pe-2", "  Mover adelante")
+                            ul_menu.appendChild(item_adelante)
+                            item_adelante.onclick = () => {
+                                let ind_pos = plantilla_cat["prefijos"][id_item].orden - 1
+                                let ind_pre = plantilla_cat["prefijos"][id_item + 1].orden + 1
+                                plantilla_cat["prefijos"][id_item].orden = ind_pos
+
+                                plantilla_cat["prefijos"][id_item + 1].orden = ind_pre
+                                Guardar_datos("TABLAS", global_proyecto["TABLAS"])
+                                _make_plantilla()
+                            }
+                        }
+
+                        if (plantilla_cat["prefijos"][id].orden != n_end) {
+                            const item_atras = newEk("div", "bi bi-arrow-left-square item-menu-s ps-2 pe-2", "  Mover atrás")
+                            ul_menu.appendChild(item_atras)
+                            item_atras.onclick = () => {
+                                let ind_pos = plantilla_cat["prefijos"][id_item].orden + 1
+                                let ind_pre = plantilla_cat["prefijos"][id_item - 1].orden - 1
+                                plantilla_cat["prefijos"][id_item].orden = ind_pos
+
+                                plantilla_cat["prefijos"][id_item - 1].orden = ind_pre
+                                //Guardar_datos("TABLAS", global_proyecto["TABLAS"])
+                                _make_plantilla()
+                            }
+                        }
+
+
+                        const col_value = newEk("div", "col")
+                        row_th.appendChild(col_value)
+
+                        const in_prefijo = newEk("input", "input-flat-dicc")
+                        col_value.appendChild(in_prefijo)
+
+                        in_prefijo.value = plantilla_cat["prefijos"][id_item].nombre
+                        in_prefijo.onchange = () => {
+                            plantilla_cat["prefijos"][id_item].nombre = in_prefijo.value
+                            Guardar_datos("TABLAS", global_proyecto["TABLAS"])
+                        }
+                    }
+
+                    //<th scope="col">#</th>
+                    const th = newEk("th", "", cat.nombre[0].texto.toUpperCase())
+                    trh.appendChild(th)
+
+
+
+                    let data_sufijo = plantilla_cat["sufijos"]
+                    var sorted2 = data_sufijo.sort(function (a, b) { return a.orden - b.orden });
+                    plantilla_cat["sufijos"] = sorted2
+
+
+                    let n_orden_suf = 0
+                    const n_end_sufijo = plantilla_cat["sufijos"].length - 1
+                    for (id in plantilla_cat["sufijos"]) {
+                        plantilla_cat["sufijos"][id].orden = n_orden_suf
+                        n_orden_suf = n_orden_suf + 1
+                        Guardar_datos("TABLAS", global_proyecto["TABLAS"])
+                        const th = newEk("th", "")
+                        trh.appendChild(th)
+                        const row_th = newEk("div", "row align-items-center")
+                        th.appendChild(row_th)
+
+                        const col_btn = newEk("div", "col-auto")
+                        row_th.appendChild(col_btn)
+
+                        const _btn = newEk("i", "bi bi-arrow-down-circle-fill btn-context-lx")
+                        _btn.setAttribute("data-bs-toggle", "dropdown")
+                        col_btn.appendChild(_btn)
+
+                        const ul_menu = newEk("ul", "dropdown-menu shadow")
+                        col_btn.appendChild(ul_menu)
+
+                        const item_borrar = newEk("div", "bi bi-trash item-menu-s ps-2 pe-2", "  Eliminar")
+                        ul_menu.appendChild(item_borrar)
+                        let id_item = parseInt(id)
+
+                        item_borrar.onclick = () => {
+                            const filter_del = plantilla_cat["sufijos"].filter(ele => ele.key != plantilla_cat["sufijos"][id_item].key)
+                            plantilla_cat["sufijos"] = filter_del
+                            Guardar_datos("TABLAS", global_proyecto["TABLAS"])
+                            _make_plantilla()
+
+                        }
+
+
+                        if (plantilla_cat["sufijos"][id].orden != n_end_sufijo) {
+                            const item_adelante = newEk("div", "bi bi-arrow-right-square item-menu-s ps-2 pe-2", "  Mover atrás")
+                            ul_menu.appendChild(item_adelante)
+                            item_adelante.onclick = () => {
+                                let ind_pos = plantilla_cat["sufijos"][id_item + 1].orden
+                                let ind_pre = plantilla_cat["sufijos"][id_item].orden
+                                
+                                plantilla_cat["sufijos"][id_item].orden = ind_pos
+                                plantilla_cat["sufijos"][id_item + 1].orden=ind_pre
+                                Guardar_datos("TABLAS", global_proyecto["TABLAS"])
+                                _make_plantilla()
+                            }
+                        }
+
+                        if (plantilla_cat["sufijos"][id].orden != 0) {
+                            const item_atras = newEk("div", "bi bi-arrow-left-square item-menu-s ps-2 pe-2", "  Mover adelante")
+                            ul_menu.appendChild(item_atras)
+                            item_atras.onclick = () => {
+                                let ind_pos = plantilla_cat["sufijos"][id_item - 1].orden
+                                let ind_pre = plantilla_cat["sufijos"][id_item].orden
+                                
+                                plantilla_cat["sufijos"][id_item].orden = ind_pos
+                                plantilla_cat["sufijos"][id_item - 1].orden=ind_pre
+                                Guardar_datos("TABLAS", global_proyecto["TABLAS"])
+                                _make_plantilla()
+
+                            }
+                        }
+
+
+                        const col_value = newEk("div", "col")
+                        row_th.appendChild(col_value)
+
+                        const in_prefijo = newEk("input", "input-flat-dicc")
+                        col_value.appendChild(in_prefijo)
+
+                        in_prefijo.value = plantilla_cat["sufijos"][id_item].nombre
+                        in_prefijo.onchange = () => {
+                            plantilla_cat["sufijos"][id_item].nombre = in_prefijo.value
+                            Guardar_datos("TABLAS", global_proyecto["TABLAS"])
+                        }
+                    }
+
+
+                }
+
+
+
+
+            }
+
+            //Accion de crear un elemento anterior a la categoría
+            btn_anteriores.onclick = () => {
+                //Creamos un elemento
+                const contar_prefijos = plantilla_cat["prefijos"].length
+                const item = {
+                    "key": "pre-" + randomKey(5, '12345abcde'),
+                    "orden": contar_prefijos,
+                    "nombre": "prefijo " + contar_prefijos,
+                    "tipo": "",
+                    "formas": []
+                }
+                plantilla_cat["prefijos"].push(item)
+                Guardar_datos("TABLAS", global_proyecto["TABLAS"])
+
+                _make_plantilla()
+            }
+
+            btn_posteriores.onclick = () => {
+                //Creamos un elemento
+                const contar_sufijos = plantilla_cat["sufijos"].length
+                const item = {
+                    "key": "suf-" + randomKey(5, '12345abcde'),
+                    "orden": contar_sufijos,
+                    "nombre": "sufijo " + contar_sufijos,
+                    "tipo": "",
+                    "formas": []
+                }
+                plantilla_cat["sufijos"].push(item)
+                Guardar_datos("TABLAS", global_proyecto["TABLAS"])
+                _make_plantilla()
             }
         }
 

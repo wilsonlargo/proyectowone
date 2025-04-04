@@ -84,7 +84,6 @@ function make_lexicon() {
 
         ul_menu_config.appendChild(item_proyecto)
 
-
         const item_variantes = newE("div", "item_variantes", "item-menu")
         item_variantes.textContent = "Variantes de idioma"
         item_variantes.setAttribute("data-bs-toggle", "modal")
@@ -206,62 +205,63 @@ function make_lexicon() {
         panel_lexicon_edit.innerHTML = ""
 
         //Contenedor de categoria lx y sus variantes
-        const div_lx = newE("div", "div_lx", "div-categoria")
+        const div_lx = newEk("div", "div-categoria")
         panel_lexicon_edit.appendChild(div_lx)
 
-        const row_lx = newE("div", "row_lx", "row align-items-end")
+        const row_lx = newEk("div", "row align-items-end")
         div_lx.appendChild(row_lx)
 
-        const col_lx_label = newE("div", "col_lx_label", "col-3 label-wrap")
+        const col_lx_label = newEk("div", "col-3 label-wrap")
         row_lx.appendChild(col_lx_label)
 
-        const row_lx_label = newE("div", "row_lx_label", "row align-items-center")
+        const row_lx_label = newEk("div", "row align-items-center")
         col_lx_label.appendChild(row_lx_label)
 
-        const col_menu_lx = newE("div", "col_menu_lx", "col-auto")
+        const col_menu_lx = newEk("div", "col-auto")
         row_lx_label.appendChild(col_menu_lx)
 
-        const btn_menu_lx = newE("div", "btn_menu_lx", "bi bi-arrow-down-circle-fill btn-context-lx")
+        const btn_menu_lx = newEk("div", "bi bi-arrow-down-circle-fill btn-context-lx")
         btn_menu_lx.setAttribute("data-bs-toggle", "dropdown")
         col_menu_lx.appendChild(btn_menu_lx)
 
-        const ul_menu_lx = newE("ul", "ul_menu_lx", "dropdown-menu shadow")
+        const ul_menu_lx = newEk("ul", "dropdown-menu shadow")
         col_menu_lx.appendChild(ul_menu_lx)
 
-        const item_lx_vertodo_campos = newE("ul", "item_lx_vertodo_campos", "item-menu")
+        const item_lx_vertodo_campos = newEk("ul", "item-menu")
         item_lx_vertodo_campos.textContent = "Ver campos ocultos"
         ul_menu_lx.appendChild(item_lx_vertodo_campos)
         item_lx_vertodo_campos.onclick = () => {
             entrada["clase-contexto"].visible = true
             entrada["clase-varianteOf"].visible = true
             entrada["clase-etimologia"].visible = true
+            entrada["clase-fonetica"].visible = true
             Guardar_datos("LEXICON", global_proyecto["LEXICON"])
             _make_lexicon_edit(entrada)
         }
 
-        const col_menu_lx_label = newE("div", "col_menu_lx_label", "col-auto")
+        const col_menu_lx_label = newEk("div", "col-auto")
         col_menu_lx_label.textContent = "Lexema base"
         row_lx_label.appendChild(col_menu_lx_label)
 
-        const col_lx_value = newE("div", "col_lx_value", "col")
+        const col_lx_value = newEk("div", "col")
         row_lx.appendChild(col_lx_value)
 
-        const row_lx_values = newE("div", "row_lx_values", "align-items-center div-fluid")
+        const row_lx_values = newEk("div", "align-items-center div-fluid")
         col_lx_value.appendChild(row_lx_values)
 
-        const col_lx_ini = newE("div", "col_lx_ini", "div fs-5 me-1")
+        const col_lx_ini = newEk("div", "div fs-5 me-1")
         col_lx_ini.style.width = "2px"
         col_lx_ini.textContent = entrada.lexeme.ini
         row_lx_values.appendChild(col_lx_ini)
 
-        const col_lx = newE("div", "col_lx", "div")
+        const col_lx = newEk("div", "")
         row_lx_values.appendChild(col_lx)
 
         const col_lx_fin = newE("div", "col_lx_fin", "div fs-5")
         col_lx_fin.textContent = entrada.lexeme.fin
         row_lx_values.appendChild(col_lx_fin)
 
-        const input_lx_value = newE("span", "input_lx_value", "fs-5 fw-bold input input-flat-dicc")
+        const input_lx_value = newEk("span", "fs-5 fw-bold input input-flat-dicc")
         input_lx_value.role = "textbox"
         input_lx_value.setAttribute("contenteditable", "")
         col_lx.appendChild(input_lx_value)
@@ -270,7 +270,6 @@ function make_lexicon() {
         input_lx_value.oninput = () => {
             entrada.lexeme.lx = input_lx_value.textContent
             entrada.lexeme["lc"] = entrada.lexeme.ini + input_lx_value.textContent + entrada.lexeme.fin
-            console.log(entrada.lexeme)
             Guardar_datos("LEXICON", global_proyecto["LEXICON"])
             byE("p-" + entrada.key).textContent = entrada.lexeme.ini + input_lx_value.textContent + entrada.lexeme.fin
         }
@@ -389,43 +388,42 @@ function make_lexicon() {
         /////////////////////////////////////////////////////////////////
         _put_morfema()
         function _put_morfema() {
-            const row_cat = newE("div", randomKey(10, '12345abcde'), "row align-items-end mt-3")
+            const row_cat = newEk("div", "row align-items-end mt-3")
             div_lx.appendChild(row_cat)
 
-            const col_cat_label = newE("div", randomKey(10, '12345abcde'), "col-3 label-wrap")
+            const col_cat_label = newEk("div", "col-3 label-wrap")
             row_cat.appendChild(col_cat_label)
 
-            const row_cat_label = newE("div", randomKey(10, '12345abcde'), "row align-items-center")
+            const row_cat_label = newEk("div", "row align-items-center")
             col_cat_label.appendChild(row_cat_label)
 
-            const col_menu_cat = newE("div", randomKey(10, '12345abcde'), "col-auto")
+            const col_menu_cat = newEk("div", "col-auto")
             row_cat_label.appendChild(col_menu_cat)
 
-            const btn_menu_cat = newE("div", randomKey(10, '12345abcde'), "bi bi-arrow-down-circle-fill btn-context-lx")
+            const btn_menu_cat = newEk("div", "bi bi-arrow-down-circle-fill btn-context-lx")
             btn_menu_cat.setAttribute("data-bs-toggle", "dropdown")
             col_menu_cat.appendChild(btn_menu_cat)
 
-            const ul_menu_cat = newE("ul", randomKey(10, '12345abcde'), "dropdown-menu shadow")
+            const ul_menu_cat = newEk("ul", "dropdown-menu shadow")
             col_menu_cat.appendChild(ul_menu_cat)
 
-            const div_visible_cat = newE("div", randomKey(10, '12345abcde'), "form-check")
+            const div_visible_cat = newE("div", "form-check")
             ul_menu_cat.appendChild(div_visible_cat)
 
-            const item_applyTo = newE("div", randomKey(10, '12345abcde'), "item-menu")
+            const item_applyTo = newEk("div", "item-menu")
 
             //Verifica que tipo de morfema es
             //Si es es afino entonces mostrar el menú aplicar a
-
 
             item_applyTo.textContent = "Aplicar a"
             ul_menu_cat.appendChild(item_applyTo)
 
 
-            const int_visible_cat = newE("input", randomKey(10, '12345abcde'), "form-check-input-check")
+            const int_visible_cat = newEk("input", "form-check-input-check")
             int_visible_cat.type = "checkbox"
             div_visible_cat.appendChild(int_visible_cat)
 
-            const int_visiblecat_label = newE("label", randomKey(10, '12345abcde'), "form-check-label ms-2")
+            const int_visiblecat_label = newEk("label", "form-check-label ms-2")
             int_visiblecat_label.for = "int_visible_cat"
             int_visiblecat_label.textContent = "Visible"
             div_visible_cat.appendChild(int_visiblecat_label)
@@ -437,11 +435,11 @@ function make_lexicon() {
                 _make_lexicon_edit(entrada)
             }
 
-            const col_menu_cat_label = newE("div", randomKey(10, '12345abcde'), "col-auto")
+            const col_menu_cat_label = newEk("div", "col-auto")
             col_menu_cat_label.textContent = "Tipo de morfema"
             row_cat_label.appendChild(col_menu_cat_label)
 
-            const col_cat_value = newE("div", randomKey(10, '12345abcde'), "col")
+            const col_cat_value = newEk("div", "col")
             row_cat.appendChild(col_cat_value)
 
             const input_morfema_value = newE("select", "input_morfema_value", "input-flat-dicc")
@@ -1162,6 +1160,162 @@ function make_lexicon() {
             }
 
         }
+
+        /////////////////////////////////////////////////////////////////
+        ///Configuración etimologìa de palabra
+        _make_pronunciacion()
+        function _make_pronunciacion() {
+            if (entrada["clase-fonetica"].visible == true) {
+                const hr1 = newEk("hr", "")
+                div_lx.appendChild(hr1)
+
+                const row_cat = newEk("div", "row align-items-end mt-2")
+                div_lx.appendChild(row_cat)
+
+                const col_row_cat_label = newEk("div", "col-3 label-wrap")
+                row_cat.appendChild(col_row_cat_label)
+
+                const row_cat_label = newEk("div", "row align-items-center")
+                col_row_cat_label.appendChild(row_cat_label)
+
+                const col_menu_cat = newEk("div", "col-auto")
+                row_cat_label.appendChild(col_menu_cat)
+
+                const btn_menu_Cat = newEk("div", "bi bi-arrow-down-circle-fill btn-context-lx")
+                btn_menu_Cat.setAttribute("data-bs-toggle", "dropdown")
+                col_menu_cat.appendChild(btn_menu_Cat)
+
+                const ul_menu_Cat = newEk("ul", "dropdown-menu shadow")
+                col_menu_cat.appendChild(ul_menu_Cat)
+
+                const div_visible_Cat = newEk("div", "form-check")
+                ul_menu_Cat.appendChild(div_visible_Cat)
+
+                const int_visible_Cat = newEk("input", "form-check-input-check")
+                int_visible_Cat.type = "checkbox"
+                div_visible_Cat.appendChild(int_visible_Cat)
+
+
+                const int_visibleCat_label = newEk("label", "form-check-label ms-2")
+                int_visibleCat_label.for = "int_visible_Cat"
+                int_visibleCat_label.textContent = "Visible"
+                div_visible_Cat.appendChild(int_visibleCat_label)
+
+
+                int_visible_Cat.checked = entrada["clase-fonetica"].visible
+                int_visible_Cat.onchange = () => {
+                    entrada["clase-fonetica"].visible = int_visible_Cat.checked
+                    Guardar_datos("LEXICON", global_proyecto["LEXICON"])
+                    _make_lexicon_edit(entrada)
+                }
+
+                const col_menu_Cat_label = newEk("div", "col-auto", "Pronunciación")
+                row_cat_label.appendChild(col_menu_Cat_label)
+
+                const row_fonetica = newEk("div", "row align-items-center mt-2")
+                div_lx.appendChild(row_fonetica)
+
+                const col_fonetica_label = newEk("div", "col-3 label-wrap")
+                row_fonetica.appendChild(col_fonetica_label)
+
+                const row_fonetica_label = newEk("div", "row align-items-center")
+                col_fonetica_label.appendChild(row_fonetica_label)
+
+                const col_menu_fonetica = newEk("div", "col-auto")
+                row_fonetica_label.appendChild(col_menu_fonetica)
+
+                const btn_menu_fonetica = newEk("div", "bi bi-arrow-down-circle-fill btn-context-lx text-white")
+                //btn_menu_glosas.setAttribute("data-bs-toggle", "dropdown")
+                col_menu_fonetica.appendChild(btn_menu_fonetica)
+
+                const div_fonetica_label = newEk("div", "col sub-labels text-end", "Fonetica")
+                row_fonetica_label.appendChild(div_fonetica_label)
+
+                const col_fonetica_values = newEk("div", "col")
+                row_fonetica.appendChild(col_fonetica_values)
+
+                const fonetica_input = newEk("input", "input-flat-dicc fs-5 text-primary")
+                col_fonetica_values.appendChild(fonetica_input)
+
+                fonetica_input.value = entrada["clase-fonetica"]["forma-fonetica"]
+                fonetica_input.onchange = () => {
+                    entrada["clase-fonetica"]["forma-fonetica"] = fonetica_input.value
+                    Guardar_datos("LEXICON", global_proyecto["LEXICON"])
+                }
+
+                //Forma fonológica
+                const row_fonologia = newEk("div", "row align-items-center mt-2")
+                div_lx.appendChild(row_fonologia)
+
+                const col_fonologia_label = newEk("div", "col-3 label-wrap")
+                row_fonologia.appendChild(col_fonologia_label)
+
+                const row_fonologia_label = newEk("div", "row align-items-center")
+                col_fonologia_label.appendChild(row_fonologia_label)
+
+                const col_menu_fonologia = newEk("div", "col-auto")
+                row_fonologia_label.appendChild(col_menu_fonologia)
+
+                const btn_menu_fonologia = newEk("div", "bi bi-arrow-down-circle-fill btn-context-lx text-white")
+                //btn_menu_glosas.setAttribute("data-bs-toggle", "dropdown")
+                col_menu_fonologia.appendChild(btn_menu_fonologia)
+
+                const div_fonologia_label = newEk("div", "col sub-labels text-end", "Fonologia")
+                row_fonologia_label.appendChild(div_fonologia_label)
+
+                const col_fonologia_values = newEk("div", "col")
+                row_fonologia.appendChild(col_fonologia_values)
+
+                const fonologia_input = newEk("input", "input-flat-dicc fs-5 text-secondary")
+                col_fonologia_values.appendChild(fonologia_input)
+
+                fonologia_input.value = entrada["clase-fonetica"]["forma-fonologica"]
+                fonologia_input.onchange = () => {
+                    entrada["clase-fonetica"]["forma-fonologica"] = fonologia_input.value
+                    Guardar_datos("LEXICON", global_proyecto["LEXICON"])
+                }
+                //Forma CV
+                const row_plantilacv = newEk("div", "row align-items-center mt-2")
+                div_lx.appendChild(row_plantilacv)
+
+                const col_plantilacv_label = newEk("div", "col-3 label-wrap")
+                row_plantilacv.appendChild(col_plantilacv_label)
+
+                const row_plantilacv_label = newEk("div", "row align-items-center")
+                col_plantilacv_label.appendChild(row_plantilacv_label)
+
+                const col_menu_plantilacv = newEk("div", "col-auto")
+                row_plantilacv_label.appendChild(col_menu_plantilacv)
+
+                const btn_menu_plantilacv = newEk("div", "bi bi-arrow-down-circle-fill btn-context-lx text-white")
+                //btn_menu_glosas.setAttribute("data-bs-toggle", "dropdown")
+                col_menu_plantilacv.appendChild(btn_menu_plantilacv)
+
+                const div_plantilacv_label = newEk("div", "col sub-labels text-end", "Plantilla C.V")
+                row_plantilacv_label.appendChild(div_plantilacv_label)
+
+                const col_plantilacv_values = newEk("div", "col")
+                row_plantilacv.appendChild(col_plantilacv_values)
+
+                const plantilacv_input = newEk("input", "input-flat-dicc fs-5 text-secondary")
+                col_plantilacv_values.appendChild(plantilacv_input)
+
+                plantilacv_input.value = entrada["clase-fonetica"]["forma-cv"]
+                plantilacv_input.onchange = () => {
+                    entrada["clase-fonetica"]["forma-cv"] = plantilacv_input.value
+                    Guardar_datos("LEXICON", global_proyecto["LEXICON"])
+                }
+
+
+
+
+
+
+
+            }
+        }
+
+
         /////////////////////////////////////////////////////////////////
         ///Configuración etimologìa de palabra
         if (entrada["clase-etimologia"].visible == true) {
@@ -1512,7 +1666,7 @@ function make_lexicon() {
                                 row_cat_values_lng.appendChild(col_cat_value_lng)
 
                                 const int_cat_value_lng = newE("textarea", randomKey(10, '12345abcde'), "input-flat-dicc")
-                                int_cat_value_lng.rows = 1
+                                int_cat_value_lng.rows = 3
                                 int_cat_value_lng.style.color = filter_trad[0].style["font-color"]
                                 int_cat_value_lng.style.fontSize = filter_trad[0].style["font-size"]
                                 col_cat_value_lng.appendChild(int_cat_value_lng)
@@ -1804,10 +1958,9 @@ function make_sn_tree(ul, input, sn, entrada) {
         pos = "Prefijo"
     }
 
-    const modal_panel=byE("modal_panel_dialog")
-    modal_panel.className="modal-body"
-    modal_panel.innerHTML=""
-
+    const modal_panel = byE("modal_panel_dialog")
+    modal_panel.className = "modal-body"
+    modal_panel.innerHTML = ""
 
     if (verificar_datos(global_proyecto["TABLAS"].CATGRAMATICAL) == true) {
         const tipo_aplicacion = [
@@ -1893,7 +2046,7 @@ function make_sn_tree(ul, input, sn, entrada) {
                         new_ps = template_ps()
                         new_ps.nombre[0].texto = "Inflexional"
                         new_ps.abreviaciones[0].texto = div_categoria.textContent + input_infle.value
-                        sn.ps = new_ps 
+                        sn.ps = new_ps
 
                         input.innerHTML = `<b class="me-3">${sn.ps.nombre[0].texto}</b> [<i>${sn.ps.abreviaciones[0].texto}</i>]`
                         Guardar_datos("LEXICON", global_proyecto["LEXICON"])
@@ -1919,7 +2072,7 @@ function make_sn_tree(ul, input, sn, entrada) {
                     div_acciones2.appendChild(collapse_Nivel_1)
 
                 } else {
-                    modal_panel.className="modal-body menu-group-scroll-lg"
+                    modal_panel.className = "modal-body menu-group-scroll-lg"
                     modal_panel.appendChild(collapse_Nivel_1)
                 }
 

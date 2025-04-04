@@ -5,7 +5,9 @@ function template_entry() {
         "lexeme": {
             "ini": "",
             "lx": "Nueva entrada",
+            "lc": "Nueva entrada",
             "ini": "",
+            "fin": "",
             "lx_lngs": [],
             "visible": true
         },
@@ -20,13 +22,19 @@ function template_entry() {
             }
 
         },
-
         "clase-contexto": {
             "contextos": [],
             "visible": true
         },
         "clase-varianteOf": {
             "variantes": [],
+            "visible": true
+        },
+        "clase-fonetica": {
+            "forma-fonetica":"",
+            "forma-fonologica":"",
+            "forma-cv":"",
+            "notas":"",
             "visible": true
         }
         ,
@@ -35,11 +43,19 @@ function template_entry() {
             "visible": true,
             "glosas": template_glosas(),
             "nota": "",
+        } ,
+        "clase-nota-lexema": {
+            "visible": true,
+            "nota": "",
         }
         ,
         "clase-sn": {
             "visible": true,
             "sentidos": [],
+        },
+        "clase-sd": {
+            "visible": true,
+            "dominios": [],
         }
     }
     return template
@@ -144,8 +160,14 @@ function template_sn() {
                 "abreviacion": l.abreviacion,
                 "visible": l.visible
             }
+            const item_dn = {
+                "texto": "Definición en " + l.nombre,
+                "idioma": l.nombre,
+                "abreviacion": l.abreviacion,
+                "visible": l.visible
+            }
             gns.push(item_gn)
-            dns.push(item_gn)
+            dns.push(item_dn)
         })
         //
     }
@@ -202,7 +224,15 @@ function template_ps() {
         "nombre": ns,
         "abreviaciones": abbs,
         "definiciones": dess,
-        "subcategorias": []
+        "subcategorias": [],
+        "plantilla":[
+            {
+                "prefijos":[]
+            },
+            {
+                "sufijos":[]
+            }
+        ]
     }
     return template
 }

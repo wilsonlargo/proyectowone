@@ -223,6 +223,17 @@ div.content {
   color: white;
 }
 
+.item-menu-s {
+  padding: 3px;
+  cursor: pointer;
+  font-size: 10pt;
+}
+
+.item-menu-s:hover {
+  background-color: #555;
+  color: white;
+}
+
 .text-justificado {
   text-align: justify;
 }
@@ -524,4 +535,16 @@ div.content {
 .label-parser-ps{
   color:blue;
   font-size: 10pt;
+}
+
+.table-fit {
+  display: block;
+
+  
+}
+
+
+.td-fitwidth {
+width: 1px;
+white-space: nowrap;
 }

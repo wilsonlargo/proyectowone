@@ -225,14 +225,10 @@ function template_ps() {
         "abreviaciones": abbs,
         "definiciones": dess,
         "subcategorias": [],
-        "plantilla":[
-            {
-                "prefijos":[]
-            },
-            {
-                "sufijos":[]
-            }
-        ]
+        "plantilla":{
+            "prefijos":[],
+            "sufijos":[]
+        }
     }
     return template
 }

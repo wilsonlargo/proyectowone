@@ -794,6 +794,15 @@ function config_gramatical_list() {
     div_add_categoria.textContent = "Agregar categoria +"
     div_actions.appendChild(div_add_categoria)
 
+    const div_export_categoria = newEk("div", "item-texto-small ms-3","Exportar")
+    div_actions.appendChild(div_export_categoria)
+    div_export_categoria.onclick = () => {
+        download(JSON.stringify(global_proyecto["TABLAS"]["CATGRAMATICAL"]), 'categorias_gramaticales.json', 'txt')
+    }
+
+
+
+
 
     make_spliter_panel()
     function make_spliter_panel() {
@@ -1152,22 +1161,22 @@ function config_gramatical_list() {
                 Guardar_datos("TABLAS", global_proyecto["TABLAS"])
             }
             let plantilla_cat = cat["plantilla"]
-
+            
             _make_plantilla()
             function _make_plantilla() {
                 _make_tabla()
                 function _make_tabla() {
+                    console.log(cat)
                     div_plantilla.innerHTML = ""
                     //<table class="table">
-                    const tabla = newEk("table", "table")
+                    const tabla = newEk("table", "table mt-2")
                     div_plantilla.appendChild(tabla)
                     //<thead>
                     const thead = newEk("thead", "")
                     tabla.appendChild(thead)
                     //<tr>
-                    const trh = newEk("tr", "")
+                    const trh = newEk("tr", "align-items-start")
                     thead.appendChild(trh)
-
 
                     //Primero ordeno los prefijo en su orden de aparición
                     //Aquí coloco las columnas previas si las hay
@@ -1183,9 +1192,9 @@ function config_gramatical_list() {
                         plantilla_cat["prefijos"][id].orden = n_orden_pref
                         n_orden_pref = n_orden_pref - 1
                         Guardar_datos("TABLAS", global_proyecto["TABLAS"])
-                        const th = newEk("th", "")
+                        const th = newEk("th", "border-lx")
                         trh.appendChild(th)
-                        const row_th = newEk("div", "row align-items-center")
+                        const row_th = newEk("div", "row align-items-start")
                         th.appendChild(row_th)
 
                         const col_btn = newEk("div", "col-auto")
@@ -1211,8 +1220,6 @@ function config_gramatical_list() {
                             _make_plantilla()
 
                         }
-
-
 
                         if (plantilla_cat["prefijos"][id].orden != 0) {
                             const item_adelante = newEk("div", "bi bi-arrow-right-square item-menu-s ps-2 pe-2", "  Mover adelante")
@@ -1246,19 +1253,61 @@ function config_gramatical_list() {
                         const col_value = newEk("div", "col")
                         row_th.appendChild(col_value)
 
-                        const in_prefijo = newEk("input", "input-flat-dicc")
-                        col_value.appendChild(in_prefijo)
+                        const div_value = newEk("div", "")
+                        col_value.appendChild(div_value)
 
-                        in_prefijo.value = plantilla_cat["prefijos"][id_item].nombre
-                        in_prefijo.onchange = () => {
-                            plantilla_cat["prefijos"][id_item].nombre = in_prefijo.value
+                        const sm_nombre = newEk("small", "fw-bold text-secondary ms-2","Nombre")
+                        //div_value.appendChild(sm_nombre)
+
+                        const in_prefijo_nombre = newEk("input", "form-control input-flat-dicc")
+                        div_value.appendChild(in_prefijo_nombre)
+
+                        in_prefijo_nombre.value = plantilla_cat["prefijos"][id_item].nombre
+                        in_prefijo_nombre.onchange = () => {
+                            plantilla_cat["prefijos"][id_item].nombre = in_prefijo_nombre.value
                             Guardar_datos("TABLAS", global_proyecto["TABLAS"])
                         }
+
+                        const sm_abb = newEk("small", "fw-bold text-secondary ms-2","Abreviación")
+                        div_value.appendChild(sm_abb)
+
+                        const in_prefijo_abb = newEk("input", "form-control input-flat-dicc")
+                        div_value.appendChild(in_prefijo_abb)
+
+                        in_prefijo_abb.value = plantilla_cat["prefijos"][id_item].abreviacion
+                        in_prefijo_abb.onchange = () => {
+                            plantilla_cat["prefijos"][id_item].abreviacion = in_prefijo_abb.value
+                            Guardar_datos("TABLAS", global_proyecto["TABLAS"])
+                        }
+
+                        const sm_tipo = newEk("small", "fw-bold text-secondary ms-2","Tipo")
+                        div_value.appendChild(sm_tipo)
+
+                        const sel_tipo = newEk("select", "form-control")
+                        div_value.appendChild(sel_tipo)
+
+                        const tipos=["Indefinido","Inflexional","Derivacional"]
+                        tipos.forEach(t=>{
+                            const item= newEk("option","")
+                            item.textContent=t
+                            item.value=t
+                            sel_tipo.appendChild(item)
+                        })
+                        sel_tipo.value=plantilla_cat["prefijos"][id_item].tipo
+                        sel_tipo.onchange=()=>{
+                            plantilla_cat["prefijos"][id_item].tipo=sel_tipo.value
+                            Guardar_datos("TABLAS", global_proyecto["TABLAS"])
+                        }
+
                     }
 
                     //<th scope="col">#</th>
-                    const th = newEk("th", "", cat.nombre[0].texto.toUpperCase())
+                    const th = newEk("th", "")
                     trh.appendChild(th)
+
+                    const div_cat = newEk("div", "", cat.nombre[0].texto.toUpperCase())
+                    div_cat.style.height="150px"
+                    th.appendChild(div_cat)
 
 
 
@@ -1266,16 +1315,15 @@ function config_gramatical_list() {
                     var sorted2 = data_sufijo.sort(function (a, b) { return a.orden - b.orden });
                     plantilla_cat["sufijos"] = sorted2
 
-
                     let n_orden_suf = 0
                     const n_end_sufijo = plantilla_cat["sufijos"].length - 1
                     for (id in plantilla_cat["sufijos"]) {
                         plantilla_cat["sufijos"][id].orden = n_orden_suf
                         n_orden_suf = n_orden_suf + 1
                         Guardar_datos("TABLAS", global_proyecto["TABLAS"])
-                        const th = newEk("th", "")
+                        const th = newEk("th", "border-lx")
                         trh.appendChild(th)
-                        const row_th = newEk("div", "row align-items-center")
+                        const row_th = newEk("div", "row align-items-start")
                         th.appendChild(row_th)
 
                         const col_btn = newEk("div", "col-auto")
@@ -1334,12 +1382,49 @@ function config_gramatical_list() {
                         const col_value = newEk("div", "col")
                         row_th.appendChild(col_value)
 
-                        const in_prefijo = newEk("input", "input-flat-dicc")
-                        col_value.appendChild(in_prefijo)
+                        const div_value = newEk("div", "")
+                        col_value.appendChild(div_value)
 
-                        in_prefijo.value = plantilla_cat["sufijos"][id_item].nombre
-                        in_prefijo.onchange = () => {
-                            plantilla_cat["sufijos"][id_item].nombre = in_prefijo.value
+                        const sm_nombre = newEk("small", "fw-bold text-secondary ms-2","Nombre")
+                        //div_value.appendChild(sm_nombre)
+
+                        const in_prefijo_nombre = newEk("input", "form-control input-flat-dicc")
+                        div_value.appendChild(in_prefijo_nombre)
+
+                        in_prefijo_nombre.value = plantilla_cat["sufijos"][id_item].nombre
+                        in_prefijo_nombre.onchange = () => {
+                            plantilla_cat["sufijos"][id_item].nombre = in_prefijo_nombre.value
+                            Guardar_datos("TABLAS", global_proyecto["TABLAS"])
+                        }
+
+                        const sm_abb = newEk("small", "fw-bold text-secondary","Abreviación")
+                        div_value.appendChild(sm_abb)
+
+                        const in_prefijo_abb = newEk("input", "form-control input-flat-dicc")
+                        div_value.appendChild(in_prefijo_abb)
+
+                        in_prefijo_abb.value = plantilla_cat["sufijos"][id_item].abreviacion
+                        in_prefijo_abb.onchange = () => {
+                            plantilla_cat["sufijos"][id_item].abreviacion = in_prefijo_abb.value
+                            Guardar_datos("TABLAS", global_proyecto["TABLAS"])
+                        }
+
+                        const sm_tipo = newEk("small", "fw-bold text-secondary ms-2","Tipo")
+                        div_value.appendChild(sm_tipo)
+
+                        const sel_tipo = newEk("select", "form-control")
+                        div_value.appendChild(sel_tipo)
+
+                        const tipos=["Indefinido","Inflexional","Derivacional"]
+                        tipos.forEach(t=>{
+                            const item= newEk("option","")
+                            item.textContent=t
+                            item.value=t
+                            sel_tipo.appendChild(item)
+                        })
+                        sel_tipo.value=plantilla_cat["sufijos"][id_item].tipo
+                        sel_tipo.onchange=()=>{
+                            plantilla_cat["sufijos"][id_item].tipo=sel_tipo.value
                             Guardar_datos("TABLAS", global_proyecto["TABLAS"])
                         }
                     }
@@ -1360,7 +1445,8 @@ function config_gramatical_list() {
                     "key": "pre-" + randomKey(5, '12345abcde'),
                     "orden": contar_prefijos,
                     "nombre": "prefijo " + contar_prefijos,
-                    "tipo": "",
+                    "abreviacion": "ABB" + contar_prefijos,
+                    "tipo": "Indefinido",
                     "formas": []
                 }
                 plantilla_cat["prefijos"].push(item)
@@ -1376,7 +1462,8 @@ function config_gramatical_list() {
                     "key": "suf-" + randomKey(5, '12345abcde'),
                     "orden": contar_sufijos,
                     "nombre": "sufijo " + contar_sufijos,
-                    "tipo": "",
+                    "abreviacion": "ABB" + contar_sufijos,
+                    "tipo": "Indefinido",
                     "formas": []
                 }
                 plantilla_cat["sufijos"].push(item)

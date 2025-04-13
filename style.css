@@ -537,14 +537,9 @@ div.content {
   font-size: 10pt;
 }
 
-.table-fit {
-  display: block;
-
-  
-}
 
 
-.td-fitwidth {
-width: 1px;
-white-space: nowrap;
+.border-lx{
+  border: 1px solid gray;
+  padding: 5px;
 }

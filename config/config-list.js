@@ -794,14 +794,11 @@ function config_gramatical_list() {
     div_add_categoria.textContent = "Agregar categoria +"
     div_actions.appendChild(div_add_categoria)
 
-    const div_export_categoria = newEk("div", "item-texto-small ms-3","Exportar")
+    const div_export_categoria = newEk("div", "item-texto-small ms-3", "Exportar")
     div_actions.appendChild(div_export_categoria)
     div_export_categoria.onclick = () => {
         download(JSON.stringify(global_proyecto["TABLAS"]["CATGRAMATICAL"]), 'categorias_gramaticales.json', 'txt')
     }
-
-
-
 
 
     make_spliter_panel()
@@ -821,7 +818,6 @@ function config_gramatical_list() {
         panel_splitter.appendChild(panel_lexicon_edit)
 
         dragElement(document.getElementById("panel_separador_ps"), "H", "panel_list_ps", "panel_lexicon_edit_ps");
-
         if (verificar_datos(global_proyecto["TABLAS"].CATGRAMATICAL) == false) {
             global_proyecto["TABLAS"]["CATGRAMATICAL"] = []
             Guardar_datos("TABLAS", global_proyecto["TABLAS"])
@@ -862,7 +858,7 @@ function config_gramatical_list() {
                 }
             }
 
-            const item_Nivel1 = newEk("div", "item-tree-ps", Nivel_1.nombre[0].texto, "categoria" + Nivel_1.key)
+            const item_Nivel1 = newEk("div", "item-tree-ps", Nivel_1.nombres[0].texto, "categoria" + Nivel_1.key)
             collapse_Nivel_1.appendChild(item_Nivel1)
 
 
@@ -899,7 +895,7 @@ function config_gramatical_list() {
                     }
                 }
 
-                const item_Nivel2 = newEk("div", "item-tree-ps", Nivel_2.nombre[0].texto, "categoria" + Nivel_2.key)
+                const item_Nivel2 = newEk("div", "item-tree-ps", Nivel_2.nombres[0].texto, "categoria" + Nivel_2.key)
                 div_Nivel2.appendChild(item_Nivel2)
 
                 let ii = Nivel_2.key
@@ -940,11 +936,12 @@ function config_gramatical_list() {
                         }
                     }
 
-                    const item_Nivel3 = newEk("div", "item-tree-ps", Nivel_3.nombre[0].texto, "categoria" + Nivel_3.key)
+                    const item_Nivel3 = newEk("div", "item-tree-ps", Nivel_3.nombres[0].texto, "categoria" + Nivel_3.key)
                     div_Nivel3.appendChild(item_Nivel3)
 
                     let iii = Nivel_3.key
                     let campo = Nivel_3
+
                     item_Nivel3.onclick = () => {
                         _make_panel_cat(Nivel_2, campo, iii, false)
                     }
@@ -1009,8 +1006,8 @@ function config_gramatical_list() {
                 const col_nombre_valores = newE("div", randomKey(20, '12345abcde'), "col")
                 row_nombre.appendChild(col_nombre_valores)
 
-                for (i in cat.nombre) {
-                    const lng = cat.nombre[i]
+                for (i in cat.nombres) {
+                    const lng = cat.nombres[i]
                     const filter_lng = global_proyecto["PROYECTO"].Lngtraducion.filter(el => el.abreviacion == lng.abreviacion)
                     if (filter_lng[0].visible == true) {
                         const row_lng = newE("div", randomKey(20, '12345abcde'), "row align-items-center")
@@ -1026,14 +1023,14 @@ function config_gramatical_list() {
                         const int_lng_value = newE("input", "int-" + randomKey(20, '12345abcde'), "input-flat-dicc")
                         col_nombre_value.appendChild(int_lng_value)
 
-                        const valueFromLng = cat.nombre.filter(ele => ele.key == lng.key)
+                        const valueFromLng = cat.nombres.filter(ele => ele.key == lng.key)
 
                         int_lng_value.value = valueFromLng[0].texto
 
                         int_lng_value.onchange = () => {
                             valueFromLng[0].texto = int_lng_value.value
                             const item = byE("categoria" + id)
-                            item.textContent = cat.nombre[0].texto
+                            item.textContent = cat.nombres[0].texto
                             _make_plantilla()
                             Guardar_datos("TABLAS", global_proyecto["TABLAS"])
                         }
@@ -1161,12 +1158,11 @@ function config_gramatical_list() {
                 Guardar_datos("TABLAS", global_proyecto["TABLAS"])
             }
             let plantilla_cat = cat["plantilla"]
-            
+
             _make_plantilla()
             function _make_plantilla() {
                 _make_tabla()
                 function _make_tabla() {
-                    console.log(cat)
                     div_plantilla.innerHTML = ""
                     //<table class="table">
                     const tabla = newEk("table", "table mt-2")
@@ -1256,7 +1252,7 @@ function config_gramatical_list() {
                         const div_value = newEk("div", "")
                         col_value.appendChild(div_value)
 
-                        const sm_nombre = newEk("small", "fw-bold text-secondary ms-2","Nombre")
+                        const sm_nombre = newEk("small", "fw-bold text-secondary ms-2", "Nombre")
                         //div_value.appendChild(sm_nombre)
 
                         const in_prefijo_nombre = newEk("input", "form-control input-flat-dicc")
@@ -1268,7 +1264,7 @@ function config_gramatical_list() {
                             Guardar_datos("TABLAS", global_proyecto["TABLAS"])
                         }
 
-                        const sm_abb = newEk("small", "fw-bold text-secondary ms-2","Abreviación")
+                        const sm_abb = newEk("small", "fw-bold text-secondary ms-2", "Abreviación")
                         div_value.appendChild(sm_abb)
 
                         const in_prefijo_abb = newEk("input", "form-control input-flat-dicc")
@@ -1280,22 +1276,22 @@ function config_gramatical_list() {
                             Guardar_datos("TABLAS", global_proyecto["TABLAS"])
                         }
 
-                        const sm_tipo = newEk("small", "fw-bold text-secondary ms-2","Tipo")
+                        const sm_tipo = newEk("small", "fw-bold text-secondary ms-2", "Tipo")
                         div_value.appendChild(sm_tipo)
 
                         const sel_tipo = newEk("select", "form-control")
                         div_value.appendChild(sel_tipo)
 
-                        const tipos=["Indefinido","Inflexional","Derivacional"]
-                        tipos.forEach(t=>{
-                            const item= newEk("option","")
-                            item.textContent=t
-                            item.value=t
+                        const tipos = ["Indefinido", "Inflexional", "Derivacional"]
+                        tipos.forEach(t => {
+                            const item = newEk("option", "")
+                            item.textContent = t
+                            item.value = t
                             sel_tipo.appendChild(item)
                         })
-                        sel_tipo.value=plantilla_cat["prefijos"][id_item].tipo
-                        sel_tipo.onchange=()=>{
-                            plantilla_cat["prefijos"][id_item].tipo=sel_tipo.value
+                        sel_tipo.value = plantilla_cat["prefijos"][id_item].tipo
+                        sel_tipo.onchange = () => {
+                            plantilla_cat["prefijos"][id_item].tipo = sel_tipo.value
                             Guardar_datos("TABLAS", global_proyecto["TABLAS"])
                         }
 
@@ -1305,8 +1301,8 @@ function config_gramatical_list() {
                     const th = newEk("th", "")
                     trh.appendChild(th)
 
-                    const div_cat = newEk("div", "", cat.nombre[0].texto.toUpperCase())
-                    div_cat.style.height="150px"
+                    const div_cat = newEk("div", "", cat.nombres[0].texto.toUpperCase())
+                    div_cat.style.height = "150px"
                     th.appendChild(div_cat)
 
 
@@ -1355,9 +1351,9 @@ function config_gramatical_list() {
                             item_adelante.onclick = () => {
                                 let ind_pos = plantilla_cat["sufijos"][id_item + 1].orden
                                 let ind_pre = plantilla_cat["sufijos"][id_item].orden
-                                
+
                                 plantilla_cat["sufijos"][id_item].orden = ind_pos
-                                plantilla_cat["sufijos"][id_item + 1].orden=ind_pre
+                                plantilla_cat["sufijos"][id_item + 1].orden = ind_pre
                                 Guardar_datos("TABLAS", global_proyecto["TABLAS"])
                                 _make_plantilla()
                             }
@@ -1369,9 +1365,9 @@ function config_gramatical_list() {
                             item_atras.onclick = () => {
                                 let ind_pos = plantilla_cat["sufijos"][id_item - 1].orden
                                 let ind_pre = plantilla_cat["sufijos"][id_item].orden
-                                
+
                                 plantilla_cat["sufijos"][id_item].orden = ind_pos
-                                plantilla_cat["sufijos"][id_item - 1].orden=ind_pre
+                                plantilla_cat["sufijos"][id_item - 1].orden = ind_pre
                                 Guardar_datos("TABLAS", global_proyecto["TABLAS"])
                                 _make_plantilla()
 
@@ -1385,7 +1381,7 @@ function config_gramatical_list() {
                         const div_value = newEk("div", "")
                         col_value.appendChild(div_value)
 
-                        const sm_nombre = newEk("small", "fw-bold text-secondary ms-2","Nombre")
+                        const sm_nombre = newEk("small", "fw-bold text-secondary ms-2", "Nombre")
                         //div_value.appendChild(sm_nombre)
 
                         const in_prefijo_nombre = newEk("input", "form-control input-flat-dicc")
@@ -1397,7 +1393,7 @@ function config_gramatical_list() {
                             Guardar_datos("TABLAS", global_proyecto["TABLAS"])
                         }
 
-                        const sm_abb = newEk("small", "fw-bold text-secondary","Abreviación")
+                        const sm_abb = newEk("small", "fw-bold text-secondary", "Abreviación")
                         div_value.appendChild(sm_abb)
 
                         const in_prefijo_abb = newEk("input", "form-control input-flat-dicc")
@@ -1409,22 +1405,22 @@ function config_gramatical_list() {
                             Guardar_datos("TABLAS", global_proyecto["TABLAS"])
                         }
 
-                        const sm_tipo = newEk("small", "fw-bold text-secondary ms-2","Tipo")
+                        const sm_tipo = newEk("small", "fw-bold text-secondary ms-2", "Tipo")
                         div_value.appendChild(sm_tipo)
 
                         const sel_tipo = newEk("select", "form-control")
                         div_value.appendChild(sel_tipo)
 
-                        const tipos=["Indefinido","Inflexional","Derivacional"]
-                        tipos.forEach(t=>{
-                            const item= newEk("option","")
-                            item.textContent=t
-                            item.value=t
+                        const tipos = ["Indefinido", "Inflexional", "Derivacional"]
+                        tipos.forEach(t => {
+                            const item = newEk("option", "")
+                            item.textContent = t
+                            item.value = t
                             sel_tipo.appendChild(item)
                         })
-                        sel_tipo.value=plantilla_cat["sufijos"][id_item].tipo
-                        sel_tipo.onchange=()=>{
-                            plantilla_cat["sufijos"][id_item].tipo=sel_tipo.value
+                        sel_tipo.value = plantilla_cat["sufijos"][id_item].tipo
+                        sel_tipo.onchange = () => {
+                            plantilla_cat["sufijos"][id_item].tipo = sel_tipo.value
                             Guardar_datos("TABLAS", global_proyecto["TABLAS"])
                         }
                     }
@@ -1572,6 +1568,452 @@ function config_proyecto() {
     const btn_aceptar = byE("btnAceptar_open")
     btn_aceptar.onclick = () => {
 
+    }
+
+}
+
+function config_dominios_list() {
+    byE("config_titulo").textContent = "Dominios semánticos"
+    const modal_panel_gonfig = byE("modal_panel_gonfig")
+    modal_panel_gonfig.innerHTML = ""
+
+    const div_actions = newEk("div", "div-fluid")
+    modal_panel_gonfig.appendChild(div_actions)
+
+    const div_add_categoria = newEk("div", "item-texto-small")
+    div_add_categoria.textContent = "Agregar categoria +"
+    div_actions.appendChild(div_add_categoria)
+
+    const div_export_categoria = newEk("div", "item-texto-small ms-3", "Exportar")
+    div_actions.appendChild(div_export_categoria)
+    div_export_categoria.onclick = () => {
+        download(JSON.stringify(global_proyecto["TABLAS"]["DOMINIOS"]), 'dominios_semanticos.json', 'txt')
+    }
+
+
+    make_spliter_panel()
+    function make_spliter_panel() {
+        const panel_splitter = newEk("div", "splitter mt-2")
+        modal_panel_gonfig.appendChild(panel_splitter)
+
+        const panel_list = newE("div", "panel_list_ps", "")
+        panel_list.style.height = modal_panel_gonfig.style.height
+        panel_splitter.appendChild(panel_list)
+
+        const panel_separador = newE("div", "panel_separador_ps", "bg-secondary")
+        panel_splitter.appendChild(panel_separador)
+
+        const panel_lexicon_edit = newE("div", "panel_lexicon_edit_ps", "p-2")
+        panel_lexicon_edit.style.height = modal_panel_gonfig.style.height
+        panel_splitter.appendChild(panel_lexicon_edit)
+
+        dragElement(document.getElementById("panel_separador_ps"), "H", "panel_list_ps", "panel_lexicon_edit_ps");
+        if (verificar_datos(global_proyecto["TABLAS"].DOMINIOS) == false) {
+            global_proyecto["TABLAS"]["DOMINIOS"] = []
+            Guardar_datos("TABLAS", global_proyecto["TABLAS"])
+            _make_categoria()
+        } else {
+            _make_categoria()
+        }
+    }
+
+    div_add_categoria.onclick = () => {
+        global_proyecto["TABLAS"]["DOMINIOS"].push(template_sd())
+        Guardar_datos("TABLAS", global_proyecto["TABLAS"])
+        _make_categoria()
+    }
+
+    function _make_categoria() {
+        let tabla_categorias = global_proyecto["TABLAS"]["DOMINIOS"]
+
+        const ul = byE("panel_list_ps")
+        const panel_list_edit = byE("panel_lexicon_edit_ps")
+
+        ul.innerHTML = ""
+
+        tabla_categorias.forEach(Nivel_1 => {
+            const collapse_Nivel_1 = newEk("div", "div-fluid align-items-center")
+            ul.appendChild(collapse_Nivel_1)
+
+            const plus_Nivel1 = newEk("div", "bi bi-dash-square plus-tree-ps")
+            plus_Nivel1.setAttribute("data-bs-toggle", "collapse")
+            plus_Nivel1.setAttribute("data-bs-target", "#collapse_ps" + Nivel_1.key)
+            collapse_Nivel_1.appendChild(plus_Nivel1)
+
+            plus_Nivel1.onclick = () => {
+                if (plus_Nivel1.className.includes("bi-dash-square") == true) {
+                    plus_Nivel1.className = "bi bi-plus-square-fill plus-tree-ps"
+                } else if (plus_Nivel1.className.includes("bi-plus-square-fill")) {
+                    plus_Nivel1.className = "bi bi-dash-square plus-tree-ps"
+                }
+            }
+
+            const item_Nivel1 = newEk("div", "item-tree-ps", Nivel_1.nombres[0].texto, "categoria" + Nivel_1.key)
+            collapse_Nivel_1.appendChild(item_Nivel1)
+
+            let i = Nivel_1.key
+            let campo = Nivel_1
+            item_Nivel1.onclick = () => {
+                _make_panel_cat(tabla_categorias, campo, i, true)
+            }
+
+            const collapse_Nivel_2 = newEk("div", "align-items-center collapse show", "", "collapse_ps" + Nivel_1.key)
+            ul.appendChild(collapse_Nivel_2)
+
+            Nivel_1.subcategorias.forEach(Nivel_2 => {
+                const div_Nivel2 = newEk("div", "div-fluid")
+                collapse_Nivel_2.appendChild(div_Nivel2)
+
+                const div_botones_plus = newEk("div", "div-fluid")
+                div_Nivel2.appendChild(div_botones_plus)
+
+                const line_Nivel2 = newEk("div", "line-tree-ps")
+                div_botones_plus.appendChild(line_Nivel2)
+
+                const plus_Nivel2 = newEk("div", "bi bi-dash-square plus-tree-ps")
+                plus_Nivel2.setAttribute("data-bs-toggle", "collapse")
+                plus_Nivel2.setAttribute("data-bs-target", "#collapse_ps" + Nivel_2.key)
+                div_botones_plus.appendChild(plus_Nivel2)
+
+                plus_Nivel2.onclick = () => {
+                    if (plus_Nivel2.className.includes("bi-dash-square") == true) {
+                        plus_Nivel2.className = "bi bi-plus-square-fill plus-tree-ps"
+                    } else if (plus_Nivel2.className.includes("bi-plus-square-fill")) {
+                        plus_Nivel2.className = "bi bi-dash-square plus-tree-ps"
+                    }
+                }
+
+                const item_Nivel2 = newEk("div", "item-tree-ps", Nivel_2.nombres[0].texto, "categoria" + Nivel_2.key)
+                div_Nivel2.appendChild(item_Nivel2)
+
+                let ii = Nivel_2.key
+                let campo = Nivel_2
+                item_Nivel2.onclick = () => {
+                    _make_panel_cat(Nivel_1, campo, ii, true)
+                }
+
+                const collapse_Nivel_3 = newEk("div", "align-items-center collapse show", "", "collapse_ps" + Nivel_2.key)
+                collapse_Nivel_2.appendChild(collapse_Nivel_3)
+
+
+                Nivel_2.subcategorias.forEach(Nivel_3 => {
+                    const div_Nivel3 = newEk("div", "div-fluid")
+                    collapse_Nivel_3.appendChild(div_Nivel3)
+
+                    const div_botones_plus = newEk("div", "div-fluid")
+                    div_Nivel3.appendChild(div_botones_plus)
+
+                    const line_Nivel0 = newEk("div", "line-tree-single")
+                    div_botones_plus.appendChild(line_Nivel0)
+
+                    const line_Nivel3 = newEk("div", "line-tree-ps")
+                    div_botones_plus.appendChild(line_Nivel3)
+
+                    const plus_Nivel3 = newEk("div", "bi bi-dash-square plus-tree-ps")
+                    plus_Nivel3.setAttribute("data-bs-toggle", "collapse")
+                    plus_Nivel3.setAttribute("data-bs-target", "#collapse_ps" + Nivel_3.key)
+                    div_botones_plus.appendChild(plus_Nivel3)
+
+
+                    plus_Nivel3.onclick = () => {
+                        if (plus_Nivel3.className.includes("bi-dash-square") == true) {
+                            plus_Nivel3.className = "bi bi-plus-square-fill plus-tree-ps"
+                        } else if (plus_Nivel3.className.includes("bi-plus-square-fill")) {
+                            plus_Nivel3.className = "bi bi-dash-square plus-tree-ps"
+                        }
+                    }
+
+                    const item_Nivel3 = newEk("div", "item-tree-ps", Nivel_3.nombres[0].texto, "categoria" + Nivel_3.key)
+                    div_Nivel3.appendChild(item_Nivel3)
+
+                    let iii = Nivel_3.key
+                    let campo = Nivel_3
+
+                    item_Nivel3.onclick = () => {
+                        _make_panel_cat(Nivel_2, campo, iii, true)
+                    }
+
+                    const collapse_Nivel_4 = newEk("div", "align-items-center collapse show", "", "collapse_ps" + Nivel_3.key)
+                    collapse_Nivel_3.appendChild(collapse_Nivel_4)
+
+                    Nivel_3.subcategorias.forEach(Nivel_4 => {
+                        const div_Nivel4 = newEk("div", "div-fluid")
+                        collapse_Nivel_4.appendChild(div_Nivel4)
+
+                        const div_botones_plus = newEk("div", "div-fluid")
+                        div_Nivel4.appendChild(div_botones_plus)
+
+                        const line_Nivel0 = newEk("div", "line-tree-single")
+                        div_botones_plus.appendChild(line_Nivel0)
+
+                        const line_Nivel01 = newEk("div", "line-tree-single")
+                        div_botones_plus.appendChild(line_Nivel01)
+
+                        const line_Nivel = newEk("div", "line-tree-ps")
+                        div_botones_plus.appendChild(line_Nivel)
+
+                        const plus_Nivel = newEk("div", "bi bi-dash-square plus-tree-ps")
+                        plus_Nivel.setAttribute("data-bs-toggle", "collapse")
+                        plus_Nivel.setAttribute("data-bs-target", "#collapse_ps" + Nivel_4.key)
+                        div_botones_plus.appendChild(plus_Nivel)
+
+
+                        plus_Nivel.onclick = () => {
+                            if (plus_Nivel.className.includes("bi-dash-square") == true) {
+                                plus_Nivel.className = "bi bi-plus-square-fill plus-tree-ps"
+                            } else if (plus_Nivel.className.includes("bi-plus-square-fill")) {
+                                plus_Nivel.className = "bi bi-dash-square plus-tree-ps"
+                            }
+                        }
+
+                        const item_Nivel = newEk("div", "item-tree-ps", Nivel_4.nombres[0].texto, "categoria" + Nivel_4.key)
+                        div_Nivel4.appendChild(item_Nivel)
+
+                        let iiii = Nivel_4.key
+                        let campo = Nivel_4
+
+                        item_Nivel.onclick = () => {
+                            _make_panel_cat(Nivel_3, campo, iiii, true)
+                        }
+
+
+                        const collapse_Nivel_5 = newEk("div", "align-items-center collapse show", "", "collapse_ps" + Nivel_4.key)
+                        collapse_Nivel_4.appendChild(collapse_Nivel_5)
+                        Nivel_4.subcategorias.forEach(Nivel_5 => {
+                            const div_Nivel5 = newEk("div", "div-fluid")
+                            collapse_Nivel_5.appendChild(div_Nivel5)
+        
+                            const div_botones_plus = newEk("div", "div-fluid")
+                            div_Nivel4.appendChild(div_botones_plus)
+        
+                            const line_Nivel0 = newEk("div", "line-tree-single")
+                            div_botones_plus.appendChild(line_Nivel0)
+    
+                            const line_Nivel01 = newEk("div", "line-tree-single")
+                            div_botones_plus.appendChild(line_Nivel01)
+        
+                            const line_Nivel = newEk("div", "line-tree-ps")
+                            div_botones_plus.appendChild(line_Nivel)
+        
+                            const plus_Nivel = newEk("div", "bi bi-dash-square plus-tree-ps")
+                            plus_Nivel.setAttribute("data-bs-toggle", "collapse")
+                            plus_Nivel.setAttribute("data-bs-target", "#collapse_ps" + Nivel_5.key)
+                            div_botones_plus.appendChild(plus_Nivel)
+        
+        
+                            plus_Nivel.onclick = () => {
+                                if (plus_Nivel.className.includes("bi-dash-square") == true) {
+                                    plus_Nivel.className = "bi bi-plus-square-fill plus-tree-ps"
+                                } else if (plus_Nivel.className.includes("bi-plus-square-fill")) {
+                                    plus_Nivel.className = "bi bi-dash-square plus-tree-ps"
+                                }
+                            }
+        
+                            const item_Nivel = newEk("div", "item-tree-ps", Nivel_5.nombres[0].texto, "categoria" + Nivel_5.key)
+                            div_Nivel5.appendChild(item_Nivel)
+        
+                            let iiiii = Nivel_5.key
+                            let campo = Nivel_5
+                            
+                            item_Nivel.onclick = () => {
+                                _make_panel_cat(Nivel_4, campo, iiiii, false)
+                            }
+                        })
+                    })
+
+
+                })
+            })
+
+        })
+        if (tabla_categorias.length != 0) {
+            _make_panel_cat(tabla_categorias[0], tabla_categorias[0], tabla_categorias[0].key, true)
+        }
+
+        function _make_panel_cat(parent, cat, id, add) {
+            panel_list_edit.innerHTML = ""
+            //Si aún no es el último nivel, permitir agregar
+            const div_actions = newEk("div", "div-fluid-rg mb-3 bg-secondary p-3")
+            panel_list_edit.appendChild(div_actions)
+            if (add == true) {
+                const div_add_categoria = newEk("div", "item-texto-small text-white")
+                div_add_categoria.textContent = "Agregar subcategoria +"
+                div_actions.appendChild(div_add_categoria)
+                div_add_categoria.onclick = () => {
+
+                    cat.subcategorias.push(template_sd())
+                    Guardar_datos("TABLAS", global_proyecto["TABLAS"])
+                    config_dominios_list()
+                }
+            }
+            //Crea el menú para eliminar categorías
+            const div_del_categoria = newEk("div", "item-texto-small ms-2 text-white")
+            div_del_categoria.textContent = "Eliminar categoria -"
+            div_actions.appendChild(div_del_categoria)
+
+            div_del_categoria.onclick = () => {
+                //Esta verfificación se hace si estamos en el nivel superior
+                //o inferior, para aplicar el filtro
+                if (verificar_datos(parent.subcategorias) == true) {
+                    const filter_del = parent.subcategorias.filter(ele => ele.key != cat.key)
+                    parent.subcategorias = filter_del
+                    Guardar_datos("TABLAS", global_proyecto["TABLAS"])
+                    config_dominios_list()
+                } else {
+                    const filter_del = parent.filter(ele => ele.key != cat.key)
+                    global_proyecto["TABLAS"].DOMINIOS = filter_del
+                    Guardar_datos("TABLAS", global_proyecto["TABLAS"])
+                    config_dominios_list()
+
+                }
+
+            }
+
+            _make_nombre()
+            function _make_nombre() {
+                /////////////////////////////////////////////////////////////////
+                const row_nombre = newE("div", randomKey(20, '12345abcde'), "row align-items-center")
+                panel_list_edit.appendChild(row_nombre)
+
+                const col_nombre = newE("div", randomKey(20, '12345abcde'), "col-2 ms-2")
+                col_nombre.textContent = "Nombre"
+                row_nombre.appendChild(col_nombre)
+
+                const col_nombre_valores = newE("div", randomKey(20, '12345abcde'), "col")
+                row_nombre.appendChild(col_nombre_valores)
+
+                for (i in cat.nombres) {
+                    const lng = cat.nombres[i]
+                    const filter_lng = global_proyecto["PROYECTO"].Lngtraducion.filter(el => el.abreviacion == lng.abreviacion)
+                    if (filter_lng[0].visible == true) {
+                        const row_lng = newE("div", randomKey(20, '12345abcde'), "row align-items-center")
+                        col_nombre_valores.appendChild(row_lng)
+
+                        const col_nombre_lng = newE("div", randomKey(20, '12345abcde'), "col-auto tag-small")
+                        col_nombre_lng.textContent = lng.abreviacion
+                        row_lng.appendChild(col_nombre_lng)
+
+                        const col_nombre_value = newE("div", randomKey(20, '12345abcde'), "col")
+                        row_lng.appendChild(col_nombre_value)
+
+                        const int_lng_value = newE("input", "int-" + randomKey(20, '12345abcde'), "input-flat-dicc")
+                        col_nombre_value.appendChild(int_lng_value)
+
+                        const valueFromLng = cat.nombres.filter(ele => ele.key == lng.key)
+
+                        int_lng_value.value = valueFromLng[0].texto
+
+                        int_lng_value.onchange = () => {
+                            valueFromLng[0].texto = int_lng_value.value
+                            const item = byE("categoria" + id)
+                            item.textContent = cat.nombres[0].texto
+                            Guardar_datos("TABLAS", global_proyecto["TABLAS"])
+                        }
+                    }
+                }
+            }
+
+            //_make_abb()
+            function _make_abb() {
+                /////////////////////////////////////////////////////////////////
+                const row_nombre = newE("div", randomKey(20, '12345abcde'), "row align-items-center")
+                panel_list_edit.appendChild(row_nombre)
+
+                const col_nombre = newE("div", randomKey(20, '12345abcde'), "col-2 ms-2")
+                col_nombre.textContent = "Abreviación"
+                row_nombre.appendChild(col_nombre)
+
+                const col_nombre_valores = newE("div", randomKey(20, '12345abcde'), "col")
+                row_nombre.appendChild(col_nombre_valores)
+
+                for (i in cat.abreviaciones) {
+                    const lng = cat.abreviaciones[i]
+                    const filter_lng = global_proyecto["PROYECTO"].Lngtraducion.filter(el => el.abreviacion == lng.abreviacion)
+                    if (filter_lng[0].visible == true) {
+                        const row_lng = newE("div", randomKey(20, '12345abcde'), "row align-items-center")
+                        col_nombre_valores.appendChild(row_lng)
+
+                        const col_nombre_lng = newE("div", randomKey(20, '12345abcde'), "col-auto tag-small")
+                        col_nombre_lng.textContent = lng.abreviacion
+                        row_lng.appendChild(col_nombre_lng)
+
+                        const col_nombre_value = newE("div", randomKey(20, '12345abcde'), "col")
+                        row_lng.appendChild(col_nombre_value)
+
+                        const int_lng_value = newE("input", "int-" + randomKey(20, '12345abcde'), "input-flat-dicc")
+                        col_nombre_value.appendChild(int_lng_value)
+
+                        const valueFromLng = cat.abreviaciones.filter(ele => ele.key == lng.key)
+
+                        int_lng_value.value = valueFromLng[0].texto
+
+                        int_lng_value.onchange = () => {
+
+                            valueFromLng[0].texto = int_lng_value.value
+
+                            Guardar_datos("TABLAS", global_proyecto["TABLAS"])
+                        }
+                    }
+                }
+
+
+
+
+
+
+
+
+            }
+            _make_det()
+            function _make_det() {
+                /////////////////////////////////////////////////////////////////
+                const row_nombre = newE("div", randomKey(20, '12345abcde'), "row align-items-center")
+                panel_list_edit.appendChild(row_nombre)
+
+                const col_nombre = newE("div", randomKey(20, '12345abcde'), "col-2 ms-2")
+                col_nombre.textContent = "Definicion"
+                row_nombre.appendChild(col_nombre)
+
+                const col_nombre_valores = newE("div", randomKey(20, '12345abcde'), "col")
+                row_nombre.appendChild(col_nombre_valores)
+
+                for (i in cat.definiciones) {
+                    const lng = cat.definiciones[i]
+                    const filter_lng = global_proyecto["PROYECTO"].Lngtraducion.filter(el => el.abreviacion == lng.abreviacion)
+                    if (filter_lng[0].visible == true) {
+                        const row_lng = newE("div", randomKey(20, '12345abcde'), "row align-items-center")
+                        col_nombre_valores.appendChild(row_lng)
+
+                        const col_nombre_lng = newE("div", randomKey(20, '12345abcde'), "col-auto tag-small")
+                        col_nombre_lng.textContent = lng.abreviacion
+                        row_lng.appendChild(col_nombre_lng)
+
+                        const col_nombre_value = newE("div", randomKey(20, '12345abcde'), "col")
+                        row_lng.appendChild(col_nombre_value)
+
+                        const int_lng_value = newE("textarea", "int-" + randomKey(20, '12345abcde'), "input-flat-dicc")
+                        int_lng_value.rows = 3
+                        col_nombre_value.appendChild(int_lng_value)
+
+                        const valueFromLng = cat.definiciones.filter(ele => ele.key == lng.key)
+
+                        int_lng_value.value = valueFromLng[0].texto
+
+                        int_lng_value.onchange = () => {
+
+                            valueFromLng[0].texto = int_lng_value.value
+
+                            Guardar_datos("TABLAS", global_proyecto["TABLAS"])
+                        }
+                    }
+                }
+
+            }
+        }
+
+    }
+    byE("btnAceptar_open").onclick = () => {
+        make_lexicon()
     }
 
 }

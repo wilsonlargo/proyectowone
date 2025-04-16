@@ -63,6 +63,30 @@
                         </span>
                     </a>
                 </div>
+
+                <a data-bs-toggle="collapse" href="#collapseListas" hidden="true">
+                    <i class="fs-3 bi-list-task"></i>
+                    <span class="ms-1 d-none d-sm-inline">
+                        Listas
+                    </span>
+                </a>
+                <div class="collapse bg-white ms-3" id="collapseListas" style="cursor: pointer; font-size: 10pt;">
+                    <a onclick="open_ps()">
+                        <span class="ms-1 d-none d-sm-inline" >
+                            Categorías gramaticales
+                        </span>
+                    </a>
+                    <a onclick="config_morfemas()">
+                        <span class="ms-1 d-none d-sm-inline" >
+                            Tipos de morfema
+                        </span>
+                    </a>
+                    <a onclick="config_contexto()">
+                        <span class="ms-1 d-none d-sm-inline" >
+                            Contextos
+                        </span>
+                    </a>
+                </div>
             </div>
             <a class="nav-link active text-center mb-1 fs-5" aria-current="page" data-bs-toggle="collapse"
                 href="#menu"><i class="bi bi-list"></i></a>

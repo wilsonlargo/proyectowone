@@ -221,7 +221,7 @@ function template_ps() {
     }
     const template = {
         "key": "ps-" + randomKey(10, '12345abcde'),
-        "nombre": ns,
+        "nombres": ns,
         "abreviaciones": abbs,
         "definiciones": dess,
         "subcategorias": [],
@@ -229,6 +229,54 @@ function template_ps() {
             "prefijos":[],
             "sufijos":[]
         }
+    }
+    return template
+}
+function template_sd() {
+    //Debo procesar antes los idiomas incluidos para análisis
+    let ns = []
+    let abbs = []
+    let dess = []
+    if (verificar_datos(global_proyecto["PROYECTO"].Lngtraducion) == true) {
+        const lngs = global_proyecto["PROYECTO"].Lngtraducion
+        lngs.forEach(l => {
+            const item = {
+                "key": "lng-" + randomKey(10, '12345abcde'),
+                "texto": "Categoria en " + l.nombre,
+                "idioma": l.nombre,
+                "abreviacion": l.abreviacion,
+                "visible": l.visible
+            }
+            ns.push(item)
+        })
+        lngs.forEach(l => {
+            const item = {
+                "key": "lng-" + randomKey(10, '12345abcde'),
+                "texto": "",
+                "idioma": l.nombre,
+                "abreviacion": l.abreviacion,
+                "visible": l.visible
+            }
+            abbs.push(item)
+        })
+        lngs.forEach(l => {
+            const item = {
+                "key": "lng-" + randomKey(10, '12345abcde'),
+                "texto": "",
+                "idioma": l.nombre,
+                "abreviacion": l.abreviacion,
+                "visible": l.visible
+            }
+            dess.push(item)
+        })
+        //
+    }
+    const template = {
+        "key": "sd-" + randomKey(10, '12345abcde'),
+        "nombres": ns,
+        "abreviaciones": abbs,
+        "definiciones": dess,
+        "subcategorias": [],
     }
     return template
 }

@@ -113,9 +113,6 @@ function make_lexicon() {
         }
 
 
-
-
-
         /////////////////////////////////////////////
         const div_dropdown_listas = newE("div", "div_dropdown_listas", "dropdown mt-1")
         bts_move.appendChild(div_dropdown_listas)
@@ -156,10 +153,19 @@ function make_lexicon() {
         item_ps.setAttribute("data-bs-target", "#open_modal")
         ul_menu_listas.appendChild(item_ps)
         item_ps.onclick = () => {
-            byE("class_modal_open").className = "modal-dialog modal-fullscreen"
-            config_gramatical_list()
+            open_ps()
+
         }
 
+        const item_sd = newE("div", "item_ps", "item-menu")
+        item_sd.textContent = "Dominios semanticos"
+        item_sd.setAttribute("data-bs-toggle", "modal")
+        item_sd.setAttribute("data-bs-target", "#open_modal")
+        ul_menu_listas.appendChild(item_sd)
+        item_sd.onclick = () => {
+            byE("class_modal_open").className = "modal-dialog modal-fullscreen"
+            config_dominios_list()
+        }
     }
     make_spliter_panel()
     function make_spliter_panel() {
@@ -251,7 +257,13 @@ function make_lexicon() {
 
         const col_lx_ini = newEk("div", "div fs-5 me-1")
         col_lx_ini.style.width = "2px"
-        col_lx_ini.textContent = entrada.lexeme.ini
+
+        try {
+            col_lx_ini.textContent = entrada.lexeme.ini
+        } catch (error) {
+            return
+        }
+
         row_lx_values.appendChild(col_lx_ini)
 
         const col_lx = newEk("div", "")
@@ -636,7 +648,7 @@ function make_lexicon() {
                             }
 
 
-                            const item_Nivel1 = newEk("div", "item-tree-ps", Nivel_1.nombre[0].texto)
+                            const item_Nivel1 = newEk("div", "item-tree-ps", Nivel_1.nombres[0].texto)
                             collapse_Nivel_1.appendChild(item_Nivel1)
 
                             item_Nivel1.onclick = () => {
@@ -671,7 +683,7 @@ function make_lexicon() {
                                     }
                                 }
 
-                                const item_Nivel2 = newEk("div", "item-tree-ps", Nivel_2.nombre[0].texto)
+                                const item_Nivel2 = newEk("div", "item-tree-ps", Nivel_2.nombres[0].texto)
                                 div_Nivel2.appendChild(item_Nivel2)
 
                                 item_Nivel2.onclick = () => {
@@ -706,7 +718,7 @@ function make_lexicon() {
                                             plus_Nivel3.className = "bi bi-dash-square plus-tree-ps"
                                         }
                                     }
-                                    const item_Nivel3 = newEk("div", "item-tree-ps", Nivel_3.nombre[0].texto)
+                                    const item_Nivel3 = newEk("div", "item-tree-ps", Nivel_3.nombres[0].texto)
                                     div_Nivel3.appendChild(item_Nivel3)
 
                                     item_Nivel3.onclick = () => {
@@ -718,7 +730,7 @@ function make_lexicon() {
 
                         function _put_ps(categoria) {
                             cat_sel = {
-                                "categoria": categoria.nombre[0].texto,
+                                "categoria": categoria.nombres[0].texto,
                                 "abreviacion": categoria.abreviaciones[0].texto
                             }
 
@@ -1715,11 +1727,15 @@ function make_lexicon() {
                         col_ps_value.appendChild(row_ps_value)
 
                         ////////////////////////////////////////////////
+
                         const col_ps_values = newE("div", randomKey(10, '12345abcde'), "col div-fluid fw-bold ms-5")
-                        try {
+                        //col_ps_values.innerHTML = `<b class="me-3">${sn.ps.nombres[0].texto}</b> [<i>${sn.ps.abreviaciones[0].texto}</i>]`
+
+
+                        if (sn.ps == "Indefinido") {
+                            col_ps_values.innerHTML = `<b class="me-3">Indefinido</b> [<i></i>]`
+                        } else {
                             col_ps_values.innerHTML = `<b class="me-3">${sn.ps.nombres[0].texto}</b> [<i>${sn.ps.abreviaciones[0].texto}</i>]`
-                        } catch (error) {
-                            col_ps_values.textContent = "Indefinido"
                         }
 
                         row_ps_value.appendChild(col_ps_values)
@@ -2038,26 +2054,59 @@ function make_sn_tree(ul, input, sn, entrada) {
                         div_categoria.textContent = "?:"
                     }
 
-                    const input_infle = newEk("input", "")
-                    input_infle.value = "?"
+                    const input_infle = newEk("select", "form-control")
+                    //input_infle.value = "?"
                     div_acciones.appendChild(input_infle)
+
+                    //Busco la categoría en la lista de categorías
+
+                    let tabla_categorias = global_proyecto["TABLAS"]["CATGRAMATICAL"]
+                    const filtered_cat = tabla_categorias.filter(ele => ele["abreviaciones"][0].texto == cat_input)
+                    
+                    //Leemos todos los elementos de la tabla categorias de manera anidada
+
+                    let Inflexiones=[]
+                    tabla_categorias.forEach(cat => {
+                        const it=cat["abreviaciones"][0].texto.toLowerCase()
+                        if(cat_input.toLowerCase()==it){
+                            Inflexiones=cat.plantilla[pos.toLowerCase()+"s"]
+                        }
+                        cat.subcategorias.forEach(_cat_II=>{
+                            const itII=_cat_II["abreviaciones"][0].texto.toLowerCase()
+                            if(cat_input.toLowerCase()==itII){
+                                Inflexiones=_cat_II.plantilla[pos.toLowerCase()+"s"]
+                            }
+                            _cat_II.subcategorias.forEach(_cat_III=>{
+                                const itIII=_cat_III["abreviaciones"][0].texto.toLowerCase()
+                                if(cat_input.toLowerCase()==itIII){
+                                    Inflexiones=_cat_III.plantilla[pos.toLowerCase()+"s"]
+                                }
+                            })
+                        })                       
+                    })
+
+                    input_infle.innerHTML=""
+                    const item= newEk("option", "","Indefinido")
+                    item.value="Indefinido"
+                    input_infle.appendChild(item)
+                    Inflexiones.forEach(inf=>{
+                        const item= newEk("option", "",inf.nombre)
+                        item.value=inf.nombre
+                        input_infle.appendChild(item)
+                        
+                    })
 
                     input_infle.onchange = () => {
                         new_ps = template_ps()
-                        new_ps.nombre[0].texto = "Inflexional"
+                        new_ps.nombres[0].texto = "Inflexional"
                         new_ps.abreviaciones[0].texto = div_categoria.textContent + input_infle.value
                         sn.ps = new_ps
-
-                        input.innerHTML = `<b class="me-3">${sn.ps.nombre[0].texto}</b> [<i>${sn.ps.abreviaciones[0].texto}</i>]`
+                        input.innerHTML = `<b class="me-3">${sn.ps.nombres[0].texto}</b> [<i>${sn.ps.abreviaciones[0].texto}</i>]`
                         Guardar_datos("LEXICON", global_proyecto["LEXICON"])
-
                     }
                 }
-
             }
-
         } else {
-            sn.ps = "Indefinido"
             _sub_make_ps_tree(modal_panel, "", sn, entrada)
         }
 
@@ -2091,7 +2140,7 @@ function make_sn_tree(ul, input, sn, entrada) {
                 }
 
 
-                const item_Nivel1 = newEk("div", "item-tree-ps", Nivel_1.nombre[0].texto)
+                const item_Nivel1 = newEk("div", "item-tree-ps", Nivel_1.nombres[0].texto)
                 collapse_Nivel_1.appendChild(item_Nivel1)
 
                 item_Nivel1.onclick = () => {
@@ -2109,16 +2158,13 @@ function make_sn_tree(ul, input, sn, entrada) {
                         Guardar_datos("LEXICON", global_proyecto["LEXICON"])
                     } else {
                         const new_ps = {
-                            "nombres": Nivel_1.nombre,
+                            "nombres": Nivel_1.nombres,
                             "abreviaciones": Nivel_1.abreviaciones
                         }
-
                         sn.ps = new_ps
                         input.innerHTML = `<b class="me-3">${sn.ps.nombres[0].texto}</b> [<i>${sn.ps.abreviaciones[0].texto}</i>]`
                         Guardar_datos("LEXICON", global_proyecto["LEXICON"])
                     }
-
-
                 }
 
                 const collapse_Nivel_2 = newEk("div", "align-items-center collapse show", "", "collapse_ps" + Nivel_1.key)
@@ -2152,7 +2198,7 @@ function make_sn_tree(ul, input, sn, entrada) {
                         }
                     }
 
-                    const item_Nivel2 = newEk("div", "item-tree-ps", Nivel_2.nombre[0].texto)
+                    const item_Nivel2 = newEk("div", "item-tree-ps", Nivel_2.nombres[0].texto)
                     div_Nivel2.appendChild(item_Nivel2)
 
                     item_Nivel2.onclick = () => {
@@ -2170,7 +2216,7 @@ function make_sn_tree(ul, input, sn, entrada) {
                             Guardar_datos("LEXICON", global_proyecto["LEXICON"])
                         } else {
                             const new_ps = {
-                                "nombres": Nivel_2.nombre,
+                                "nombres": Nivel_2.nombres,
                                 "abreviaciones": Nivel_2.abreviaciones
                             }
 
@@ -2208,7 +2254,7 @@ function make_sn_tree(ul, input, sn, entrada) {
                                 plus_Nivel3.className = "bi bi-dash-square plus-tree-ps"
                             }
                         }
-                        const item_Nivel3 = newEk("div", "item-tree-ps", Nivel_3.nombre[0].texto)
+                        const item_Nivel3 = newEk("div", "item-tree-ps", Nivel_3.nombres[0].texto)
                         div_Nivel3.appendChild(item_Nivel3)
 
                         item_Nivel3.onclick = () => {
@@ -2226,7 +2272,7 @@ function make_sn_tree(ul, input, sn, entrada) {
                                 Guardar_datos("LEXICON", global_proyecto["LEXICON"])
                             } else {
                                 const new_ps = {
-                                    "nombres": Nivel_3.nombre,
+                                    "nombres": Nivel_3.nombres,
                                     "abreviaciones": Nivel_3.abreviaciones
                                 }
 
@@ -2261,5 +2307,10 @@ async function download(data, type) {
     const writableStream = await newHandle.createWritable();
     await writableStream.write(blob);
     await writableStream.close();
+}
+
+function open_ps(){
+    byE("class_modal_open").className = "modal-dialog modal-fullscreen"
+    config_gramatical_list()
 }
 

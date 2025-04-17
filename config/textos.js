@@ -1124,7 +1124,7 @@ function make_ps_tree(ul, input, field, option2) {
             }
 
 
-            const item_Nivel1 = newEk("div", "item-tree-ps", Nivel_1.nombre[0].texto)
+            const item_Nivel1 = newEk("div", "item-tree-ps", Nivel_1.nombres[0].texto)
             collapse_Nivel_1.appendChild(item_Nivel1)
 
             item_Nivel1.onclick = () => {
@@ -1133,12 +1133,12 @@ function make_ps_tree(ul, input, field, option2) {
                 } else if (option2 == "for_derivacional") {
                     input.textContent = Nivel_1.abreviaciones[0].texto
                 } else if (option2 == "for_entry") {
-                    input.textContent = Nivel_1.abreviaciones[0].texto + "-" + Nivel_1.nombre[0].texto
+                    input.textContent = Nivel_1.abreviaciones[0].texto + "-" + Nivel_1.nombres[0].texto
                 } else if (option2 == "for_text") {
                     input.textContent = Nivel_1.abreviaciones[0].texto
                     field["categoria-general"] = {
                         "abreviacion": Nivel_1.abreviaciones[0].texto,
-                        "nombre": Nivel_1.nombre[0].texto
+                        "nombre": Nivel_1.nombres[0].texto
                     }
                     save_data(global_proyecto["PARSER-WORD"])
                 }
@@ -1171,7 +1171,7 @@ function make_ps_tree(ul, input, field, option2) {
                     }
                 }
 
-                const item_Nivel2 = newEk("div", "item-tree-ps", Nivel_2.nombre[0].texto)
+                const item_Nivel2 = newEk("div", "item-tree-ps", Nivel_2.nombres[0].texto)
                 div_Nivel2.appendChild(item_Nivel2)
 
                 item_Nivel2.onclick = () => {
@@ -1181,12 +1181,12 @@ function make_ps_tree(ul, input, field, option2) {
                     } else if (option2 == "for_derivacional") {
                         input.textContent = Nivel_2.abreviaciones[0].texto
                     } else if (option2 == "for_entry") {
-                        input.textContent = Nivel_2.abreviaciones[0].texto + "-" + Nivel_2.nombre[0].texto
+                        input.textContent = Nivel_2.abreviaciones[0].texto + "-" + Nivel_2.nombres[0].texto
                     } else if (option2 == "for_text") {
                         input.textContent = Nivel_2.abreviaciones[0].texto
                         field["categoria-general"] = {
                             "abreviacion": Nivel_2.abreviaciones[0].texto,
-                            "nombre": Nivel_2.nombre[0].texto
+                            "nombre": Nivel_2.nombres[0].texto
                         }
                         save_data(global_proyecto["PARSER-WORD"])
                     }
@@ -1221,7 +1221,7 @@ function make_ps_tree(ul, input, field, option2) {
                         }
                     }
 
-                    const item_Nivel3 = newEk("div", "item-tree-ps", Nivel_3.nombre[0].texto)
+                    const item_Nivel3 = newEk("div", "item-tree-ps", Nivel_3.nombres[0].texto)
                     div_Nivel3.appendChild(item_Nivel3)
 
                     item_Nivel3.onclick = () => {
@@ -1230,12 +1230,12 @@ function make_ps_tree(ul, input, field, option2) {
                         } else if (option2 == "for_derivacional") {
                             input.textContent = Nivel_3.abreviaciones[0].texto
                         } else if (option2 == "for_entry") {
-                            input.textContent = Nivel_3.abreviaciones[0].texto + "-" + Nivel_2.nombre[0].texto
+                            input.textContent = Nivel_3.abreviaciones[0].texto + "-" + Nivel_2.nombres[0].texto
                         } else if (option2 == "for_text") {
                             input.textContent = Nivel_3.abreviaciones[0].texto
                             field["categoria-general"] = {
                                 "abreviacion": Nivel_3.abreviaciones[0].texto,
-                                "nombre": Nivel_3.nombre[0].texto
+                                "nombre": Nivel_3.nombres[0].texto
                             }
                             save_data(global_proyecto["PARSER-WORD"])
                         }

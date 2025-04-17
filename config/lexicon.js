@@ -241,6 +241,7 @@ function make_lexicon() {
             entrada["clase-varianteOf"].visible = true
             entrada["clase-etimologia"].visible = true
             entrada["clase-fonetica"].visible = true
+            entrada["clase-sd"].visible = true
             Guardar_datos("LEXICON", global_proyecto["LEXICON"])
             _make_lexicon_edit(entrada)
         }
@@ -1751,7 +1752,12 @@ function make_lexicon() {
                         col_ps_items.appendChild(btn_menu_ps_items)
 
                         const div_menu_ps = newE("div", randomKey(10, '12345abcde'), "m-3 menu-group-scroll-lg div-categoria")
-                        make_sn_tree(div_menu_ps, col_ps_values, sn, entrada)
+                       
+                        btn_menu_ps_items.onclick=()=>{
+                            make_sn_tree(div_menu_ps, col_ps_values, sn, entrada)
+                        }
+                       
+                        
                     }
 
                     const div_sec_ejemplos = newE("div", randomKey(10, '12345abcde'), "")
@@ -1898,12 +1904,102 @@ function make_lexicon() {
                         }
 
                     }
-
                     s++
                 })
 
             }
+
+
         }
+
+        /////////////////////////////////////////////////////////////////
+        ///Configuración dominios semánticos
+        if (entrada["clase-sd"].visible == true) {
+            //Contenedor de categoria lx y sus variantes
+            const div_sd = newEk("div", "div-categoria mt-2")
+            panel_lexicon_edit.appendChild(div_sd)
+
+            const row_A_label = newEk("div", "row align-items-start")
+            div_sd.appendChild(row_A_label)
+
+            const col_menu_AA = newEk("div", "col-auto")
+            row_A_label.appendChild(col_menu_AA)
+
+            const btn_menu_AA = newEk("div", "bi bi-arrow-down-circle-fill btn-context-lx")
+            btn_menu_AA.setAttribute("data-bs-toggle", "dropdown")
+            col_menu_AA.appendChild(btn_menu_AA)
+
+            const ul_menu_sd = newEk("ul", "dropdown-menu shadow")
+            col_menu_AA.appendChild(ul_menu_sd)
+
+            const div_visible_sd = newEk("div", "form-check")
+            ul_menu_sd.appendChild(div_visible_sd)
+
+            const int_visible_sd = newEk("input", "form-check-input-check")
+            int_visible_sd.type = "checkbox"
+            div_visible_sd.appendChild(int_visible_sd)
+
+            const int_visible_label = newEk("label", "form-check-label ms-2", "", "int_visible_sd")
+            int_visible_label.for = "int_visible_sd"
+            int_visible_label.textContent = "Visible"
+            div_visible_sd.appendChild(int_visible_label)
+
+            int_visible_label.checked = entrada["clase-sd"].visible
+            int_visible_label.onchange = () => {
+                entrada["clase-sd"].visible = int_visible_label.checked
+                Guardar_datos("LEXICON", global_proyecto["LEXICON"])
+                _make_lexicon_edit(entrada)
+            }
+            const col_menu_label = newEk("div", "col-auto", "Domino semántico")
+            row_A_label.appendChild(col_menu_label)
+
+            const col_value = newEk("div", "col")
+            row_A_label.appendChild(col_value)
+
+            const row_sd_value = newEk("div", "row align-items-end")
+            col_value.appendChild(row_sd_value)
+
+            const col_sd_values = newEk("div", "col")
+            row_sd_value.appendChild(col_sd_values)
+
+            const div_sd_values = newEk("div", "col div-fluid-wrap input-flat-dicc")
+            col_sd_values.appendChild(div_sd_values)
+
+            const col_sd_items = newEk("div", "col-auto")
+            row_sd_value.appendChild(col_sd_items)
+
+            const btn_menu_sd_items = newEk("button", "btn btn-light btn-sm fw-bold")
+            btn_menu_sd_items.type = "button"
+            btn_menu_sd_items.textContent = "..."
+            btn_menu_sd_items.setAttribute("data-bs-toggle", "modal")
+            btn_menu_sd_items.setAttribute("data-bs-target", "#dialog_modal")
+            col_sd_items.appendChild(btn_menu_sd_items)
+
+            btn_menu_sd_items.onclick=()=>{
+                make_sd_tree(div_sd_values, entrada)
+            }
+
+            _fill_sd()
+            function _fill_sd() {
+                div_sd_values.innerHTML = ""
+                entrada["clase-sd"].dominios.forEach(sd => {
+                    const sd_item = newEk("div", "", sd.nombres[0].texto)
+                    div_sd_values.appendChild(sd_item)
+        
+                    const div_borrar = newEk("div", "ms-2 me-4 bi bi-x-circle-fill btn-context-lx")
+                    div_sd_values.appendChild(div_borrar)
+                    div_borrar.onclick = () => {
+                        const dominios_lx = entrada["clase-sd"].dominios
+                        const filter_del = dominios_lx.filter(ele => ele.nombres[0].texto !=sd.nombres[0].texto)
+                        entrada["clase-sd"].dominios=filter_del
+                        Guardar_datos("LEXICON", global_proyecto["LEXICON"])
+                        _fill_sd()
+                    }
+                })
+            }
+
+        }
+
 
         //////////////////////////////////77
         byE("bt_del").onclick = () => {
@@ -1962,7 +2058,6 @@ function _delete_registro(DATA, CAMPO, ID) {
 }
 
 function make_sn_tree(ul, input, sn, entrada) {
-
     //Evaluamos si la entrada actual tiene forma de afijo
     //Si es asì aplica una plantilla segùn la categoria
     //Temporal por ahora
@@ -2062,38 +2157,38 @@ function make_sn_tree(ul, input, sn, entrada) {
 
                     let tabla_categorias = global_proyecto["TABLAS"]["CATGRAMATICAL"]
                     const filtered_cat = tabla_categorias.filter(ele => ele["abreviaciones"][0].texto == cat_input)
-                    
+
                     //Leemos todos los elementos de la tabla categorias de manera anidada
 
-                    let Inflexiones=[]
+                    let Inflexiones = []
                     tabla_categorias.forEach(cat => {
-                        const it=cat["abreviaciones"][0].texto.toLowerCase()
-                        if(cat_input.toLowerCase()==it){
-                            Inflexiones=cat.plantilla[pos.toLowerCase()+"s"]
+                        const it = cat["abreviaciones"][0].texto.toLowerCase()
+                        if (cat_input.toLowerCase() == it) {
+                            Inflexiones = cat.plantilla[pos.toLowerCase() + "s"]
                         }
-                        cat.subcategorias.forEach(_cat_II=>{
-                            const itII=_cat_II["abreviaciones"][0].texto.toLowerCase()
-                            if(cat_input.toLowerCase()==itII){
-                                Inflexiones=_cat_II.plantilla[pos.toLowerCase()+"s"]
+                        cat.subcategorias.forEach(_cat_II => {
+                            const itII = _cat_II["abreviaciones"][0].texto.toLowerCase()
+                            if (cat_input.toLowerCase() == itII) {
+                                Inflexiones = _cat_II.plantilla[pos.toLowerCase() + "s"]
                             }
-                            _cat_II.subcategorias.forEach(_cat_III=>{
-                                const itIII=_cat_III["abreviaciones"][0].texto.toLowerCase()
-                                if(cat_input.toLowerCase()==itIII){
-                                    Inflexiones=_cat_III.plantilla[pos.toLowerCase()+"s"]
+                            _cat_II.subcategorias.forEach(_cat_III => {
+                                const itIII = _cat_III["abreviaciones"][0].texto.toLowerCase()
+                                if (cat_input.toLowerCase() == itIII) {
+                                    Inflexiones = _cat_III.plantilla[pos.toLowerCase() + "s"]
                                 }
                             })
-                        })                       
+                        })
                     })
 
-                    input_infle.innerHTML=""
-                    const item= newEk("option", "","Indefinido")
-                    item.value="Indefinido"
+                    input_infle.innerHTML = ""
+                    const item = newEk("option", "", "Indefinido")
+                    item.value = "Indefinido"
                     input_infle.appendChild(item)
-                    Inflexiones.forEach(inf=>{
-                        const item= newEk("option", "",inf.nombre)
-                        item.value=inf.nombre
+                    Inflexiones.forEach(inf => {
+                        const item = newEk("option", "", inf.nombre)
+                        item.value = inf.nombre
                         input_infle.appendChild(item)
-                        
+
                     })
 
                     input_infle.onchange = () => {
@@ -2107,6 +2202,7 @@ function make_sn_tree(ul, input, sn, entrada) {
                 }
             }
         } else {
+
             _sub_make_ps_tree(modal_panel, "", sn, entrada)
         }
 
@@ -2291,6 +2387,271 @@ function make_sn_tree(ul, input, sn, entrada) {
 
 }
 
+function make_sd_tree(input, entrada) {
+    input.innerHTML=""
+    const modal_panel = byE("modal_panel_dialog")
+    modal_panel.className = "modal-body"
+    modal_panel.innerHTML = ""
+
+    if (verificar_datos(global_proyecto["TABLAS"].DOMINIOS) == true) {
+        const tabla_categorias = global_proyecto["TABLAS"].DOMINIOS
+        const ul = byE("modal_panel_dialog")
+
+        tabla_categorias.forEach(Nivel_1 => {
+            const collapse_Nivel_1 = newEk("div", "div-fluid align-items-center")
+            ul.appendChild(collapse_Nivel_1)
+
+            const plus_Nivel1 = newEk("div", "bi bi-dash-square plus-tree-ps")
+            plus_Nivel1.setAttribute("data-bs-toggle", "collapse")
+            plus_Nivel1.setAttribute("data-bs-target", "#collapse_ps" + Nivel_1.key)
+            collapse_Nivel_1.appendChild(plus_Nivel1)
+
+            plus_Nivel1.onclick = () => {
+                if (plus_Nivel1.className.includes("bi-dash-square") == true) {
+                    plus_Nivel1.className = "bi bi-plus-square-fill plus-tree-ps"
+                } else if (plus_Nivel1.className.includes("bi-plus-square-fill")) {
+                    plus_Nivel1.className = "bi bi-dash-square plus-tree-ps"
+                }
+            }
+
+            const item_Nivel1 = newEk("div", "item-tree-ps", Nivel_1.nombres[0].texto, "categoria" + Nivel_1.key)
+            collapse_Nivel_1.appendChild(item_Nivel1)
+
+            let i = Nivel_1.key
+            let campo = Nivel_1
+            item_Nivel1.onclick = () => {
+                const new_sd = {
+                    "nombres": Nivel_1.nombres,
+                    "abreviaciones": Nivel_1.abreviaciones
+                }
+
+                entrada["clase-sd"].dominios.push(new_sd)
+                Guardar_datos("LEXICON", global_proyecto["LEXICON"])
+                _fill_sd()
+            }
+
+            const collapse_Nivel_2 = newEk("div", "align-items-center collapse show", "", "collapse_ps" + Nivel_1.key)
+            ul.appendChild(collapse_Nivel_2)
+
+            Nivel_1.subcategorias.forEach(Nivel_2 => {
+                const div_Nivel2 = newEk("div", "div-fluid")
+                collapse_Nivel_2.appendChild(div_Nivel2)
+
+                const div_botones_plus = newEk("div", "div-fluid")
+                div_Nivel2.appendChild(div_botones_plus)
+
+                const line_Nivel2 = newEk("div", "line-tree-ps")
+                div_botones_plus.appendChild(line_Nivel2)
+
+                const plus_Nivel2 = newEk("div", "bi bi-dash-square plus-tree-ps")
+                plus_Nivel2.setAttribute("data-bs-toggle", "collapse")
+                plus_Nivel2.setAttribute("data-bs-target", "#collapse_ps" + Nivel_2.key)
+                div_botones_plus.appendChild(plus_Nivel2)
+
+                plus_Nivel2.onclick = () => {
+                    if (plus_Nivel2.className.includes("bi-dash-square") == true) {
+                        plus_Nivel2.className = "bi bi-plus-square-fill plus-tree-ps"
+                    } else if (plus_Nivel2.className.includes("bi-plus-square-fill")) {
+                        plus_Nivel2.className = "bi bi-dash-square plus-tree-ps"
+                    }
+                }
+
+                const item_Nivel2 = newEk("div", "item-tree-ps", Nivel_2.nombres[0].texto, "categoria" + Nivel_2.key)
+                div_Nivel2.appendChild(item_Nivel2)
+
+                let ii = Nivel_2.key
+                let campo = Nivel_2
+                item_Nivel2.onclick = () => {
+                    const new_sd = {
+                        "nombres": Nivel_2.nombres,
+                        "abreviaciones": Nivel_2.abreviaciones
+                    }
+    
+                    entrada["clase-sd"].dominios.push(new_sd)
+                    Guardar_datos("LEXICON", global_proyecto["LEXICON"])
+                    _fill_sd()
+
+                }
+
+                const collapse_Nivel_3 = newEk("div", "align-items-center collapse show", "", "collapse_ps" + Nivel_2.key)
+                collapse_Nivel_2.appendChild(collapse_Nivel_3)
+
+
+                Nivel_2.subcategorias.forEach(Nivel_3 => {
+                    const div_Nivel3 = newEk("div", "div-fluid")
+                    collapse_Nivel_3.appendChild(div_Nivel3)
+
+                    const div_botones_plus = newEk("div", "div-fluid")
+                    div_Nivel3.appendChild(div_botones_plus)
+
+                    const line_Nivel0 = newEk("div", "line-tree-single")
+                    div_botones_plus.appendChild(line_Nivel0)
+
+                    const line_Nivel3 = newEk("div", "line-tree-ps")
+                    div_botones_plus.appendChild(line_Nivel3)
+
+                    const plus_Nivel3 = newEk("div", "bi bi-dash-square plus-tree-ps")
+                    plus_Nivel3.setAttribute("data-bs-toggle", "collapse")
+                    plus_Nivel3.setAttribute("data-bs-target", "#collapse_ps" + Nivel_3.key)
+                    div_botones_plus.appendChild(plus_Nivel3)
+
+
+                    plus_Nivel3.onclick = () => {
+                        if (plus_Nivel3.className.includes("bi-dash-square") == true) {
+                            plus_Nivel3.className = "bi bi-plus-square-fill plus-tree-ps"
+                        } else if (plus_Nivel3.className.includes("bi-plus-square-fill")) {
+                            plus_Nivel3.className = "bi bi-dash-square plus-tree-ps"
+                        }
+                    }
+
+                    const item_Nivel3 = newEk("div", "item-tree-ps", Nivel_3.nombres[0].texto, "categoria" + Nivel_3.key)
+                    div_Nivel3.appendChild(item_Nivel3)
+
+                    let iii = Nivel_3.key
+                    let campo = Nivel_3
+
+                    item_Nivel3.onclick = () => {
+                        const new_sd = {
+                            "nombres": Nivel_3.nombres,
+                            "abreviaciones": Nivel_3.abreviaciones
+                        }
+        
+                        entrada["clase-sd"].dominios.push(new_sd)
+                        Guardar_datos("LEXICON", global_proyecto["LEXICON"])
+                        _fill_sd()
+
+                    }
+
+                    const collapse_Nivel_4 = newEk("div", "align-items-center collapse show", "", "collapse_ps" + Nivel_3.key)
+                    collapse_Nivel_3.appendChild(collapse_Nivel_4)
+
+                    Nivel_3.subcategorias.forEach(Nivel_4 => {
+                        const div_Nivel4 = newEk("div", "div-fluid")
+                        collapse_Nivel_4.appendChild(div_Nivel4)
+
+                        const div_botones_plus = newEk("div", "div-fluid")
+                        div_Nivel4.appendChild(div_botones_plus)
+
+                        const line_Nivel0 = newEk("div", "line-tree-single")
+                        div_botones_plus.appendChild(line_Nivel0)
+
+                        const line_Nivel01 = newEk("div", "line-tree-single")
+                        div_botones_plus.appendChild(line_Nivel01)
+
+                        const line_Nivel = newEk("div", "line-tree-ps")
+                        div_botones_plus.appendChild(line_Nivel)
+
+                        const plus_Nivel = newEk("div", "bi bi-dash-square plus-tree-ps")
+                        plus_Nivel.setAttribute("data-bs-toggle", "collapse")
+                        plus_Nivel.setAttribute("data-bs-target", "#collapse_ps" + Nivel_4.key)
+                        div_botones_plus.appendChild(plus_Nivel)
+
+
+                        plus_Nivel.onclick = () => {
+                            if (plus_Nivel.className.includes("bi-dash-square") == true) {
+                                plus_Nivel.className = "bi bi-plus-square-fill plus-tree-ps"
+                            } else if (plus_Nivel.className.includes("bi-plus-square-fill")) {
+                                plus_Nivel.className = "bi bi-dash-square plus-tree-ps"
+                            }
+                        }
+
+                        const item_Nivel = newEk("div", "item-tree-ps", Nivel_4.nombres[0].texto, "categoria" + Nivel_4.key)
+                        div_Nivel4.appendChild(item_Nivel)
+
+                        let iiii = Nivel_4.key
+                        let campo = Nivel_4
+
+                        item_Nivel.onclick = () => {
+                            const new_sd = {
+                                "nombres": Nivel_4.nombres,
+                                "abreviaciones": Nivel_4.abreviaciones
+                            }
+            
+                            entrada["clase-sd"].dominios.push(new_sd)
+                            Guardar_datos("LEXICON", global_proyecto["LEXICON"])
+                            _fill_sd()
+
+                        }
+
+
+                        const collapse_Nivel_5 = newEk("div", "align-items-center collapse show", "", "collapse_ps" + Nivel_4.key)
+                        collapse_Nivel_4.appendChild(collapse_Nivel_5)
+                        Nivel_4.subcategorias.forEach(Nivel_5 => {
+                            const div_Nivel5 = newEk("div", "div-fluid")
+                            collapse_Nivel_5.appendChild(div_Nivel5)
+
+                            const div_botones_plus = newEk("div", "div-fluid")
+                            div_Nivel5.appendChild(div_botones_plus)
+
+                            const line_Nivel0 = newEk("div", "line-tree-single")
+                            div_botones_plus.appendChild(line_Nivel0)
+
+                            const line_Nivel01 = newEk("div", "line-tree-single")
+                            div_botones_plus.appendChild(line_Nivel01)
+
+                            const line_Nivel02 = newEk("div", "line-tree-single")
+                            div_botones_plus.appendChild(line_Nivel02)
+
+                            const line_Nivel = newEk("div", "line-tree-ps")
+                            div_botones_plus.appendChild(line_Nivel)
+
+                            const plus_Nivel = newEk("div", "bi bi-dash-square plus-tree-ps")
+                            plus_Nivel.setAttribute("data-bs-toggle", "collapse")
+                            plus_Nivel.setAttribute("data-bs-target", "#collapse_ps" + Nivel_5.key)
+                            div_botones_plus.appendChild(plus_Nivel)
+
+
+                            plus_Nivel.onclick = () => {
+                                if (plus_Nivel.className.includes("bi-dash-square") == true) {
+                                    plus_Nivel.className = "bi bi-plus-square-fill plus-tree-ps"
+                                } else if (plus_Nivel.className.includes("bi-plus-square-fill")) {
+                                    plus_Nivel.className = "bi bi-dash-square plus-tree-ps"
+                                }
+                            }
+
+                            const item_Nivel = newEk("div", "item-tree-ps", Nivel_5.nombres[0].texto, "categoria" + Nivel_5.key)
+                            div_Nivel5.appendChild(item_Nivel)
+
+                            let iiiii = Nivel_5.key
+                            let campo = Nivel_5
+
+                            item_Nivel.onclick = () => {
+                                const new_sd = {
+                                    "nombres": Nivel_5.nombres,
+                                    "abreviaciones": Nivel_5.abreviaciones
+                                }
+                
+                                entrada["clase-sd"].dominios.push(new_sd)
+                                Guardar_datos("LEXICON", global_proyecto["LEXICON"])
+                                _fill_sd()
+                            }
+                        })
+                    })
+                })
+            })
+        })
+    }
+    _fill_sd()
+    function _fill_sd() {
+        input.innerHTML = ""
+        entrada["clase-sd"].dominios.forEach(sd => {
+            const sd_item = newEk("div", "", sd.nombres[0].texto)
+            input.appendChild(sd_item)
+
+            const div_borrar = newEk("div", "ms-2 me-4 bi bi-x-circle-fill btn-context-lx")
+            input.appendChild(div_borrar)
+            div_borrar.onclick = () => {
+                const dominios_lx = entrada["clase-sd"].dominios
+                const filter_del = dominios_lx.filter(ele => ele.nombres[0].texto !=sd.nombres[0].texto)
+                entrada["clase-sd"].dominios=filter_del
+                Guardar_datos("LEXICON", global_proyecto["LEXICON"])
+                _fill_sd()
+            }
+        })
+    }
+
+}
+
 async function download(data, type) {
     const blob = new Blob([data], { type: type });
     const newHandle = await window.showSaveFilePicker({
@@ -2309,7 +2670,7 @@ async function download(data, type) {
     await writableStream.close();
 }
 
-function open_ps(){
+function open_ps() {
     byE("class_modal_open").className = "modal-dialog modal-fullscreen"
     config_gramatical_list()
 }

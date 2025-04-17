@@ -301,6 +301,12 @@ div.content {
   justify-content: left;
 }
 
+.div-fluid-wrap {
+  display: flex;
+  justify-content: left;
+  flex-wrap: wrap
+}
+
 .div-fluid-rg {
   display: flex;
   justify-content: right;

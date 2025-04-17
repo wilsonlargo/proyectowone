@@ -147,16 +147,16 @@ function calcHeight(value) {
 }
 
 let lista_puntuacion = []
-function load_puntuacion(){
+function load_puntuacion() {
     const proyecto = global_proyecto["PROYECTO"]
-    const puntos= proyecto.puntuacion.split(" ")
+    const puntos = proyecto.puntuacion.split(" ")
 
-    puntos.forEach(p=>{
-        if(p!=""){
+    puntos.forEach(p => {
+        if (p != "") {
             lista_puntuacion.push(p.trim())
         }
     })
-    
+
 }
 
 function clear_word_2(word_ini) {
@@ -170,17 +170,50 @@ function clear_word_2(word_ini) {
     })
 
     const step2 = Word_clear.split(" ")
-    let word2=""
+    let word2 = ""
 
-    step2.forEach(s2=>{
-        if(lista_puntuacion.includes(s2)==false){
-            word2=word2 + s2
+    step2.forEach(s2 => {
+        if (lista_puntuacion.includes(s2) == false) {
+            word2 = word2 + s2
         }
     })
 
 
     return word2.toLowerCase()
 }
+
+function clear_text(word_ini) {
+    load_puntuacion()
+    let Word_clear = word_ini
+
+    let text_proces = [word_ini]
+
+    let i = 0
+    lista_puntuacion.forEach(l => {
+        if (text_proces[i].includes(l) == true) {
+            var result = _cleanChar(text_proces[i], l);
+            text_proces.push(result)          
+            i++
+        }
+    })
+
+    function _cleanChar(str, char) {
+        while (true) {
+            var result_1 = str.replace(char, '');
+            if (result_1 === str) {
+                break;
+            }
+            str = result_1;
+        }
+        return str;
+    }
+
+
+    //console.log(text_proces[text_proces.length - 1])
+    return text_proces[text_proces.length - 1]
+}
+
+
 
 function clear_word(word_ini) {
     load_puntuacion()
@@ -193,11 +226,11 @@ function clear_word(word_ini) {
     })
 
     const step2 = Word_clear.split(" ")
-    let word2=""
+    let word2 = ""
 
-    step2.forEach(s2=>{
-        if(lista_puntuacion.includes(s2)==false){
-            word2=word2 + s2
+    step2.forEach(s2 => {
+        if (lista_puntuacion.includes(s2) == false) {
+            word2 = word2 + s2
         }
     })
     return Word_clear.toLowerCase()

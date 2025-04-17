@@ -1471,6 +1471,7 @@ function config_gramatical_list() {
     }
     byE("btnAceptar_open").onclick = () => {
         make_lexicon()
+        console.clear()
     }
 
 }

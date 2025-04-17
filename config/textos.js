@@ -1,5 +1,6 @@
 let parrafos //Administra todos los párrafos del texto actual
 let id_parrafo = 0
+let list_word = []
 
 function make_text_editor() {
     try {
@@ -175,20 +176,12 @@ function _make_item_list() {
     })
     _make_edit_text(tabla_textos[0])
     function _make_edit_text(texto) {
+
+
+
         id_parrafo = texto.analisis["analisis-activo"]
 
         panel_edit.innerHTML = ""
-
-        const barra = newEk("div", "progress mt-2")
-        barra.role = "progressbar"
-        barra.setAttribute("aria-valuenow", "40")
-        barra.setAttribute("aria-valuemin", "20")
-        barra.setAttribute("aria-valuemax", "100")
-        //panel_edit.appendChild(barra)
-
-        const progreso = newEk("div", "progress-bar")
-        progreso.style.width = "40%"
-        //panel_edit.appendChild(progreso)
 
 
         _make_info()
@@ -289,6 +282,18 @@ function _make_item_list() {
                 parrafos = new_parrafos
                 _make_text_parser()
             }
+
+            //Esta opción administra la visualización del analizador de textos
+            const btn_toWords = newEk("div", "item-texto-small text-white ms-2", "[Lista de palabras]", "btn_toWords")
+            btn_toWords.setAttribute("data-bs-toggle", "modal")
+            btn_toWords.setAttribute("data-bs-target", "#dialog_modal")
+
+            div_tool.appendChild(btn_toWords)
+            btn_toWords.onclick = () => {
+
+                make_list_words(texto)
+
+            }
         }
 
         const div_analisis = newEk("div", "mt-2",)
@@ -329,7 +334,6 @@ function _make_item_list() {
 
         //Abre el visualizador de texto analizador
         function _make_text_parser() {
-
             div_analisis.innerHTML = ""
             const div_parser = newEk("div", "box-parser")
             div_analisis.appendChild(div_parser)
@@ -543,6 +547,7 @@ function _make_item_list() {
                                     }
                                     //Llama a la funciòn analizar palabra
                                     _make_lexema_txt(controls, word_ini)
+
                                 }
                             }
 
@@ -562,20 +567,32 @@ function _make_item_list() {
                 //Ejecuta la función de buscar la palabra en la DB analisis ["PARSER-WORD"]
                 const verificar_word = load_analisis(word_ini)
 
+
+
                 //Si la palabra se encuentra entonces proceder a cargar todas las características
                 if (verificar_word["includes"] == true) {
-                    //_make_exist()
+                    let lexemes_temp
+                    if (word_ini !== verificar_word.word) {
+                        lexemes_temp = word_ini
+                    } else {
+                        lexemes_temp = ""
+                    }
+
+                    //verificar_word["active-analisis"]="aaa aaaaa aaa"
                     //Identifica cúal es el indice que se dejó por defecto del análisis
                     const id_active = verificar_word["active-analisis_id"]
                     //Limpiamos todos los menús
                     controls.menu_lexemas.innerHTML = ""
 
                     //Agregamos un item para resetear los lexemas
-                    const itemBasic = newEk("div", "me-2  item-menu", word_ini)
+                    const itemBasic = newEk("div", "me-2  item-menu", verificar_word.word)
                     controls.menu_lexemas.appendChild(itemBasic)
+
+                    const itemAditional = newEk("div", "")
+                    controls.menu_lexemas.appendChild(itemAditional)
                     itemBasic.onclick = () => {
                         controls.panel_lexemas.innerHTML = ""
-                        _make_parser2(itemBasic.textContent, "--", "-")
+                        _make_parser2(itemBasic.textContent, "--", "--")
                     }
 
                     controls.menu_glosas_gen.innerHTML = ""
@@ -584,10 +601,9 @@ function _make_item_list() {
                     //La información la carga en un botón, indicando cuantas opciones hay y la muestra en un menú
                     controls.btn_lexemas.textContent = verificar_word.count
                     //Para agregar al menu items de lexemas
-
                     //Esto para reducir uso de memoria o controles dentro del visor
                     controls.btn_lexemas.onclick = () => {
-                        controls.menu_lexemas.innerHTML = ""
+                        itemAditional.innerHTML = ""
                         _make_menu_lexemas()
                     }
                     function _make_menu_lexemas() {
@@ -595,7 +611,7 @@ function _make_item_list() {
                             //P es la opción enumerada, contieno todas las caracteristicas de la palabra
                             const item = newEk("div", "me-2  item-menu", p["lexemas-basic"])
                             //Agrega la opción al menú de lexemas
-                            controls.menu_lexemas.appendChild(item)
+                            itemAditional.appendChild(item)
 
                             //Al seleccionar una opción de lexemas actualizar en al DB
                             item.onclick = () => {
@@ -641,7 +657,6 @@ function _make_item_list() {
                     }
                     //////////////////////////////////////////////77
 
-
                     //Fuera del menú glosas
                     //Cargamos info de las glosas de esta palabra
                     let adm_glosas = verificar_word.parser[id_active]["glosa-general"]
@@ -672,7 +687,10 @@ function _make_item_list() {
                     //ya sea un lexemas o varios lexemas, son una matris bidimencional
 
                     //Carga todos los lexemas del análisis activo [id_active]
+
                     let w = verificar_word.parser[id_active]["lexemas-basic"]
+
+
                     //Todas las glosas de cada lexema
                     let gns = verificar_word.parser[id_active]["lexemas-gn"]
                     //Todas las categorias de cada lexema
@@ -681,7 +699,16 @@ function _make_item_list() {
                     //Llamamos a la función parser_2, esta se encarga de fragmentar los analisis
                     //por cada lexemamorfema entontrado
                     //            //Usa el campo lexemas basic, y glosas y categorias.
-                    _make_parser2(verificar_word.parser[id_active]["lexemas-basic"], gns, pss)
+                    //verificar_word.parser[id_active]["lexemas-basic"]=word_ini
+
+                    if (lexemes_temp != "") {
+                        _make_parser2(lexemes_temp, "", "")
+                    } else {
+                        _make_parser2(w, gns, pss)
+                    }
+
+
+
 
                     //**** */
 
@@ -704,7 +731,6 @@ function _make_item_list() {
                     }
                     //Llama la función de fragmentar palabra para un solo lexema
                     _make_parser2(word_ini)
-                    //_make_parser2(verificar_word.parser[id_active]["lexemas-basic"], gns, pss)
                 }
 
                 //Esta es la función que fragmenta la palabra según datos previos
@@ -752,11 +778,13 @@ function _make_item_list() {
                                 //El usuario puede modificar el contenido del input
                                 //Cada vez que ingresa información se actualiza en ciclo todo
                                 c_word_lexeme.oninput = () => {
+
                                     //Identifica dentro de que contenedor está
 
                                     let Padre1 = controls.panel_lexemas.childNodes;
                                     //Enumera cada control que se encuentra dentro del contenedor padre
                                     Padre1.forEach(P => {
+
                                         //Por cada contenedor padre busca 
                                         //que otros controles se encuentran junto a él 
                                         let child = P.childNodes
@@ -774,11 +802,13 @@ function _make_item_list() {
                                     })
                                     //Limpia el contedenor
                                     controls.panel_lexemas.innerHTML = ""
-                                    //Ahora lo que ahce es llamar a la función que crea un control por cada fragmento
+                                    //Ahora lo que hace es llamar a la función que crea un control por cada fragmento
 
                                     //Retorna ciclicamente cada vez que se hace un cambio en el input [c_word_lexeme]
                                     //Usa la base de datos de controles y el nuevo texto creado
+
                                     _make_lexema_txt(controls, new_text)
+
                                 }
 
                                 //ESto fuera de acciones dentro del input c_word_lexeme
@@ -1056,14 +1086,16 @@ function load_analisis(word_basic) {
 
         const index_active = filter_word[0].analisis.findIndex((element) => element["lexemas-basic"] == filter_word[0]["active-analisis"]);
 
-
         load_word = {
+            "word": filter_word[0].word,
             "active-analisis_id": index_active,
             "active-analisis": filter_word[0]["active-analisis"],
             "includes": true,
             "count": n,
             "parser": filter_word[0].analisis
         }
+
+
 
     } else {
         load_word = {
@@ -1136,7 +1168,6 @@ function make_ps_tree(ul, input, field, option2, tipo_afijo, input_infle) {
                     let Inflexiones = []
                     tabla_categorias.forEach(cat => {
                         const it = cat["abreviaciones"][0].texto.toLowerCase()
-                        console.log(tipo_afijo)
 
                         if (cat_input.toLowerCase() == it) {
 
@@ -1222,7 +1253,7 @@ function make_ps_tree(ul, input, field, option2, tipo_afijo, input_infle) {
                         let Inflexiones = []
                         tabla_categorias.forEach(cat => {
                             const it = cat["abreviaciones"][0].texto.toLowerCase()
-                            console.log(tipo_afijo)
+
 
                             if (cat_input.toLowerCase() == it) {
 
@@ -1308,7 +1339,7 @@ function make_ps_tree(ul, input, field, option2, tipo_afijo, input_infle) {
                             let Inflexiones = []
                             tabla_categorias.forEach(cat => {
                                 const it = cat["abreviaciones"][0].texto.toLowerCase()
-                                console.log(tipo_afijo)
+
 
                                 if (cat_input.toLowerCase() == it) {
 
@@ -1912,4 +1943,81 @@ function open_new_entry(texto) {
     }
 
 
-}   
+}
+function make_list_words(texto) {
+    byE("dialog_title").textContent = "Lista de palabras"
+    byE("btnAceptar_dialog").onclick=()=>{
+
+    }
+    const contenedor = byE("modal_panel_dialog")
+    contenedor.innerHTML=""
+
+
+    const parrafos_ini = texto.analisis["text-basic"]
+    let texto_temporal = ""
+    parrafos_ini.forEach(p => {
+        texto_temporal = texto_temporal + " " + p["par-text"]
+    })
+
+    const t1_clear = clear_text(texto_temporal)
+    list_word_inText = []
+    list_word_objetc = []
+
+    const word_preliminar = t1_clear.split(" ")
+    word_preliminar.forEach(wp => {
+        if (wp != "") {
+            const w1_clear = wp.toLowerCase()
+            const w2_clear = w1_clear.trim()
+
+            if (list_word_inText.includes(w2_clear) == false) {
+                const new_wp = {
+                    "palabra": w2_clear,
+                    "ocurrencias": 1
+                }
+
+                list_word_inText.push(w2_clear)
+                list_word_objetc.push(new_wp)
+            } else {
+                const filtered = list_word_objetc.filter(ele => ele["palabra"] == w1_clear)
+                filtered[0]["ocurrencias"] = filtered[0]["ocurrencias"] + 1
+            }
+        }
+
+    })
+
+    const sortedDataArray = list_word_inText.sort(function (a, b) {
+        return a.localeCompare(b);
+    });
+
+    const sort_tabla_palabras = list_word_objetc.sort(function (a, b) {
+        //return a["palabra"].localeCompare(b["palabra"]);
+        return b["ocurrencias"] - a["ocurrencias"];
+    });
+
+    const div_lista=newEk("div","menu-group-scroll-lg p-2")
+    contenedor.appendChild(div_lista)
+
+    let e=1
+    sort_tabla_palabras.forEach(w => {
+        const item=newEk("div","row align-items-center")
+        div_lista.appendChild(item)
+
+        const col_ind=newEk("div","col-1 fw-bold",e + ".")
+        col_ind.style.fontSize="9pt"
+        item.appendChild(col_ind)
+
+        const col_w=newEk("div","col-4",w["palabra"])
+        item.appendChild(col_w)
+
+        const col_o=newEk("div","col-2",w["ocurrencias"])
+        item.appendChild(col_o)
+
+        
+        e++
+    })
+
+    //console.log(sortedDataArray)
+
+
+
+}

@@ -36,6 +36,41 @@ loadDataBase("1dniplVXfiSFYUFfsT1Ij6cdEoAdtK7dqWf3x4s9eUSw", proyecto).then(obje
     GLOBAL.from_drive = DataPrincipal
 })
 
+//Limpiamos los contenedores
+contenedor_ps.innerHTML = ""
+div_partes.innerHTML = ""
+
+//const int_buscarini = byE("int_nuevo_lx")
+const dPrincipal_Categoria = newEk("div", "ps-1 bg-warning pe-1", "?")
+div_partes.appendChild(dPrincipal_Categoria)
+
+const div_simbolo = newEk("div", "bg-white ps-1 pe-1", "=>")
+div_partes.appendChild(div_simbolo)
+
+//Control de entrada de tipo de inflexion
+const input_inflexion = newEk("input", "form-control ms-2", "?")
+div_partes.appendChild(input_inflexion)
+
+make_ps_tree(contenedor_ps, dPrincipal_Categoria, "", "for_inflexional")
+
+
+const div_ok = newEk("div", "ms-3 bg-success text-white ps-1 pe-1", "Ok")
+div_ok.style.cursor = "pointer"
+div_partes.appendChild(div_ok)
+
+div_ok.onclick = () => {
+    //Usamos una plantilla de categorias
+    const temp_ps = template_ps()
+    //Pero solo usamos los nombres y abreviaciones
+    new_ps = []
+    new_ps = {
+        "abreviaciones": temp_ps.abreviaciones,
+        "nombres": temp_ps.nombre
+    }
+    new_ps.nombres[0].texto = "Inflexional"
+    new_ps.abreviaciones[0].texto = dPrincipal_Categoria.textContent + ":" + input_inflexion.value
+    sel_cat_lx.textContent = "Inflexional [" + dPrincipal_Categoria.textContent + ":" + input_inflexion.value + "]"
+}
 
 
 

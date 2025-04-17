@@ -175,8 +175,7 @@ function _make_item_list() {
     })
     _make_edit_text(tabla_textos[0])
     function _make_edit_text(texto) {
-        console.log(texto)
-        id_parrafo= texto.analisis["analisis-activo"]
+        id_parrafo = texto.analisis["analisis-activo"]
 
         panel_edit.innerHTML = ""
 
@@ -280,8 +279,6 @@ function _make_item_list() {
             const btn_toParserText = newEk("div", "item-texto-small text-white ms-2", "[Analizar texto]", "btn_analizarTexto")
             div_tool.appendChild(btn_toParserText)
             btn_toParserText.onclick = () => {
-                console.log(parrafos.length)
-
                 let new_parrafos = []
                 parrafos.forEach(p => {
 
@@ -395,7 +392,7 @@ function _make_item_list() {
 
                 _load_parser(id_parrafo)
                 function _load_parser(id) {
-                    texto.analisis["analisis-activo"]=id_parrafo
+                    texto.analisis["analisis-activo"] = id_parrafo
                     save_texto(texto)
                     let palabras = parrafos[id]["par-text"].split(" ")
                     _make_words(palabras)
@@ -650,7 +647,7 @@ function _make_item_list() {
                     let adm_glosas = verificar_word.parser[id_active]["glosa-general"]
 
                     controls.btn_glosas_gen.textContent = adm_glosas.options.length
-                    controls.btn_glosas_gen.onclick=()=>{
+                    controls.btn_glosas_gen.onclick = () => {
                         controls.menu_glosas_gen.innerHTML = ""
                         _make_menu_glosasGen()
                     }
@@ -796,7 +793,7 @@ function _make_item_list() {
                                 const div_lx_id = newEk("div", "word-find-parser", wp, "LXID-" + randomKey(10, '12345abcde'))
                                 div_lx_id.setAttribute("data-bs-toggle", "dropdown")
                                 div_lx_analisis.appendChild(div_lx_id)
-                                
+
 
                                 const ul_menu_buscar = newE("ul", "ul_menu_varianteOf", "dropdown-menu shadow")
                                 div_lx_analisis.appendChild(ul_menu_buscar)
@@ -920,7 +917,6 @@ function _make_item_list() {
                             }
                             contadores_lx++
                         }
-
 
                     })
 
@@ -1094,7 +1090,7 @@ function newDataTable(data, id) {
     GLOBAL.firestore.addTexto(data, id)
 }
 
-function make_ps_tree(ul, input, field, option2) {
+function make_ps_tree(ul, input, field, option2, tipo_afijo, input_infle) {
 
     ul.innerHTML = ""
     ul.onclick = (e) => {
@@ -1123,13 +1119,53 @@ function make_ps_tree(ul, input, field, option2) {
                 }
             }
 
-
             const item_Nivel1 = newEk("div", "item-tree-ps", Nivel_1.nombres[0].texto)
             collapse_Nivel_1.appendChild(item_Nivel1)
+
+
 
             item_Nivel1.onclick = () => {
                 if (option2 == "for_inflexional") {
                     input.textContent = Nivel_1.abreviaciones[0].texto
+
+                    const cat_input = Nivel_1.abreviaciones[0].texto
+
+                    let tabla_categorias = global_proyecto["TABLAS"]["CATGRAMATICAL"]
+                    const filtered_cat = tabla_categorias.filter(ele => ele["abreviaciones"][0].texto == cat_input)
+
+                    let Inflexiones = []
+                    tabla_categorias.forEach(cat => {
+                        const it = cat["abreviaciones"][0].texto.toLowerCase()
+                        console.log(tipo_afijo)
+
+                        if (cat_input.toLowerCase() == it) {
+
+                            Inflexiones = cat.plantilla[tipo_afijo]
+                        }
+                        cat.subcategorias.forEach(_cat_II => {
+                            const itII = _cat_II["abreviaciones"][0].texto.toLowerCase()
+                            if (cat_input.toLowerCase() == itII) {
+                                Inflexiones = _cat_II.plantilla[tipo_afijo]
+                            }
+                            _cat_II.subcategorias.forEach(_cat_III => {
+                                const itIII = _cat_III["abreviaciones"][0].texto.toLowerCase()
+                                if (cat_input.toLowerCase() == itIII) {
+                                    Inflexiones = _cat_III.plantilla[tipo_afijo]
+                                }
+                            })
+                        })
+                    })
+
+                    input_infle.innerHTML = ""
+                    const item = newEk("option", "", "Indefinido")
+                    item.value = "Indefinido"
+                    input_infle.appendChild(item)
+                    Inflexiones.forEach(inf => {
+                        const item = newEk("option", "", inf.nombre)
+                        item.value = inf.nombre
+                        input_infle.appendChild(item)
+                    })
+
                 } else if (option2 == "for_derivacional") {
                     input.textContent = Nivel_1.abreviaciones[0].texto
                 } else if (option2 == "for_entry") {
@@ -1178,6 +1214,43 @@ function make_ps_tree(ul, input, field, option2) {
 
                     if (option2 == "for_inflexional") {
                         input.textContent = Nivel_2.abreviaciones[0].texto
+                        const cat_input = Nivel_1.abreviaciones[0].texto
+
+                        let tabla_categorias = global_proyecto["TABLAS"]["CATGRAMATICAL"]
+                        const filtered_cat = tabla_categorias.filter(ele => ele["abreviaciones"][0].texto == cat_input)
+
+                        let Inflexiones = []
+                        tabla_categorias.forEach(cat => {
+                            const it = cat["abreviaciones"][0].texto.toLowerCase()
+                            console.log(tipo_afijo)
+
+                            if (cat_input.toLowerCase() == it) {
+
+                                Inflexiones = cat.plantilla[tipo_afijo]
+                            }
+                            cat.subcategorias.forEach(_cat_II => {
+                                const itII = _cat_II["abreviaciones"][0].texto.toLowerCase()
+                                if (cat_input.toLowerCase() == itII) {
+                                    Inflexiones = _cat_II.plantilla[tipo_afijo]
+                                }
+                                _cat_II.subcategorias.forEach(_cat_III => {
+                                    const itIII = _cat_III["abreviaciones"][0].texto.toLowerCase()
+                                    if (cat_input.toLowerCase() == itIII) {
+                                        Inflexiones = _cat_III.plantilla[tipo_afijo]
+                                    }
+                                })
+                            })
+                        })
+
+                        input_infle.innerHTML = ""
+                        const item = newEk("option", "", "Indefinido")
+                        item.value = "Indefinido"
+                        input_infle.appendChild(item)
+                        Inflexiones.forEach(inf => {
+                            const item = newEk("option", "", inf.nombre)
+                            item.value = inf.nombre
+                            input_infle.appendChild(item)
+                        })
                     } else if (option2 == "for_derivacional") {
                         input.textContent = Nivel_2.abreviaciones[0].texto
                     } else if (option2 == "for_entry") {
@@ -1227,6 +1300,43 @@ function make_ps_tree(ul, input, field, option2) {
                     item_Nivel3.onclick = () => {
                         if (option2 == "for_inflexional") {
                             input.textContent = Nivel_3.abreviaciones[0].texto
+                            const cat_input = Nivel_1.abreviaciones[0].texto
+
+                            let tabla_categorias = global_proyecto["TABLAS"]["CATGRAMATICAL"]
+                            const filtered_cat = tabla_categorias.filter(ele => ele["abreviaciones"][0].texto == cat_input)
+
+                            let Inflexiones = []
+                            tabla_categorias.forEach(cat => {
+                                const it = cat["abreviaciones"][0].texto.toLowerCase()
+                                console.log(tipo_afijo)
+
+                                if (cat_input.toLowerCase() == it) {
+
+                                    Inflexiones = cat.plantilla[tipo_afijo]
+                                }
+                                cat.subcategorias.forEach(_cat_II => {
+                                    const itII = _cat_II["abreviaciones"][0].texto.toLowerCase()
+                                    if (cat_input.toLowerCase() == itII) {
+                                        Inflexiones = _cat_II.plantilla[tipo_afijo]
+                                    }
+                                    _cat_II.subcategorias.forEach(_cat_III => {
+                                        const itIII = _cat_III["abreviaciones"][0].texto.toLowerCase()
+                                        if (cat_input.toLowerCase() == itIII) {
+                                            Inflexiones = _cat_III.plantilla[tipo_afijo]
+                                        }
+                                    })
+                                })
+                            })
+
+                            input_infle.innerHTML = ""
+                            const item = newEk("option", "", "Indefinido")
+                            item.value = "Indefinido"
+                            input_infle.appendChild(item)
+                            Inflexiones.forEach(inf => {
+                                const item = newEk("option", "", inf.nombre)
+                                item.value = inf.nombre
+                                input_infle.appendChild(item)
+                            })
                         } else if (option2 == "for_derivacional") {
                             input.textContent = Nivel_3.abreviaciones[0].texto
                         } else if (option2 == "for_entry") {
@@ -1361,17 +1471,16 @@ function open_new_entry(texto) {
 
     const sel_cat_lx = newEk("div", "word-find-parser", "Indefinido")
     sel_cat_lx.style.height = "35px"
-    sel_cat_lx.setAttribute("data-bs-toggle", "dropdown")
+    //sel_cat_lx.setAttribute("data-bs-toggle", "dropdown")
+
+    sel_cat_lx.setAttribute("data-bs-toggle", "modal")
+    sel_cat_lx.setAttribute("data-bs-target", "#dialog_modal")
     col_cat.appendChild(sel_cat_lx)
 
     const ul_menu_ps = newEk("ul", "dropdown-menu shadow p-3")
     col_cat.appendChild(ul_menu_ps)
 
-    const contenedor_acciones = newEk("div", "")
-    ul_menu_ps.appendChild(contenedor_acciones)
 
-    const contenedor_ps = newEk("div", "bg-white mt-1 menu-group-scroll")
-    ul_menu_ps.appendChild(contenedor_ps)
 
     //Evitar acciones de click
     ul_menu_ps.onclick = (e) => {
@@ -1381,12 +1490,22 @@ function open_new_entry(texto) {
     //Acciones cuando abro el menú de categorias
     sel_cat_lx.onclick = () => {
         //Limpiamos controles dentro de las acciones
+        const contenedor_input = byE("modal_panel_dialog")
+        contenedor_input.innerHTML = ""
+
+        const contenedor_acciones = newEk("div", "")
+        contenedor_input.appendChild(contenedor_acciones)
+
+        const contenedor_ps = newEk("div", "bg-white mt-1 menu-group-scroll")
+        contenedor_input.appendChild(contenedor_ps)
+
+
         contenedor_acciones.innerHTML = ""
 
         //Limpiamos el contenedor de ps
         contenedor_ps.innerHTML = ""
 
-        //DEbe ser distinto a indefinido la clase de morfema
+        //Debe ser distinto a indefinido la clase de morfema
         if (sel_tipo_lx.value != "Indefinido") {
             //Llamamos a la tabla de morfemas
             const tipos = global_proyecto["TABLAS"].MORFEMAS
@@ -1396,18 +1515,16 @@ function open_new_entry(texto) {
 
             //Si es Sufijo
             if (filter_tipo[0].estructura.ini != "" && filter_tipo[0].estructura.fin == "") {
-                _make_categria() //Crea un menú específico para afijos
+                _make_categria("prefijos") //Crea un menú específico para afijos
                 //Si es prefijo
             } else if (filter_tipo[0].estructura.ini == "" && filter_tipo[0].estructura.fin != "") {
-                _make_categria()
+                _make_categria("sufijos")
                 //Si no entonces abrir el arbol directamente de categorias
             } else {
                 new_ps = "Indefinido"
                 make_ps_tree(contenedor_ps, sel_cat_lx, new_ps, "for_entry")
 
-                const div_ok = newEk("div", "mt-2 bg-success text-white ps-1 pe-1 text-center", "Ok")
-                div_ok.style.cursor = "pointer"
-                ul_menu_ps.appendChild(div_ok)
+                const div_ok = byE("btnAceptar_dialog")
 
                 div_ok.onclick = () => {
                     //Usamos una plantilla de categorias
@@ -1416,7 +1533,7 @@ function open_new_entry(texto) {
                     new_ps = []
                     new_ps = {
                         "abreviaciones": temp_ps.abreviaciones,
-                        "nombres": temp_ps.nombre
+                        "nombres": temp_ps.nombres
                     }
 
                     const Cat_separada = sel_cat_lx.textContent.split("-")
@@ -1425,7 +1542,7 @@ function open_new_entry(texto) {
                 }
             }
 
-            function _make_categria() {
+            function _make_categria(tipo_afijo) {
                 //Creamos un menú para las acciones de afijos derivacion o inflexion
                 contenedor_acciones.innerHTML = ""
                 contenedor_ps.className = "bg-white"
@@ -1482,7 +1599,7 @@ function open_new_entry(texto) {
                             }
 
                             //Crea un contenedor texto de la convención de derivacional
-                            const div_simbolo = newEk("div", "bg-white ps-1 pe-1", ":")
+                            const div_simbolo = newEk("div", "bg-white ps-1 pe-1", "=>")
                             div_partes.appendChild(div_simbolo)
 
                             //
@@ -1497,9 +1614,7 @@ function open_new_entry(texto) {
                                 make_ps_tree(contenedor_ps, dSegunda_Categoria, "", "for_derivacional")
                             }
 
-                            const div_ok = newEk("div", "ms-3 bg-success text-white ps-1 pe-1", "Ok")
-                            div_ok.style.cursor = "pointer"
-                            div_partes.appendChild(div_ok)
+                            const div_ok = byE("btnAceptar_dialog")
 
                             div_ok.onclick = () => {
                                 //Usamos una plantilla de categorias
@@ -1508,7 +1623,7 @@ function open_new_entry(texto) {
                                 new_ps = []
                                 new_ps = {
                                     "abreviaciones": temp_ps.abreviaciones,
-                                    "nombres": temp_ps.nombre
+                                    "nombres": temp_ps.nombres
                                 }
 
                                 //Luego modificamos esa información con los datos actuales de la nuesva entrada
@@ -1529,19 +1644,19 @@ function open_new_entry(texto) {
                             const dPrincipal_Categoria = newEk("div", "ps-1 bg-warning pe-1", "?")
                             div_partes.appendChild(dPrincipal_Categoria)
 
-                            const div_simbolo = newEk("div", "bg-white ps-1 pe-1", "=>")
+                            const div_simbolo = newEk("div", "bg-white ps-1 pe-1", ":")
                             div_partes.appendChild(div_simbolo)
 
                             //Control de entrada de tipo de inflexion
-                            const input_inflexion = newEk("input", "form-control ms-2", "?")
+                            const input_inflexion = newEk("select", "form-control")
                             div_partes.appendChild(input_inflexion)
 
-                            make_ps_tree(contenedor_ps, dPrincipal_Categoria, "", "for_inflexional")
 
 
-                            const div_ok = newEk("div", "ms-3 bg-success text-white ps-1 pe-1", "Ok")
-                            div_ok.style.cursor = "pointer"
-                            div_partes.appendChild(div_ok)
+                            make_ps_tree(contenedor_ps, dPrincipal_Categoria, "", "for_inflexional", tipo_afijo, input_inflexion)
+
+
+                            const div_ok = byE("btnAceptar_dialog")
 
                             div_ok.onclick = () => {
                                 //Usamos una plantilla de categorias
@@ -1550,11 +1665,12 @@ function open_new_entry(texto) {
                                 new_ps = []
                                 new_ps = {
                                     "abreviaciones": temp_ps.abreviaciones,
-                                    "nombres": temp_ps.nombre
+                                    "nombres": temp_ps.nombres
                                 }
                                 new_ps.nombres[0].texto = "Inflexional"
                                 new_ps.abreviaciones[0].texto = dPrincipal_Categoria.textContent + ":" + input_inflexion.value
                                 sel_cat_lx.textContent = "Inflexional [" + dPrincipal_Categoria.textContent + ":" + input_inflexion.value + "]"
+
                             }
 
                         }
@@ -1633,7 +1749,6 @@ function open_new_entry(texto) {
             })
         }
     }
-
 
     //Creamos una lista de idiomas
     const sm_idiomas = newE("small", randomKey(10, '12345abcde'), "")

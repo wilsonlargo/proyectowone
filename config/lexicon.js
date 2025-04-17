@@ -2150,7 +2150,6 @@ function make_sn_tree(ul, input, sn, entrada) {
                     }
 
                     const input_infle = newEk("select", "form-control")
-                    //input_infle.value = "?"
                     div_acciones.appendChild(input_infle)
 
                     //Busco la categoría en la lista de categorías

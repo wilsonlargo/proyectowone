@@ -1782,25 +1782,28 @@ function config_dominios_list() {
                         Nivel_4.subcategorias.forEach(Nivel_5 => {
                             const div_Nivel5 = newEk("div", "div-fluid")
                             collapse_Nivel_5.appendChild(div_Nivel5)
-        
+
                             const div_botones_plus = newEk("div", "div-fluid")
-                            div_Nivel4.appendChild(div_botones_plus)
-        
+                            div_Nivel5.appendChild(div_botones_plus)
+
                             const line_Nivel0 = newEk("div", "line-tree-single")
                             div_botones_plus.appendChild(line_Nivel0)
-    
+
                             const line_Nivel01 = newEk("div", "line-tree-single")
                             div_botones_plus.appendChild(line_Nivel01)
-        
+
+                            const line_Nivel02 = newEk("div", "line-tree-single")
+                            div_botones_plus.appendChild(line_Nivel02)
+
                             const line_Nivel = newEk("div", "line-tree-ps")
                             div_botones_plus.appendChild(line_Nivel)
-        
+
                             const plus_Nivel = newEk("div", "bi bi-dash-square plus-tree-ps")
                             plus_Nivel.setAttribute("data-bs-toggle", "collapse")
                             plus_Nivel.setAttribute("data-bs-target", "#collapse_ps" + Nivel_5.key)
                             div_botones_plus.appendChild(plus_Nivel)
-        
-        
+
+
                             plus_Nivel.onclick = () => {
                                 if (plus_Nivel.className.includes("bi-dash-square") == true) {
                                     plus_Nivel.className = "bi bi-plus-square-fill plus-tree-ps"
@@ -1808,13 +1811,13 @@ function config_dominios_list() {
                                     plus_Nivel.className = "bi bi-dash-square plus-tree-ps"
                                 }
                             }
-        
+
                             const item_Nivel = newEk("div", "item-tree-ps", Nivel_5.nombres[0].texto, "categoria" + Nivel_5.key)
                             div_Nivel5.appendChild(item_Nivel)
-        
+
                             let iiiii = Nivel_5.key
                             let campo = Nivel_5
-                            
+
                             item_Nivel.onclick = () => {
                                 _make_panel_cat(Nivel_4, campo, iiiii, false)
                             }

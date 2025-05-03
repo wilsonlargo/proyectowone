@@ -1072,8 +1072,11 @@ function put_analisis(data) {
 }
 
 function load_analisis(word_basic) {
+    console.log(word_basic)
     let tabla_analisis = global_proyecto["PARSER-WORD"].PARSER
     const filter_word = tabla_analisis.filter(ele => ele.word == clear_word_2(word_basic))
+
+    
 
     let load_word
     let n = 0

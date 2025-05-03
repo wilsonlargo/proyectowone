@@ -166,6 +166,10 @@ function make_lexicon() {
             byE("class_modal_open").className = "modal-dialog modal-fullscreen"
             config_dominios_list()
         }
+
+        const item = newEk("div", "div-previwe", "", "div_preview_entada")
+        panel_escritorio.appendChild(item)
+
     }
     make_spliter_panel()
     function make_spliter_panel() {
@@ -190,9 +194,14 @@ function make_lexicon() {
         const panel_list = byE("panel_list_lx")
         panel_list.innerHTML = ""
 
+
+        const sortedDicc = active_lexicon.entries.sort(function (a, b) {
+            return a.lexeme.lx.localeCompare(b.lexeme.lx);
+        });
+
         let i = 0
-        for (idx in active_lexicon.entries) {
-            const entrada = active_lexicon.entries[idx]
+        for (idx in sortedDicc) {
+            const entrada = sortedDicc[idx]
             entrada.id = i
             i++
             const p = newE("div", "p-" + entrada.key, "item-list-lx")
@@ -207,6 +216,34 @@ function make_lexicon() {
     }
     _move_to_entry("ini")
     function _make_lexicon_edit(entrada) {
+
+
+
+        view_entrada()
+        function view_entrada() {
+            const div_preview = byE("div_preview_entada")
+            div_preview.innerHTML = ""
+
+            //Creo un aentrada lc
+            const lc = newEk("div", "fw-bold me-2", entrada.lexeme.lc)
+            div_preview.appendChild(lc)
+
+            //Miro cuanto sentido tiene cada entrada para extraer cada uno
+
+            entrada["clase-sn"].sentidos.forEach(sn => {
+                const ps = newEk("div", "fst-italic me-2", sn.ps.abreviaciones[0].texto + ".")
+                div_preview.appendChild(ps)
+
+                const gn = newEk("div", "fw-bold text-primary me-2", sn.gn[0].texto + ".")
+                div_preview.appendChild(gn)
+
+                const dn = newEk("div", "text-secondary me-2", sn.dn[0].texto + "")
+                div_preview.appendChild(dn)
+            })
+
+
+        }
+
         const panel_lexicon_edit = byE("panel_lexicon_edit_lx")
         panel_lexicon_edit.innerHTML = ""
 
@@ -1752,12 +1789,12 @@ function make_lexicon() {
                         col_ps_items.appendChild(btn_menu_ps_items)
 
                         const div_menu_ps = newE("div", randomKey(10, '12345abcde'), "m-3 menu-group-scroll-lg div-categoria")
-                       
-                        btn_menu_ps_items.onclick=()=>{
+
+                        btn_menu_ps_items.onclick = () => {
                             make_sn_tree(div_menu_ps, col_ps_values, sn, entrada)
                         }
-                       
-                        
+
+
                     }
 
                     const div_sec_ejemplos = newE("div", randomKey(10, '12345abcde'), "")
@@ -1975,7 +2012,7 @@ function make_lexicon() {
             btn_menu_sd_items.setAttribute("data-bs-target", "#dialog_modal")
             col_sd_items.appendChild(btn_menu_sd_items)
 
-            btn_menu_sd_items.onclick=()=>{
+            btn_menu_sd_items.onclick = () => {
                 make_sd_tree(div_sd_values, entrada)
             }
 
@@ -1985,13 +2022,13 @@ function make_lexicon() {
                 entrada["clase-sd"].dominios.forEach(sd => {
                     const sd_item = newEk("div", "", sd.nombres[0].texto)
                     div_sd_values.appendChild(sd_item)
-        
+
                     const div_borrar = newEk("div", "ms-2 me-4 bi bi-x-circle-fill btn-context-lx")
                     div_sd_values.appendChild(div_borrar)
                     div_borrar.onclick = () => {
                         const dominios_lx = entrada["clase-sd"].dominios
-                        const filter_del = dominios_lx.filter(ele => ele.nombres[0].texto !=sd.nombres[0].texto)
-                        entrada["clase-sd"].dominios=filter_del
+                        const filter_del = dominios_lx.filter(ele => ele.nombres[0].texto != sd.nombres[0].texto)
+                        entrada["clase-sd"].dominios = filter_del
                         Guardar_datos("LEXICON", global_proyecto["LEXICON"])
                         _fill_sd()
                     }
@@ -2387,7 +2424,7 @@ function make_sn_tree(ul, input, sn, entrada) {
 }
 
 function make_sd_tree(input, entrada) {
-    input.innerHTML=""
+    input.innerHTML = ""
     const modal_panel = byE("modal_panel_dialog")
     modal_panel.className = "modal-body"
     modal_panel.innerHTML = ""
@@ -2465,7 +2502,7 @@ function make_sd_tree(input, entrada) {
                         "nombres": Nivel_2.nombres,
                         "abreviaciones": Nivel_2.abreviaciones
                     }
-    
+
                     entrada["clase-sd"].dominios.push(new_sd)
                     Guardar_datos("LEXICON", global_proyecto["LEXICON"])
                     _fill_sd()
@@ -2514,7 +2551,7 @@ function make_sd_tree(input, entrada) {
                             "nombres": Nivel_3.nombres,
                             "abreviaciones": Nivel_3.abreviaciones
                         }
-        
+
                         entrada["clase-sd"].dominios.push(new_sd)
                         Guardar_datos("LEXICON", global_proyecto["LEXICON"])
                         _fill_sd()
@@ -2565,7 +2602,7 @@ function make_sd_tree(input, entrada) {
                                 "nombres": Nivel_4.nombres,
                                 "abreviaciones": Nivel_4.abreviaciones
                             }
-            
+
                             entrada["clase-sd"].dominios.push(new_sd)
                             Guardar_datos("LEXICON", global_proyecto["LEXICON"])
                             _fill_sd()
@@ -2619,7 +2656,7 @@ function make_sd_tree(input, entrada) {
                                     "nombres": Nivel_5.nombres,
                                     "abreviaciones": Nivel_5.abreviaciones
                                 }
-                
+
                                 entrada["clase-sd"].dominios.push(new_sd)
                                 Guardar_datos("LEXICON", global_proyecto["LEXICON"])
                                 _fill_sd()
@@ -2641,8 +2678,8 @@ function make_sd_tree(input, entrada) {
             input.appendChild(div_borrar)
             div_borrar.onclick = () => {
                 const dominios_lx = entrada["clase-sd"].dominios
-                const filter_del = dominios_lx.filter(ele => ele.nombres[0].texto !=sd.nombres[0].texto)
-                entrada["clase-sd"].dominios=filter_del
+                const filter_del = dominios_lx.filter(ele => ele.nombres[0].texto != sd.nombres[0].texto)
+                entrada["clase-sd"].dominios = filter_del
                 Guardar_datos("LEXICON", global_proyecto["LEXICON"])
                 _fill_sd()
             }

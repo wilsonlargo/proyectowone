@@ -94,7 +94,7 @@ div.content {
 
 #panel_list_lx {
   width: 30%;
-  height: 500%;
+  height: 250%;
   min-width: 200px;
   overflow: auto;
   white-space: nowrap;
@@ -104,7 +104,7 @@ div.content {
 
 #panel_lexicon_edit_lx {
   width: 70%;
-  height: 500%;
+  height: 250%;
   min-width: 200px;
   overflow: auto;
   white-space: nowrap;
@@ -548,4 +548,16 @@ div.content {
 .border-lx{
   border: 1px solid gray;
   padding: 5px;
+}
+
+.div-previwe{
+  border: #aaa 1px solid;
+  border-radius: 5px;
+  padding: 10px;
+  position: sticky;
+  top: 0;
+  display: flex;
+  justify-content: left;
+  background-color: white;
+  margin-top: 5px;
 }
